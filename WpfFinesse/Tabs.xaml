@@ -20,13 +20,60 @@
         <SolidColorBrush x:Key="BackgroundBrush" Color="{StaticResource BackgroundColor}" />
 
 
-        <Style x:Key="Body_Content_DataGrid_Centering"
+        <!--<Style x:Key="Body_Content_DataGrid_Centering"
 	  TargetType="{x:Type DataGridCell}">
             <Setter Property="VerticalAlignment"
 			Value="Center" />
+            <Setter Property="Background" Value="Red" />
+            <Setter Property="Padding" Value="0 0 20 0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type DataGridCell}">
+                        <Border Padding="{TemplateBinding Padding}" SnapsToDevicePixels="True">
+                            <ContentPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="DataGridCell.IsSelected" Value="True">
+                
+                    <Setter Property="Foreground" Value="Blue"></Setter>
+                </Trigger>
+                <Trigger Property="DataGridCell.IsSelected" Value="True">
+                    <Setter Property="Background" Value="Orange" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>-->
+
+        <Style x:Key="Body_Content_DataGrid_Centering" 
+               TargetType="{x:Type DataGridCell}">
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Height" Value="40"></Setter>
+            <Setter Property="BorderBrush" Value="Transparent"></Setter>
+            <Setter Property="BorderThickness" Value="0"></Setter>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type DataGridCell}">
+                        <Grid Background="{TemplateBinding Background}">
+                            <Grid.RowDefinitions>
+                                <RowDefinition></RowDefinition>
+                            </Grid.RowDefinitions>
+                            <Border Padding="0 0 20 0">
+                                <ContentPresenter VerticalAlignment="Center" />
+                            </Border>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="DataGridCell.IsSelected" Value="True">
+                    <Setter Property="Background" Value="#CCDAFF" />
+                    <Setter Property="Foreground" Value="Blue"></Setter>
+                    <Setter Property="FontWeight" Value="DemiBold"></Setter>
+                </Trigger>
+            </Style.Triggers>
         </Style>
-
-
 
 
         <!--Start Vertical Thumb-->
@@ -274,6 +321,7 @@
 										                                Grid.Column="1"
                                                                             HorizontalAlignment="Stretch"
                                                                             Grid.ColumnSpan="2"
+                                                                            Background="red"
 										                                Visibility="{Binding HeadersVisibility,
 										                                                     ConverterParameter={x:Static DataGridHeadersVisibility.Column},
 										                                                     Converter={x:Static DataGrid.HeadersVisibilityConverter},
@@ -281,7 +329,7 @@
                                             <!-- Grid.Row="1" Grid.ColumnSpan="2"-->
                                             <ScrollContentPresenter x:Name="PART_ScrollContentPresenter"
 										                       Grid.Row="1"
-										                        Grid.ColumnSpan="2"
+										                        Grid.ColumnSpan="3"
 										                        CanContentScroll="{TemplateBinding CanContentScroll}" />
                                             <!--Grid.Row="1" Grid.Column="2"-->
                                             <ScrollBar x:Name="PART_VerticalScrollBar"
@@ -1753,14 +1801,13 @@
                 </Style>
             </DataGrid.Resources>-->
                                         <DataGrid.Columns>
+                                            <DataGridTextColumn Header="Birthday" Binding="{Binding Birthday}" IsReadOnly="True"/>
                                             <DataGridTextColumn Header="Id" Binding="{Binding Id}" IsReadOnly="True"/>
                                             <DataGridTextColumn Header="First Name" Binding="{Binding FirrstName}" IsReadOnly="True"/>
                                             <DataGridTextColumn Header="Last Name" Binding="{Binding LastName}" IsReadOnly="True" />
                                             <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True" />
-                                            <DataGridTextColumn Header="Birthday" Binding="{Binding Birthday}" IsReadOnly="True"/>
                                         </DataGrid.Columns>
                                     </DataGrid>
-
                                 </StackPanel>
 
                             </StackPanel>
