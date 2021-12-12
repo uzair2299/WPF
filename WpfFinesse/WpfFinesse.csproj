@@ -1,0 +1,289 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{1D8F9515-90D8-4EB9-8BE3-C497C7504111}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>WpfFinesse</RootNamespace>
+    <AssemblyName>WpfFinesse</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Apache.NMS, Version=1.8.0.0, Culture=neutral, PublicKeyToken=82756feee3957618, processorArchitecture=MSIL">
+      <HintPath>..\packages\Apache.NMS.1.8.0\lib\net40\Apache.NMS.dll</HintPath>
+    </Reference>
+    <Reference Include="Apache.NMS.ActiveMQ, Version=1.8.0.0, Culture=neutral, PublicKeyToken=82756feee3957618, processorArchitecture=MSIL">
+      <HintPath>..\packages\Apache.NMS.ActiveMQ.1.8.0\lib\net40\Apache.NMS.ActiveMQ.dll</HintPath>
+    </Reference>
+    <Reference Include="FontAwesome.WPF, Version=4.7.0.37774, Culture=neutral, PublicKeyToken=0758b07a11a4f466, processorArchitecture=MSIL">
+      <HintPath>..\packages\FontAwesome.WPF.4.7.0.9\lib\net40\FontAwesome.WPF.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationFramework.Aero2" />
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Compile Include="combo.xaml.cs">
+      <DependentUpon>combo.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Combo\Window2.xaml.cs">
+      <DependentUpon>Window2.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Consultcall.xaml.cs">
+      <DependentUpon>Consultcall.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DGrid\GridEX_1.xaml.cs">
+      <DependentUpon>GridEX_1.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DGrid\GridEX_2.xaml.cs">
+      <DependentUpon>GridEX_2.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DGrid\GridEX_3.xaml.cs">
+      <DependentUpon>GridEX_3.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dock\Window1.xaml.cs">
+      <DependentUpon>Window1.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ExpertFlow\Window1.xaml.cs">
+      <DependentUpon>Window1.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="GridEX.xaml.cs">
+      <DependentUpon>GridEX.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MainWindow1.xaml.cs">
+      <DependentUpon>MainWindow1.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Models\CallInfoData.cs" />
+    <Compile Include="PhoneWindow.xaml.cs">
+      <DependentUpon>PhoneWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ScrollBar\ScrollBar.xaml.cs">
+      <DependentUpon>ScrollBar.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Tabs.xaml.cs">
+      <DependentUpon>Tabs.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="TextBoxTrigger\TextboxTriggerEX.xaml.cs">
+      <DependentUpon>TextboxTriggerEX.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Utility\GC_Utility.cs" />
+    <Compile Include="Buttons.xaml.cs">
+      <DependentUpon>Buttons.xaml</DependentUpon>
+    </Compile>
+    <Page Include="combo.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Combo\Window2.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Consultcall.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="DGrid\GridEX_1.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="DGrid\GridEX_2.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="DGrid\GridEX_3.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dock\Window1.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ExpertFlow\Window1.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="GridEX.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="LoginWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="AMQ\AMQManager.cs" />
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="GC_Commands\GC_AllCommand.cs" />
+    <Compile Include="LoginWindow.xaml.cs">
+      <DependentUpon>LoginWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Page Include="MainWindow1.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="PhoneWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ScrollBar\ScrollBar.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Tabs.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Buttons.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="TextBoxTrigger\TextboxTriggerEX.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Models\Agent.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\3006.png" />
+    <Resource Include="Resources\3050.png" />
+    <Resource Include="Resources\3051.png" />
+    <Resource Include="Resources\3052.png" />
+    <Resource Include="Resources\3053.png" />
+    <Resource Include="Resources\3055.png" />
+    <Resource Include="Resources\701.png" />
+    <Resource Include="Resources\717.png" />
+    <Resource Include="Resources\719.png" />
+    <Resource Include="Resources\720.png" />
+    <Resource Include="Resources\721.png" />
+    <Resource Include="Resources\729.png" />
+    <Resource Include="Resources\730.png" />
+    <Resource Include="Resources\748.png" />
+    <Resource Include="Resources\749.png" />
+    <Resource Include="Resources\agent-busy.png" />
+    <Resource Include="Resources\agent-inactive.png" />
+    <Resource Include="Resources\agent-not-ready.png" />
+    <Resource Include="Resources\agent-on-call.png" />
+    <Resource Include="Resources\agent-ready.png" />
+    <Resource Include="Resources\call-animated.gif" />
+    <Resource Include="Resources\call-answer-1.png" />
+    <Resource Include="Resources\call-answer-2.png" />
+    <Resource Include="Resources\call-answer-3.png" />
+    <Resource Include="Resources\call-answer-inactive.png" />
+    <Resource Include="Resources\call-answer.png" />
+    <Resource Include="Resources\call-conference-inactive.png" />
+    <Resource Include="Resources\call-conference.png" />
+    <Resource Include="Resources\call-consult-inactive.png" />
+    <Resource Include="Resources\call-consult.png" />
+    <Resource Include="Resources\call-end-inactive.png" />
+    <Resource Include="Resources\call-end.png" />
+    <Resource Include="Resources\call-hold-inactive.png" />
+    <Resource Include="Resources\call-hold.png" />
+    <Resource Include="Resources\call-resume-inactive.png" />
+    <Resource Include="Resources\call-resume.png" />
+    <Resource Include="Resources\call-transfer-inactive.png" />
+    <Resource Include="Resources\call-transfer.png" />
+    <Resource Include="Resources\Close_16.png" />
+    <Resource Include="Resources\ctticon.ico" />
+    <Resource Include="Resources\dailing.gif" />
+    <Resource Include="Resources\dial-disable.png" />
+    <Resource Include="Resources\dial-inactive.png" />
+    <Resource Include="Resources\dial.png" />
+    <Resource Include="Resources\dialing-01.png" />
+    <Resource Include="Resources\dialing-02.png" />
+    <Resource Include="Resources\dialing-03.png" />
+    <Resource Include="Resources\GrayCircleWhiteTick.png" />
+    <Resource Include="Resources\GreenCircleWhiteTick.png" />
+    <Resource Include="Resources\icon-dialer.png" />
+    <Resource Include="Resources\icon-enter.png" />
+    <Resource Include="Resources\icon-login.png" />
+    <Resource Include="Resources\icon-logout.png" />
+    <Resource Include="Resources\key-backspace.png" />
+    <Resource Include="Resources\key-clear.png" />
+    <Resource Include="Resources\search.ico" />
+    <Resource Include="Resources\stocks_plus_hover.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
