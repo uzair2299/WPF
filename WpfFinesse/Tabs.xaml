@@ -132,6 +132,7 @@
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
+
         </Style>
         <!--End RepeatButton-->
 
@@ -162,6 +163,7 @@
 					VerticalAlignment="Center"
 					Data="F1 M 3.5,0L 0,7L 7,7L 3.5,0 Z "
 					Fill="{StaticResource StandardBrush}" />
+                                
                             </RepeatButton>
                             <Track x:Name="PART_Track"
 			Grid.Row="1"
@@ -227,7 +229,7 @@
                             <Track x:Name="PART_Track"
 		Grid.Column="1"
 			Focusable="false"
-			IsDirectionReversed="true">
+			IsDirectionReversed="False">
                                 <Track.Thumb>
                                     <Thumb x:Name="Thumb"
 					Background="{DynamicResource ButtonDefaultBrush}"
@@ -336,6 +338,7 @@
 										           Grid.Row="1"
 										           Grid.Column="2"
                                                    Grid.RowSpan="3"
+                                                      
 										           Maximum="{TemplateBinding ScrollableHeight}"
 										           Orientation="Vertical"
 										           Style="{DynamicResource MyScrollBar}"
@@ -384,7 +387,8 @@
             <Setter Property="VerticalContentAlignment" Value="Center" />
             <Setter Property="Height" Value="35" />
             <Setter Property="SeparatorBrush" Value="DarkRed" />
-            <Setter Property="FontWeight" Value="Black" />
+            <Setter Property="FontWeight" Value="Medium" />
+            <Setter Property="Foreground" Value="Black" />
             <Setter Property="Background" Value="#DEDEDE"></Setter>
             <Setter Property="Height" Value="50"></Setter>
             <Setter Property="HorizontalAlignment" Value="Stretch"></Setter>
@@ -393,7 +397,7 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type DataGridColumnHeader}">
                         <Grid Background="#DEDEDE">
-                            <Border x:Name="columnHeaderBorder" BorderThickness="1" Padding="3,0,3,0" Background="#DEDEDE" Height="100" VerticalAlignment="Center" >
+                            <Border x:Name="columnHeaderBorder" BorderThickness="1" Padding="3,0,40,0" Background="#DEDEDE" Height="100" VerticalAlignment="Center">
                                 <!--<Border.BorderBrush>
                                     <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
                                         <GradientStop Offset="0" Color="#A5A5A5" />
@@ -407,10 +411,6 @@
                                     </LinearGradientBrush>
                                 </Border.Background>-->
                                 <StackPanel Orientation="Horizontal">
-                                    <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                                      VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                                                      SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}">
-                                    </ContentPresenter>
 
                                     <!--Data Grid Sort Arrow-->
                                     <Path x:Name="SortArrow"
@@ -420,10 +420,15 @@
                                           Width="8"
                                           Height="6"
                                           Fill="#9b9898"
-                                          Margin="3,5,0,0"
+                                          Margin="0,5,3,0"
                                           RenderTransformOrigin="0.5,0.4"
                                           HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                           VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                                    <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                      VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                                      SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}">
+                                    </ContentPresenter>
+
                                 </StackPanel>
                             </Border>
                         </Grid>
@@ -1790,17 +1795,17 @@
                                 </Grid>
                                 <StackPanel HorizontalAlignment="Stretch">
                                     <DataGrid  Name="dgSimple" VerticalAlignment="Center" VerticalContentAlignment="Center" CellStyle="{StaticResource Body_Content_DataGrid_Centering}" Height="350" EnableRowVirtualization="False">
-                                        <!--<DataGrid.Resources>
-                <Style TargetType="ScrollBar">
-                    <Setter Property="Background" Value="Green"></Setter>
-                    <Style.Triggers>
-                        <Trigger Property="Orientation" Value="Vertical">
-                            <Setter Property="Width" Value="50"/>
-                        </Trigger>
-                    </Style.Triggers>
-                </Style>
-            </DataGrid.Resources>-->
                                         <DataGrid.Columns>
+                                            <DataGridTemplateColumn>
+                                                <DataGridTemplateColumn.CellTemplate>
+                                                    <DataTemplate>
+                                                        <WrapPanel>
+                                                            <Ellipse Height="7" Width="7" Fill="Red" Margin="5,0"></Ellipse>
+                                                            <TextBlock Text="{Binding Id}"></TextBlock>
+                                                        </WrapPanel>
+                                                    </DataTemplate>
+                                                </DataGridTemplateColumn.CellTemplate>
+                                            </DataGridTemplateColumn>
                                             <DataGridTextColumn Header="Birthday" Binding="{Binding Birthday}" IsReadOnly="True"/>
                                             <DataGridTextColumn Header="Id" Binding="{Binding Id}" IsReadOnly="True"/>
                                             <DataGridTextColumn Header="First Name" Binding="{Binding FirrstName}" IsReadOnly="True"/>

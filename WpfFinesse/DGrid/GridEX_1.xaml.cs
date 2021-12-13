@@ -47,7 +47,7 @@ namespace WpfFinesse.DGrid
         }
     }
 
-    public class s
+    public class User
     {
         public int Id { get; set; }
 
