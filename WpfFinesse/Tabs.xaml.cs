@@ -49,7 +49,8 @@ namespace WpfFinesse
 
             //}
             dgSimple.ItemsSource = users;
-          
+            dgSimple1.ItemsSource = users;
+
         }
         private void btnCallVaribles_Click(object sender, RoutedEventArgs e)
         {
