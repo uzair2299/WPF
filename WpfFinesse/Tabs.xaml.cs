@@ -50,8 +50,18 @@ namespace WpfFinesse
             //}
             dgSimple.ItemsSource = users;
             dgSimple1.ItemsSource = users;
+            SearchTermTextBox.Text = "Enter text here...";
+
+            SearchTermTextBox.GotFocus += RemoveText;
+            SearchTermTextBox.LostFocus += AddText;
 
         }
+
+        private void SearchTermTextBox_GotFocus(object sender, RoutedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
         private void btnCallVaribles_Click(object sender, RoutedEventArgs e)
         {
             Button b = (Button)sender;
@@ -79,6 +89,21 @@ namespace WpfFinesse
                 }
             }
         }
+
+        public void RemoveText(object sender, EventArgs e)
+        {
+            if (SearchTermTextBox.Text == "Enter text here...")
+            {
+                SearchTermTextBox.Text = "";
+            }
+        }
+
+        public void AddText(object sender, EventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(SearchTermTextBox.Text))
+                SearchTermTextBox.Text = "Enter text here...";
+        }
+
     }
 
     public class UserTab
