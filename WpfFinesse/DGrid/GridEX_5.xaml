@@ -1,0 +1,32 @@
+﻿<Window x:Class="WpfFinesse.DGrid.GridEX_5"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WpfFinesse.DGrid"
+        mc:Ignorable="d"
+        Title="GridEX_5">
+    <StackPanel>
+        <DataGrid  Name="dgSimple" VerticalAlignment="Center" VerticalContentAlignment="Center" AutoGenerateColumns="False">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Id" Binding="{Binding Id}" IsReadOnly="True" MinWidth="60" Width="*"/>
+                <DataGridTextColumn Header="First Name" Binding="{Binding FirrstName}" IsReadOnly="True" MinWidth="60" Width="*"/>
+                <DataGridTextColumn Header="Last Name" Binding="{Binding LastName}" IsReadOnly="True" MinWidth="60" Width="*"/>
+                <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True" MinWidth="60" Width="*"/>
+                <DataGridTextColumn Header="Birthday" Binding="{Binding Birthday}" IsReadOnly="True" MinWidth="60" Width="*"/>
+            </DataGrid.Columns>
+            <DataGrid.RowDetailsTemplate>
+                <DataTemplate>
+                    <Border BorderThickness="0" Background="BlanchedAlmond" Padding="10">
+                        <StackPanel Orientation="Vertical">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock FontSize="12" Text="Address: " VerticalAlignment="Center" />
+                                <TextBlock FontSize="16" Foreground="MidnightBlue" Text="{Binding Address}" VerticalAlignment="Center" />
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                </DataTemplate>
+            </DataGrid.RowDetailsTemplate>
+        </DataGrid>
+    </StackPanel>
+</Window>

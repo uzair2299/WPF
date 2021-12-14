@@ -163,7 +163,7 @@
 					VerticalAlignment="Center"
 					Data="F1 M 3.5,0L 0,7L 7,7L 3.5,0 Z "
 					Fill="{StaticResource StandardBrush}" />
-                                
+
                             </RepeatButton>
                             <Track x:Name="PART_Track"
 			Grid.Row="1"
@@ -1812,6 +1812,74 @@
                                             <DataGridTextColumn Header="Last Name" Binding="{Binding LastName}" IsReadOnly="True" />
                                             <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True" />
                                         </DataGrid.Columns>
+                                        <DataGrid.RowDetailsTemplate >
+                                            <DataTemplate>
+                                                <Border x:Name="RowDetailsContainer" BorderThickness="0" Background="#F7F7F7" Padding="10 10 10 10">
+                                                    <Grid>
+                                                        <Grid.RowDefinitions>
+                                                            <RowDefinition Height="*"></RowDefinition>
+                                                            <RowDefinition Height="*"></RowDefinition>
+                                                            <RowDefinition Height="*"></RowDefinition>
+                                                        </Grid.RowDefinitions>
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="160"></ColumnDefinition>
+                                                            <ColumnDefinition Width="160"></ColumnDefinition>
+                                                        </Grid.ColumnDefinitions>
+
+                                                        <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0">
+                                                            <TextBlock FontSize="12" Text="Active Participants : " VerticalAlignment="Center" />
+                                                            <TextBlock FontSize="12" Text="{Binding ActiveParticipants}" VerticalAlignment="Center" />
+                                                        </StackPanel>
+                                                        <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="1"> 
+                                                            <TextBlock FontSize="12" Text="Held Participants : " VerticalAlignment="Center" />
+                                                            <TextBlock FontSize="12" Text="{Binding HeldParticipants}" VerticalAlignment="Center" />
+                                                        </StackPanel>
+                                                        <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="0">
+                                                            <TextBlock FontSize="12" Text="Duration : " VerticalAlignment="Center" />
+                                                            <TextBlock FontSize="12" Text="{Binding Duration}" VerticalAlignment="Center" />
+                                                        </StackPanel>
+                                                        <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1">
+                                                            <TextBlock FontSize="12" Text="Call Status : " VerticalAlignment="Center" />
+                                                            <TextBlock FontSize="12" Text="{Binding CallStatus}" VerticalAlignment="Center" />
+                                                        </StackPanel>
+                                                        <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="0">
+                                                            <TextBlock FontSize="12" Text="Queue Name : " VerticalAlignment="Center" />
+                                                            <TextBlock FontSize="12" Text="{Binding QueueName}" VerticalAlignment="Center" />
+                                                        </StackPanel>
+                                                    </Grid>
+                                                    
+                                                    
+                                                    
+                                                    <!--<StackPanel Orientation="Vertical">
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <TextBlock FontSize="12" Text="Active Participants : " VerticalAlignment="Center" />
+                                                            <TextBlock FontSize="12" Text="{Binding ActiveParticipants}" VerticalAlignment="Center" />
+                                                        </StackPanel>
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <TextBlock FontSize="12" Text="Held Participants : " VerticalAlignment="Center" />
+                                                            <TextBlock FontSize="12" Text="{Binding HeldParticipants}" VerticalAlignment="Center" />
+                                                        </StackPanel>
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <TextBlock FontSize="12" Text="Duration : " VerticalAlignment="Center" />
+                                                            <TextBlock FontSize="12" Text="{Binding Duration}" VerticalAlignment="Center" />
+                                                        </StackPanel>
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <TextBlock FontSize="12" Text="Call Status : " VerticalAlignment="Center" />
+                                                            <TextBlock FontSize="12" Text="{Binding CallStatus}" VerticalAlignment="Center" />
+                                                        </StackPanel>
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <TextBlock FontSize="12" Text="Queue Name : " VerticalAlignment="Center" />
+                                                            <TextBlock FontSize="12" Text="{Binding QueueName}" VerticalAlignment="Center" />
+                                                        </StackPanel>
+                                                    </StackPanel>-->
+                                                </Border>
+                                                <DataTemplate.Triggers>
+                                                    <DataTrigger Binding="{Binding CallStatus}" Value="Active">
+                                                        <Setter TargetName="RowDetailsContainer" Property="Visibility" Value="Collapsed"/>
+                                                    </DataTrigger>
+                                                </DataTemplate.Triggers>
+                                            </DataTemplate>
+                                        </DataGrid.RowDetailsTemplate>
                                     </DataGrid>
                                 </StackPanel>
 

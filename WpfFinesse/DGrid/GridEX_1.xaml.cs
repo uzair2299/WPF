@@ -57,5 +57,14 @@ namespace WpfFinesse.DGrid
         public string Name { get; set; }
 
         public DateTime Birthday { get; set; }
+
+        public string Address { get; set;}
+        public string Details
+        {
+            get
+            {
+                return String.Format("{0} was born on {1} and this is a long description of the person.", this.Name, this.Birthday.ToLongDateString());
+            }
+        }
     }
 }
