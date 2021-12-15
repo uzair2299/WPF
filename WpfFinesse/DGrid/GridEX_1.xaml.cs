@@ -66,5 +66,7 @@ namespace WpfFinesse.DGrid
                 return String.Format("{0} was born on {1} and this is a long description of the person.", this.Name, this.Birthday.ToLongDateString());
             }
         }
+
+
     }
 }

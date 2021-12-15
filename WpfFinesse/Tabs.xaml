@@ -1830,7 +1830,7 @@
 
                                     <StackPanel Grid.Row="3" HorizontalAlignment="Stretch" Orientation="Vertical"  Width="306">
                                         <Grid>
-                                            <TextBox   VerticalAlignment="Center" HorizontalAlignment="Stretch" x:Name="SearchTermTextBox" Margin="0 5 0 5" Padding="4 0 0 0" HorizontalContentAlignment="Left" VerticalContentAlignment="Center">
+                                            <TextBox   VerticalAlignment="Center" HorizontalAlignment="Stretch" x:Name="SearchTermTextBox" Margin="0 5 0 5" Padding="4 0 0 0" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" KeyDown="SearchTermTextBox_KeyDown">
                                                 <TextBox.Resources>
                                                     <Style TargetType="{x:Type Border}">
                                                         <Setter Property="CornerRadius" Value="5"/>
