@@ -20,6 +20,15 @@
         <SolidColorBrush x:Key="BackgroundBrush" Color="{StaticResource BackgroundColor}" />
 
 
+
+        <DataTemplate x:Key="StatusTemplate" >
+            <WrapPanel>
+                <Ellipse Height="7" Width="7" Fill="{Binding CallStatusColor}" Margin="5,0"></Ellipse>
+                <TextBlock Text="{Binding CallStatus}"></TextBlock>
+            </WrapPanel>
+        </DataTemplate>
+
+
         <!--<Style x:Key="Body_Content_DataGrid_Centering"
 	  TargetType="{x:Type DataGridCell}">
             <Setter Property="VerticalAlignment"
@@ -59,7 +68,7 @@
                             <Grid.RowDefinitions>
                                 <RowDefinition></RowDefinition>
                             </Grid.RowDefinitions>
-                            <Border Padding="0 0 20 0">
+                            <Border Padding="10 0 20 0">
                                 <ContentPresenter VerticalAlignment="Center" />
                             </Border>
                         </Grid>
@@ -68,6 +77,8 @@
             </Setter>
             <Style.Triggers>
                 <Trigger Property="DataGridCell.IsSelected" Value="True">
+                    <Setter Property="BorderThickness" Value="1"></Setter>
+                    <Setter Property="BorderBrush" Value="#CCDAFF"></Setter>
                     <Setter Property="Background" Value="#CCDAFF" />
                     <Setter Property="Foreground" Value="Blue"></Setter>
                     <Setter Property="FontWeight" Value="DemiBold"></Setter>
@@ -261,6 +272,8 @@
         <!--Start DataGrid-->
         <Style TargetType="DataGrid">
             <Setter Property="CanUserResizeRows" Value="False"></Setter>
+            <Setter Property="CanUserResizeColumns" Value="False"></Setter>
+            <Setter Property="CanUserReorderColumns" Value="False"></Setter>
             <Setter Property="Background" Value="White"></Setter>
             <Setter Property="Foreground" Value="Black"></Setter>
             <Setter Property="IsReadOnly" Value="True"></Setter>
@@ -272,7 +285,7 @@
             <Setter Property="AutoGenerateColumns" Value="False"></Setter>
             <!--height and width of the data grid-->
             <Setter Property="Width" Value="355"></Setter>
-            <Setter Property="Height" Value="500"></Setter>
+            <Setter Property="Height" Value="350"></Setter>
 
 
 
@@ -390,14 +403,15 @@
             <Setter Property="FontWeight" Value="Medium" />
             <Setter Property="Foreground" Value="Black" />
             <Setter Property="Background" Value="#DEDEDE"></Setter>
-            <Setter Property="Height" Value="50"></Setter>
+            <Setter Property="Height" Value="40"></Setter>
             <Setter Property="HorizontalAlignment" Value="Stretch"></Setter>
             <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
+           
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type DataGridColumnHeader}">
                         <Grid Background="#DEDEDE">
-                            <Border x:Name="columnHeaderBorder" BorderThickness="1" Padding="3,0,40,0" Background="#DEDEDE" Height="100" VerticalAlignment="Center">
+                            <Border x:Name="columnHeaderBorder" BorderThickness="1" Padding="10,0,40,0" Background="#DEDEDE" Height="100" VerticalAlignment="Center">
                                 <!--<Border.BorderBrush>
                                     <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
                                         <GradientStop Offset="0" Color="#A5A5A5" />
@@ -1163,12 +1177,18 @@
             </Style.Triggers>
         </Style>
     </Window.Resources>
-    <Grid>
+    <Grid Margin="0">
         <UniformGrid Rows="1" Columns="2" Margin="5,0">
+            <!--<UniformGrid.Resources>
+                <Style TargetType="Border">
+                    <Setter Property="BorderBrush" Value="HotPink"/>
+                    <Setter Property="BorderThickness" Value="2,2,2,2"/>
+                </Style>
+            </UniformGrid.Resources>-->
             <FrameworkElement x:Name="c1"/>
             <!--no need to add the other three-->
         </UniformGrid>
-        <TabControl BorderBrush="Transparent" BorderThickness="0">
+        <TabControl BorderThickness="0">
             <TabControl.Resources>
                 <Style TargetType="TabItem">
                     <Setter Property="HeaderTemplate">
@@ -1187,7 +1207,7 @@
                                         VerticalAlignment="Center"
                                         HorizontalAlignment="Center"
                                         ContentSource="Header"
-                                        Margin="10,2"/>
+                                        />
                                 </Grid>
                                 <ControlTemplate.Triggers>
                                     <Trigger Property="IsSelected" Value="True">
@@ -1431,304 +1451,73 @@
                 </Border>
             </TabItem>
             <TabItem Header="Supervisor Dashboard" Width="{Binding ElementName=c1, Path=ActualWidth}">
-                <StackPanel>
-                    <!--<Border BorderBrush="#C8C6C6" BorderThickness="0 0 0 1" Margin="0 0 0 8" Height="50">
-                        <DockPanel LastChildFill="False">
-                            <StackPanel DockPanel.Dock="Left" Orientation="Horizontal">
-                                <TextBlock x:Name="txtAgentName1" Foreground="#56C3D8" FontSize="15" FontWeight="UltraBold" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="7 0 0 0" Text="Agent Name"></TextBlock>
-                                <TextBlock x:Name="txtAgentExtension1" Foreground="#9D9D9D" Text="(EXT. 2206)" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="10" Margin="7 2 0 0" FontWeight="Bold"></TextBlock>
-                            </StackPanel>
-                            <ComboBox  x:Name="cbReasonCodes1" Margin="0 0 15 0" DockPanel.Dock="Right" IsEditable="True" IsReadOnly="True" Text="Talking" Style="{DynamicResource ComboBoxStyle1}" HorizontalAlignment="Center" VerticalAlignment="Center"  Grid.Row="0" Grid.Column="1" Width="100" BorderBrush="#EEEEEE">
-                                <ComboBoxItem Content="Ready"></ComboBoxItem>
-                            </ComboBox>
-                        </DockPanel>
-                    </Border>-->
-
-                    <UniformGrid Rows="1" Columns="2" Margin="1,0">
-                        <FrameworkElement x:Name="c11"/>
-                        <!--no need to add the other three-->
-                    </UniformGrid>
-                    <TabControl BorderBrush="Transparent" BorderThickness="0">
-                        <TabControl.Resources>
-                            <Style TargetType="TabItem">
-                                <Setter Property="HeaderTemplate">
-                                    <Setter.Value>
-                                        <DataTemplate>
-                                            <TextBlock FontWeight="Bold" Text="{Binding}" FontSize="13"/>
-                                        </DataTemplate>
-
-                                    </Setter.Value>
-                                </Setter>
-                                <Setter Property="Template">
-                                    <Setter.Value>
-                                        <ControlTemplate TargetType="TabItem">
-                                            <Grid x:Name="panel">
-                                                <ContentPresenter x:Name="ContentSite"
+                <Border BorderBrush="Transparent" BorderThickness="0">
+                    <StackPanel>
+                        <UniformGrid Rows="1" Columns="2" Margin="5 0,5,0">
+                            <FrameworkElement x:Name="c11"/>
+                            <!--no need to add the other three-->
+                        </UniformGrid>
+                        <TabControl  BorderThickness="0" Margin="1 0">
+                            <TabControl.Resources>
+                                <Style TargetType="TabItem">
+                                    <Setter Property="HeaderTemplate">
+                                        <Setter.Value>
+                                            <DataTemplate>
+                                                <TextBlock FontWeight="Bold" Text="{Binding}" FontSize="13" Background="Orange"/>
+                                            </DataTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="TabItem">
+                                                <Border 
+                            Name="Border"
+                            BorderBrush="Transparent" 
+                            BorderThickness="0">
+                                                    <Grid x:Name="panel">
+                                                        <ContentPresenter x:Name="ContentSite"
                                         VerticalAlignment="Center"
                                         HorizontalAlignment="Center"
                                         ContentSource="Header"
-                                        Margin="10,2"/>
-                                            </Grid>
-                                            <ControlTemplate.Triggers>
-                                                <Trigger Property="IsSelected" Value="True">
-                                                    <Setter TargetName="panel" Property="Background" Value="#F4F4F4" />
-                                                </Trigger>
-                                                <Trigger Property="IsSelected" Value="False">
-                                                    <Setter TargetName="panel" Property="Background" Value="White" />
-                                                    <Setter Property="Foreground" Value="#d3d3d3"/>
-                                                </Trigger>
-                                            </ControlTemplate.Triggers>
-                                        </ControlTemplate>
-                                    </Setter.Value>
-                                </Setter>
-                            </Style>
-
-                        </TabControl.Resources>
-                        <TabItem Header="Queue Stats" Width="{Binding ElementName=c1, Path=ActualWidth}" Height="50">
-                            <Border BorderBrush="#C8C6C6" BorderThickness="1">
-                                <!--<StackPanel>
-                                    --><!--<Border BorderBrush="#C8C6C6" BorderThickness="0 0 0 1" Margin="0 0 0 8" Height="50">
-                                        <DockPanel LastChildFill="False">
-                                            <StackPanel DockPanel.Dock="Left" Orientation="Horizontal">
-                                                <TextBlock x:Name="txtAgentName1" Foreground="#56C3D8" FontSize="15" FontWeight="UltraBold" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="7 0 0 0" Text="Agent Name"></TextBlock>
-                                                <TextBlock x:Name="txtAgentExtension1" Foreground="#9D9D9D" Text="(EXT. 2206)" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="10" Margin="7 2 0 0" FontWeight="Bold"></TextBlock>
-                                            </StackPanel>
-                                            <ComboBox  x:Name="cbReasonCodes1" Margin="0 0 15 0" DockPanel.Dock="Right" IsEditable="True" IsReadOnly="True" Text="Talking" Style="{DynamicResource ComboBoxStyle1}" HorizontalAlignment="Center" VerticalAlignment="Center"  Grid.Row="0" Grid.Column="1" Width="100" BorderBrush="#EEEEEE">
-                                                <ComboBoxItem Content="Ready"></ComboBoxItem>
-                                            </ComboBox>
-                                        </DockPanel>
-                                    </Border>--><!--
-
-                                    <StackPanel  Orientation="Horizontal" HorizontalAlignment="Center" Margin="0 0 0 8">
-                                        <Border BorderBrush="#C8C6C6" BorderThickness="1" Margin="0 0 3 0" Padding=" 3 0 3 0">
-                                            <Button Style="{StaticResource btnpad}" Padding="10" Background="Transparent" FontWeight="UltraBold"  Height="25" Width="25">
-                                                <Image Source="/Resources/icon-dialer.png" Height="25" Width="25" />
-                                            </Button>
-                                        </Border>
-                                        <TextBox  x:Name="txtDailNumber1" Width="120" Margin="2 0 0 0" BorderBrush="#C8C6C6" BorderThickness="1" Text="1702" VerticalAlignment="Center" Padding="10" FontWeight="Bold"></TextBox>
-                                    </StackPanel>
-
-
-
-                                    <Border BorderBrush="#C8C6C6" BorderThickness="1" Background="#EEEEEE" Margin="5 0 5 0" Name="CallPanel1"  Visibility="Visible">
-                                        <StackPanel>
-                                            <Border BorderBrush="#9D9D9D" BorderThickness="1" Grid.Row="0" Margin="7 7 7 7" CornerRadius="2">
-                                                <Grid x:Name="toolbox1">
-                                                    <Grid.RowDefinitions>
-                                                        <RowDefinition Height="40"></RowDefinition>
-                                                        <RowDefinition Height="*"></RowDefinition>
-                                                    </Grid.RowDefinitions>
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition></ColumnDefinition>
-                                                        <ColumnDefinition></ColumnDefinition>
-                                                        <ColumnDefinition></ColumnDefinition>
-                                                    </Grid.ColumnDefinitions>
-                                                    <StackPanel Grid.Row="0" Grid.Column="0" Margin="7 3 10 0" >
-                                                        <TextBlock x:Name="txtCallTiming1" Foreground="#9D9D9D" Text="00:00:05" FontSize="14"></TextBlock>
-                                                        <StackPanel Orientation="Horizontal">
-                                                            <Image Source="/Resources/3050.png" Height="12" Width="12" Margin="0 0 3 0"/>
-                                                            <TextBlock FontWeight="Bold" FontFamily="Tahoma"  x:Name="txtCallingNumber1" Text="+923205500003"></TextBlock>
-                                                        </StackPanel>
-
-                                                    </StackPanel>
-                                                    <StackPanel Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Vertical" Margin="0 5 0 0">
-                                                        <Label Content="Testing" Width="100" HorizontalContentAlignment="Center"  HorizontalAlignment="Center" Background="Violet">
-                                                            <Label.ToolTip>
-                                                                <ToolTip ToolTipService.ShowDuration="12000" Placement="Bottom"  HorizontalOffset="0" VerticalOffset="10" BorderBrush="Transparent" Margin="0 10 0 0" Background="Transparent">
-                                                                    <StackPanel Width="110" Background="Aqua">
-                                                                        <Polygon   Points="5,0 10,10, 0,10" Stroke="Aqua" Fill="Aqua" Grid.Row="0" HorizontalAlignment="Center" Margin="0,-8,0,8" Panel.ZIndex="1000" StrokeThickness="2" StrokeDashArray="1 0"   />
-                                                                        <Border x:Name="border1" HorizontalAlignment="Center" VerticalAlignment="Top">
-                                                                            <TextBlock Text="22252 &#x0a;55514"></TextBlock>
-                                                                        </Border>
-                                                                    </StackPanel>
-                                                                </ToolTip>
-                                                            </Label.ToolTip>
-                                                        </Label>
-
-                                                        --><!--<Button Click="btnCallVaribles_Click" x:Name="btnCallVaribles" Style="{StaticResource callbtn}" Width="110" Height="20" VerticalAlignment="Center" HorizontalAlignment="Center" Background="#EEEEEE">
-
-                                                <Button.ToolTip>
-                                                    <ToolTip Placement="Bottom" HorizontalOffset="15" VerticalOffset="15" BorderBrush="Transparent" Margin="0 10 0 0" Background="Transparent">
-                                                        <StackPanel Width="110" Background="Aqua">
-                                                            -->
-                                                        <!--<Path Margin="10,0,0,0" Fill="#e5323232" Data="M 0 0 L -6 6 L -12 0 Z" HorizontalAlignment="Center" VerticalAlignment="Center"/>-->
-                                                        <!--
-                                                            <Polygon   Points="5,0 10,10, 0,10" Stroke="Aqua" Fill="Aqua" Grid.Row="0" HorizontalAlignment="Center" Margin="0,-8,0,8" Panel.ZIndex="1000" StrokeThickness="2" StrokeDashArray="1 0"   />
-                                                            <Border x:Name="border1" HorizontalAlignment="Center" VerticalAlignment="Top">
-                                                                <TextBlock Text="22252 &#x0a;55514"></TextBlock>
-                                                            </Border>
-                                                        </StackPanel>
-                                                    </ToolTip>
-                                                </Button.ToolTip>
-                                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                                    <TextBlock FontFamily="Tahoma"  x:Name="txtlbl" Text="Call Variables" VerticalAlignment="Center" Margin="5 0 8 0"></TextBlock>
-                                                    <Path x:Name="arrow" VerticalAlignment="Center"  HorizontalAlignment="Right" Stroke="#9D9D9D" StrokeThickness="2" Fill="#9D9D9D" Data="M 0 0 L 4 4 L 8 0 Z" Margin="0 1 8 0"/>
-                                                    -->
-                                                        <!--<Path Margin="10,0,0,0" Fill="#e5323232" Data="M 0 0 L 6 6 L 12 0 Z"/>-->
-                                                        <!--<Polygon Points="0,0 8,5, 0,10" Stroke="Black" Fill="Black" />
-                                        <Polygon Points="8,0 0,5, 8,10" Stroke="Black" Fill="Black" />-->
-                                                        <!--
-                                                </StackPanel>
-                                            </Button>--><!--
-                                                    </StackPanel>
-
-
-                                                    --><!--<ComboBox HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="0" Grid.Column="1" Width="100" Text="Call Variables" BorderBrush="#EEEEEE">
-                                <ComboBoxItem Content="Call Variables" IsSelected="True"></ComboBoxItem>
-                            </ComboBox>--><!--
-                                                    <StackPanel Grid.Row="0" Grid.Column="3"  Margin="0 0 10 0" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
-                                                        <Button   Style="{StaticResource callvariable}" x:Name="btnCallPick1" Padding="7" Margin="0 0 2 0" Background="#34BE82" Foreground="White" FontWeight="UltraBold" BorderBrush="Transparent" Width="25" Height="25" Visibility="Visible">
-                                                            <Image Source="/Resources/call-answer-1.png" />
-                                                        </Button>
-                                                        <Button  Style="{StaticResource callvariable}" x:Name="btnHoldcall1"  Padding="7" Margin="2 0 2 0" Background="#B91646" Foreground="White" FontWeight="UltraBold" Width="25" Height="25" Visibility="Visible">
-                                                            <Image Source="/Resources/call-hold.png" />
-                                                        </Button>
-                                                        <Button   Style="{StaticResource callvariable}" x:Name="btnResumecall1"  Padding="7" Margin="2 0 2 0" Background="#B91646" Foreground="White" FontWeight="UltraBold" Width="25" Height="25" Visibility="Visible">
-                                                            <Image Source="/Resources/call-resume.png" />
-                                                        </Button>
-
-                                                        <Button   Style="{StaticResource callvariable}" x:Name="btnConsultcall1"  Padding="7" Margin="2 0 2 0" Background="#B91646" Foreground="White" FontWeight="UltraBold" Width="25" Height="25" Visibility="Visible">
-                                                            <Image Source="/Resources/call-consult.png" />
-                                                        </Button>
-
-                                                        <Button  Style="{StaticResource callvariable}" x:Name="btntransfercall1"  Padding="7" Margin="2 0 2 0" Background="#B91646" Foreground="White" FontWeight="UltraBold" Width="25" Height="25" Visibility="Collapsed">
-                                                            <Image Source="/Resources/call-conference.png" />
-                                                        </Button>
-                                                        <Button  Style="{StaticResource callvariable}" x:Name="btnCallEnd1"  Padding="7" Margin="2 0 2 0" Background="#B91646" Foreground="White" FontWeight="UltraBold"  Width="25" Height="25" Visibility="Collapsed">
-                                                            <Image Source="/Resources/call-end.png" />
-                                                        </Button>
-                                                    </StackPanel>
-                                                    <Border Padding="15 12 15 12" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Background="#e5e3e3" Margin="7 7 7 20" BorderBrush="#9D9D9D" BorderThickness="1" x:Name="CallVariablePanel1" Visibility="Collapsed">
-                                                        <Grid x:Name="tempgrid1">
-                                                            <Grid.RowDefinitions>
-                                                                <RowDefinition Height="*"></RowDefinition>
-                                                            </Grid.RowDefinitions>
-                                                            <Grid.ColumnDefinitions>
-                                                                <ColumnDefinition></ColumnDefinition>
-                                                                <ColumnDefinition></ColumnDefinition>
-                                                            </Grid.ColumnDefinitions>
-                                                            <StackPanel Grid.Row="0" Grid.Column="0">
-                                                                <TextBlock FontSize="14" FontWeight="DemiBold" Foreground="#6f6c6c" Text="Call Variable 1" Margin="0 0 0 7"></TextBlock>
-                                                                <TextBlock FontSize="14" FontWeight="DemiBold" Foreground="#6f6c6c" Text="Call Variable 2" Margin="0 0 0 7"></TextBlock>
-                                                                <TextBlock FontSize="14" FontWeight="DemiBold" Foreground="#6f6c6c" Text="Call Variable 3" Margin="0 0 0 7"></TextBlock>
-                                                                <TextBlock FontSize="14" FontWeight="DemiBold" Foreground="#6f6c6c" Text="Call Variable 4" Margin="0 0 0 7"></TextBlock>
-                                                                <TextBlock FontSize="14" FontWeight="DemiBold" Foreground="#6f6c6c" Text="Call Variable 5" Margin="0 0 0 7"></TextBlock>
-                                                            </StackPanel>
-                                                            <StackPanel Grid.Row="0" Grid.Column="1" HorizontalAlignment="Right">
-                                                                <TextBlock FontSize="14" FontWeight="DemiBold" Foreground="#6f6c6c" Text="Call Variable 6" Margin="0 0 0 7"></TextBlock>
-                                                                <TextBlock FontSize="14" FontWeight="DemiBold" Foreground="#6f6c6c" Text="Call Variable 7" Margin="0 0 0 7"></TextBlock>
-                                                                <TextBlock FontSize="14" FontWeight="DemiBold" Foreground="#6f6c6c" Text="Call Variable 8" Margin="0 0 0 7"></TextBlock>
-                                                                <TextBlock FontSize="14" FontWeight="DemiBold" Foreground="#6f6c6c" Text="Call Variable 9" Margin="0 0 0 7"></TextBlock>
-                                                                <TextBlock FontSize="14" FontWeight="DemiBold" Foreground="#6f6c6c" Text="Call Variable 10" Margin="0 0 0 7"></TextBlock>
-                                                            </StackPanel>
-                                                        </Grid>
-                                                    </Border>
-                                                </Grid>
-                                            </Border>
-
-
-
-                                            <Border BorderBrush="#9D9D9D" BorderThickness="1" Grid.Row="0" Margin="7 20 7 7" CornerRadius="2" Visibility="Visible" x:Name="ConsultCallBar1">
-                                                <Grid x:Name="ConsultCallPanelTool1">
-                                                    <Grid.RowDefinitions>
-                                                        <RowDefinition Height="40"></RowDefinition>
-                                                        <RowDefinition Height="*"></RowDefinition>
-                                                    </Grid.RowDefinitions>
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition></ColumnDefinition>
-                                                        <ColumnDefinition></ColumnDefinition>
-                                                        <ColumnDefinition></ColumnDefinition>
-                                                    </Grid.ColumnDefinitions>
-                                                    <StackPanel Grid.Row="0" Grid.Column="0" Margin="7 3 10 0" >
-                                                        <TextBlock x:Name="txtConsultCallTiming1" Foreground="#9D9D9D" Text="00:00:50" FontSize="14"></TextBlock>
-                                                        <StackPanel Orientation="Horizontal">
-                                                            <Image Source="/Resources/3050.png" Height="12" Width="12" Margin="0 0 3 0"/>
-                                                            <TextBlock FontWeight="Bold" FontFamily="Tahoma"  x:Name="txtConsultCallingNumber1" Text="2204"></TextBlock>
-                                                        </StackPanel>
-
-                                                    </StackPanel>
-                                                    <StackPanel Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Vertical" Margin="0 5 0 0">
-                                                        <Button Click="btnCallVaribles_Click"  x:Name="btnConsultCallVaribles1" Style="{StaticResource callbtn}" Width="110" Height="20" VerticalAlignment="Center" HorizontalAlignment="Center" Background="#EEEEEE">
-                                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                                                <TextBlock FontFamily="Tahoma"  x:Name="txtConsultlbl1" Text="Call Variables" VerticalAlignment="Center" Margin="5 0 8 0"></TextBlock>
-                                                                <Path x:Name="Consultarrow1" VerticalAlignment="Center"  HorizontalAlignment="Right" Stroke="#9D9D9D" StrokeThickness="2" Fill="#9D9D9D" Data="M 0 0 L 4 4 L 8 0 Z" Margin="0 1 8 0"/>
-                                                                --><!--<Polygon Points="0,0 8,5, 0,10" Stroke="Black" Fill="Black" />-->
-                                                                <!--<Polygon Points="8,0 0,5, 8,10" Stroke="Black" Fill="Black" />--><!--
-                                                            </StackPanel>
-                                                        </Button>
-                                                    </StackPanel>
-
-                                                    <StackPanel Grid.Row="0" Grid.Column="3"  Margin="0 0 10 0" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
-                                                        <Button    Style="{StaticResource callvariable}" x:Name="btnConsultCallPick1" Padding="7" Margin="0 0 2 0" Background="#34BE82" Foreground="White" FontWeight="UltraBold" BorderBrush="Transparent" Width="25" Height="25" Visibility="Collapsed">
-                                                            <Image Source="/Resources/call-answer-1.png" />
-                                                        </Button>
-                                                        <Button   Style="{StaticResource callvariable}" x:Name="btnConsultHoldcall1"  Padding="7" Margin="2 0 2 0" Background="#B91646" Foreground="White" FontWeight="UltraBold" Width="25" Height="25" Visibility="Collapsed">
-                                                            <Image Source="/Resources/call-hold.png" />
-                                                        </Button>
-                                                        <Button   Style="{StaticResource callvariable}" x:Name="btnConsultResumecall1"  Padding="7" Margin="2 0 2 0" Background="#B91646" Foreground="White" FontWeight="UltraBold" Width="25" Height="25" Visibility="Visible">
-                                                            <Image Source="/Resources/call-resume.png" />
-                                                        </Button>
-
-
-                                                        <Button  Style="{StaticResource callvariable}" x:Name="btnConsulttransfercall1"  Padding="7" Margin="2 0 2 0" Background="#B91646" Foreground="White" FontWeight="UltraBold" Width="25" Height="25" Visibility="Visible">
-                                                            <Image Source="/Resources/call-conference.png" />
-                                                        </Button>
-                                                        <Button   Style="{StaticResource callvariable}" x:Name="btnConsultCallEnd1"  Padding="7" Margin="2 0 2 0" Background="#B91646" Foreground="White" FontWeight="UltraBold"  Width="25" Height="25" Visibility="Visible">
-                                                            <Image Source="/Resources/call-end.png" />
-                                                        </Button>
-
-                                                    </StackPanel>
-                                                    <Border Padding="15 12 15 12" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Background="#e5e3e3" Margin="7 7 7 20" BorderBrush="#9D9D9D" BorderThickness="1" x:Name="ConsultCallVariablePanel1" Visibility="Collapsed">
-                                                        <Grid x:Name="tempConsultgrid1">
-                                                            <Grid.RowDefinitions>
-                                                                <RowDefinition Height="*"></RowDefinition>
-                                                            </Grid.RowDefinitions>
-                                                            <Grid.ColumnDefinitions>
-                                                                <ColumnDefinition></ColumnDefinition>
-                                                                <ColumnDefinition></ColumnDefinition>
-                                                            </Grid.ColumnDefinitions>
-                                                            <StackPanel Grid.Row="0" Grid.Column="0">
-                                                                <TextBlock FontSize="14" FontWeight="DemiBold" Foreground="#6f6c6c" Text="Call Variable 1" Margin="0 0 0 7"></TextBlock>
-                                                                <TextBlock FontSize="14" FontWeight="DemiBold" Foreground="#6f6c6c" Text="Call Variable 2" Margin="0 0 0 7"></TextBlock>
-                                                                <TextBlock FontSize="14" FontWeight="DemiBold" Foreground="#6f6c6c" Text="Call Variable 3" Margin="0 0 0 7"></TextBlock>
-                                                                <TextBlock FontSize="14" FontWeight="DemiBold" Foreground="#6f6c6c" Text="Call Variable 4" Margin="0 0 0 7"></TextBlock>
-                                                                <TextBlock FontSize="14" FontWeight="DemiBold" Foreground="#6f6c6c" Text="Call Variable 5" Margin="0 0 0 7"></TextBlock>
-                                                            </StackPanel>
-                                                            <StackPanel Grid.Row="0" Grid.Column="1" HorizontalAlignment="Right">
-                                                                <TextBlock FontSize="14" FontWeight="DemiBold" Foreground="#6f6c6c" Text="Call Variable 6" Margin="0 0 0 7"></TextBlock>
-                                                                <TextBlock FontSize="14" FontWeight="DemiBold" Foreground="#6f6c6c" Text="Call Variable 7" Margin="0 0 0 7"></TextBlock>
-                                                                <TextBlock FontSize="14" FontWeight="DemiBold" Foreground="#6f6c6c" Text="Call Variable 8" Margin="0 0 0 7"></TextBlock>
-                                                                <TextBlock FontSize="14" FontWeight="DemiBold" Foreground="#6f6c6c" Text="Call Variable 9" Margin="0 0 0 7"></TextBlock>
-                                                                <TextBlock FontSize="14" FontWeight="DemiBold" Foreground="#6f6c6c" Text="Call Variable 10" Margin="0 0 0 7"></TextBlock>
-                                                            </StackPanel>
-                                                        </Grid>
-                                                    </Border>
-                                                </Grid>
-                                            </Border>
-                                        </StackPanel>
-                                    </Border>
-                                </StackPanel>-->
-
-                                <StackPanel HorizontalAlignment="Stretch">
-                                    <DataGrid  Name="dgSimple1" VerticalAlignment="Center" VerticalContentAlignment="Center" CellStyle="{StaticResource Body_Content_DataGrid_Centering}" Height="350" EnableRowVirtualization="False">
-                                        <DataGrid.Columns>
-                                            <DataGridTemplateColumn>
-                                                <DataGridTemplateColumn.CellTemplate>
-                                                    <DataTemplate>
-                                                        <WrapPanel>
-                                                            <Ellipse Height="7" Width="7" Fill="Red" Margin="5,0"></Ellipse>
-                                                            <TextBlock Text="{Binding Id}"></TextBlock>
-                                                        </WrapPanel>
-                                                    </DataTemplate>
-                                                </DataGridTemplateColumn.CellTemplate>
-                                            </DataGridTemplateColumn>
-                                            <DataGridTextColumn Header="Birthday" Binding="{Binding Birthday}" IsReadOnly="True"/>
-                                            <DataGridTextColumn Header="Id" Binding="{Binding Id}" IsReadOnly="True"/>
-                                            <DataGridTextColumn Header="First Name" Binding="{Binding FirrstName}" IsReadOnly="True"/>
-                                            <DataGridTextColumn Header="Last Name" Binding="{Binding LastName}" IsReadOnly="True" />
-                                            <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True" />
-                                        </DataGrid.Columns>
-                                        <!--<DataGrid.RowDetailsTemplate >
+                                        Margin="0,0"/>
+                                                    </Grid>
+                                                </Border>
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="IsSelected" Value="True">
+                                                        <Setter TargetName="panel" Property="Background" Value="White" />
+                                                    </Trigger>
+                                                    <Trigger Property="IsSelected" Value="False">
+                                                        <Setter TargetName="panel" Property="Background" Value="Blue" />
+                                                        <Setter Property="Foreground" Value="#d3d3d3"/>
+                                                    </Trigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </TabControl.Resources>
+                            <TabItem Header="Queue Stats" Width="{Binding ElementName=c11, Path=ActualWidth}" Height="50">
+                                <Border BorderBrush="#C8C6C6" BorderThickness="1">
+                                    <StackPanel HorizontalAlignment="Stretch">
+                                        <DataGrid  Name="dgSimple1" VerticalAlignment="Center" VerticalContentAlignment="Center" CellStyle="{StaticResource Body_Content_DataGrid_Centering}" Height="350" EnableRowVirtualization="False">
+                                            <DataGrid.Columns>
+                                                <DataGridTemplateColumn>
+                                                    <DataGridTemplateColumn.CellTemplate>
+                                                        <DataTemplate>
+                                                            <WrapPanel>
+                                                                <Ellipse Height="7" Width="7" Fill="Red" Margin="5,0"></Ellipse>
+                                                                <TextBlock Text="{Binding Id}"></TextBlock>
+                                                            </WrapPanel>
+                                                        </DataTemplate>
+                                                    </DataGridTemplateColumn.CellTemplate>
+                                                </DataGridTemplateColumn>
+                                                <DataGridTextColumn Header="Birthday" Binding="{Binding Birthday}" IsReadOnly="True"/>
+                                                <DataGridTextColumn Header="Id" Binding="{Binding Id}" IsReadOnly="True"/>
+                                                <DataGridTextColumn Header="First Name" Binding="{Binding FirrstName}" IsReadOnly="True"/>
+                                                <DataGridTextColumn Header="Last Name" Binding="{Binding LastName}" IsReadOnly="True" />
+                                                <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True" />
+                                            </DataGrid.Columns>
+                                            <!--<DataGrid.RowDetailsTemplate >
                                             <DataTemplate>
                                                 <Border x:Name="RowDetailsContainer" BorderThickness="0" Background="#F7F7F7" Padding="10 10 10 10">
                                                     <Grid>
@@ -1764,86 +1553,88 @@
                                                         </StackPanel>
                                                     </Grid>
                                                 </Border>
-                                                --><!--<DataTemplate.Triggers>
+                                                -->
+                                            <!--<DataTemplate.Triggers>
                                                     <DataTrigger Binding="{Binding CallStatus}" Value="Active">
                                                         <Setter TargetName="RowDetailsContainer" Property="Visibility" Value="Collapsed"/>
                                                     </DataTrigger>
-                                                </DataTemplate.Triggers>--><!--
+                                                </DataTemplate.Triggers>-->
+                                            <!--
                                             </DataTemplate>
                                         </DataGrid.RowDetailsTemplate>-->
-                                    </DataGrid>
-                                </StackPanel>
-                            </Border>
-                        </TabItem>
+                                        </DataGrid>
+                                    </StackPanel>
+                                </Border>
+                            </TabItem>
 
-                        <!--Start Team Performance Tab-->
-                        <TabItem Header="Team Performance" Width="{Binding ElementName=c1, Path=ActualWidth}" BorderBrush="Transparent" BorderThickness="0">
-                            <StackPanel HorizontalAlignment="Stretch" >
-                                <!--<StackPanel HorizontalAlignment="Stretch" Margin="10" >
+                            <!--Start Team Performance Tab-->
+                            <TabItem Header="Team Performance" Width="{Binding ElementName=c11, Path=ActualWidth}" BorderBrush="Yellow" BorderThickness="5" Height="50">
+                                <StackPanel HorizontalAlignment="Stretch" >
+                                    <!--<StackPanel HorizontalAlignment="Stretch" Margin="10" >
                                     <ComboBox x:Name="cbReasonCodes1" DockPanel.Dock="Right" IsEditable="True" IsReadOnly="True" Text="Talking"  HorizontalAlignment="Stretch" VerticalAlignment="Center"  BorderBrush="#EEEEEE" Style="{DynamicResource ComboBoxStyleTeamPerformance}">
                                         <ComboBoxItem Content="Ready"/>
                                     </ComboBox>
                                 </StackPanel>-->
-                                <!--Background="#F7F7F7"-->
-                                <Grid Margin="0 5 0 0" Background="#F7F7F7">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="40"></RowDefinition>
-                                        <RowDefinition Height="30"></RowDefinition>
-                                        <RowDefinition Height="30"></RowDefinition>
-                                        <RowDefinition Height="*"></RowDefinition>
-                                    </Grid.RowDefinitions>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"></ColumnDefinition>
-                                    </Grid.ColumnDefinitions>
-                                    <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Center" Orientation="Vertical"  Width="306">
-                                        <ComboBox Height="25"  x:Name="cbReasonCodes1" DockPanel.Dock="Right" IsEditable="True" IsReadOnly="True" Text="MEDICARE TEAM"  HorizontalAlignment="Stretch" VerticalAlignment="Center"  BorderBrush="#EEEEEE" Style="{DynamicResource ComboBoxStyleTeamPerformance}">
-                                            <ComboBoxItem Content="Ready"/>
-                                        </ComboBox>
-                                    </StackPanel>
+                                    <!--Background="#F7F7F7"-->
+                                    <Grid Background="#F7F7F7">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="40"></RowDefinition>
+                                            <RowDefinition Height="30"></RowDefinition>
+                                            <RowDefinition Height="30"></RowDefinition>
+                                            <RowDefinition Height="*"></RowDefinition>
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"></ColumnDefinition>
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Center" Orientation="Vertical"  Width="306">
+                                            <ComboBox Height="25"  x:Name="cbReasonCodes1" DockPanel.Dock="Right" IsEditable="True" IsReadOnly="True" Text="MEDICARE TEAM"  HorizontalAlignment="Stretch" VerticalAlignment="Center"  BorderBrush="#EEEEEE" Style="{DynamicResource ComboBoxStyleTeamPerformance}">
+                                                <ComboBoxItem Content="Ready"/>
+                                            </ComboBox>
+                                        </StackPanel>
 
-                                    <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Width="Auto"   Grid.Row="1"    VerticalAlignment="Center">
-                                        <Button Style="{StaticResource btnTeamPerformance}" Width="100" Height="25"  Margin="0 0 0 3" Background="White" BorderBrush="#A7A5A5" BorderThickness="1">
-                                            <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="Stop Monitoring" Padding="10 2 10 2" Foreground="#A7A5A5"></TextBlock>
-                                        </Button>
-                                        <Button Style="{StaticResource btnTeamPerformance}" Width="100" Height="25"  Margin="3 0 0 0" Background="#CB2424" BorderBrush="#CB2424" BorderThickness="1">
-                                            <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="Not Ready" Padding="10 2 10 2" Foreground="White"></TextBlock>
-                                        </Button>
-                                        <Button Style="{StaticResource btnTeamPerformance}" Width="100" Height="25" Margin="3 0 0 0" Background="White" BorderBrush="#7be5bd" BorderThickness="1">
-                                            <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="Ready" Padding="10 2 10 2" Foreground="#7be5bd"></TextBlock>
-                                        </Button>
-                                    </StackPanel>
+                                        <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Width="Auto"   Grid.Row="1"    VerticalAlignment="Center">
+                                            <Button Style="{StaticResource btnTeamPerformance}" Width="100" Height="25"  Margin="0 0 0 3" Background="White" BorderBrush="#A7A5A5" BorderThickness="1">
+                                                <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="Stop Monitoring" Padding="10 2 10 2" Foreground="#A7A5A5"></TextBlock>
+                                            </Button>
+                                            <Button Style="{StaticResource btnTeamPerformance}" Width="100" Height="25"  Margin="3 0 0 0" Background="#CB2424" BorderBrush="#CB2424" BorderThickness="1">
+                                                <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="Not Ready" Padding="10 2 10 2" Foreground="White"></TextBlock>
+                                            </Button>
+                                            <Button Style="{StaticResource btnTeamPerformance}" Width="100" Height="25" Margin="3 0 0 0" Background="White" BorderBrush="#7be5bd" BorderThickness="1">
+                                                <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="Ready" Padding="10 2 10 2" Foreground="#7be5bd"></TextBlock>
+                                            </Button>
+                                        </StackPanel>
 
-                                    <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Width="Auto"  Grid.Row="2"    VerticalAlignment="Center">
-                                        <Button Style="{StaticResource btnTeamPerformance}" Width="100" Height="25"  Margin="3 0 0 0" Background="#A7A5A5" BorderThickness="0">
-                                            <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="SignOut" Padding="10 2 10 2" Foreground="White"></TextBlock>
-                                        </Button>
+                                        <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Width="Auto"  Grid.Row="2"    VerticalAlignment="Center">
+                                            <Button Style="{StaticResource btnTeamPerformance}" Width="100" Height="25"  Margin="3 0 0 0" Background="#A7A5A5" BorderThickness="0">
+                                                <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="SignOut" Padding="10 2 10 2" Foreground="White"></TextBlock>
+                                            </Button>
 
-                                        <!--<Rectangle VerticalAlignment="Stretch" Width="2" Margin="3 0 0 0" Stroke="#DEDEDE" Fill="#DEDEDE"/>-->
+                                            <!--<Rectangle VerticalAlignment="Stretch" Width="2" Margin="3 0 0 0" Stroke="#DEDEDE" Fill="#DEDEDE"/>-->
 
-                                        <Button Style="{StaticResource btnTeamPerformance}" Width="100" Height="25" Margin="3 0 0 0" Background="Black" BorderThickness="0">
-                                            <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="Bergeln" Padding="10 2 10 2" Foreground="White"></TextBlock>
-                                        </Button>
-                                        <Button Style="{StaticResource btnTeamPerformance}" Width="100" Height="25"  Margin="3 0 5 0" Background="White" BorderBrush="#A7A5A5" BorderThickness="1">
-                                            <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="Drop Participant" Padding="10 2 10 2" Foreground="#A7A5A5"></TextBlock>
-                                        </Button>
-                                    </StackPanel>
+                                            <Button Style="{StaticResource btnTeamPerformance}" Width="100" Height="25" Margin="3 0 0 0" Background="Black" BorderThickness="0">
+                                                <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="Bergeln" Padding="10 2 10 2" Foreground="White"></TextBlock>
+                                            </Button>
+                                            <Button Style="{StaticResource btnTeamPerformance}" Width="100" Height="25"  Margin="3 0 5 0" Background="White" BorderBrush="#A7A5A5" BorderThickness="1">
+                                                <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="Drop Participant" Padding="10 2 10 2" Foreground="#A7A5A5"></TextBlock>
+                                            </Button>
+                                        </StackPanel>
 
-                                    <StackPanel Grid.Row="3" HorizontalAlignment="Stretch" Orientation="Vertical"  Width="306">
-                                        <Grid>
-                                            <TextBox   VerticalAlignment="Center" HorizontalAlignment="Stretch" x:Name="SearchTermTextBox" Margin="0 5 0 5" Padding="4 0 0 0" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" KeyDown="SearchTermTextBox_KeyDown">
-                                                <TextBox.Resources>
-                                                    <Style TargetType="{x:Type Border}">
-                                                        <Setter Property="CornerRadius" Value="5"/>
-                                                        <Setter Property="Height" Value="25"/>
+                                        <StackPanel Grid.Row="3" HorizontalAlignment="Stretch" Orientation="Vertical"  Width="306">
+                                            <Grid>
+                                                <TextBox   VerticalAlignment="Center" HorizontalAlignment="Stretch" x:Name="SearchTermTextBox" Margin="0 5 0 5" Padding="4 0 0 0" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" KeyDown="SearchTermTextBox_KeyDown">
+                                                    <TextBox.Resources>
+                                                        <Style TargetType="{x:Type Border}">
+                                                            <Setter Property="CornerRadius" Value="5"/>
+                                                            <Setter Property="Height" Value="25"/>
 
-                                                        <Setter Property="BorderThickness" Value="1"></Setter>
-                                                        <!--<Setter Property="HorizontalAlignment" Value="Center"></Setter>
+                                                            <Setter Property="BorderThickness" Value="1"></Setter>
+                                                            <!--<Setter Property="HorizontalAlignment" Value="Center"></Setter>
                         <Setter Property="VerticalAlignment" Value="Center"></Setter>-->
 
-                                                    </Style>
-                                                </TextBox.Resources>
-                                            </TextBox>
-                                            <!--<TextBlock Text="Enter Search Term Here" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" Foreground="DarkGray">
+                                                        </Style>
+                                                    </TextBox.Resources>
+                                                </TextBox>
+                                                <!--<TextBlock Text="Enter Search Term Here" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" Foreground="DarkGray">
                                             <TextBlock.Style>
                                                 <Style TargetType="{x:Type TextBlock}">
                                                     <Setter Property="Visibility" Value="Collapsed"/>
@@ -1855,67 +1646,71 @@
                                                 </Style>
                                             </TextBlock.Style>
                                         </TextBlock>-->
-                                        </Grid>
-                                    </StackPanel>
-                                </Grid>
-                                <StackPanel HorizontalAlignment="Stretch">
-                                    <DataGrid  Name="dgSimple" VerticalAlignment="Center" VerticalContentAlignment="Center" CellStyle="{StaticResource Body_Content_DataGrid_Centering}" Height="350" EnableRowVirtualization="False">
-                                        <DataGrid.Columns>
-                                            <DataGridTemplateColumn>
-                                                <DataGridTemplateColumn.CellTemplate>
-                                                    <DataTemplate>
-                                                        <WrapPanel>
-                                                            <Ellipse Height="7" Width="7" Fill="Red" Margin="5,0"></Ellipse>
-                                                            <TextBlock Text="{Binding Id}"></TextBlock>
-                                                        </WrapPanel>
-                                                    </DataTemplate>
-                                                </DataGridTemplateColumn.CellTemplate>
-                                            </DataGridTemplateColumn>
-                                            <DataGridTextColumn Header="Birthday" Binding="{Binding Birthday}" IsReadOnly="True"/>
-                                            <DataGridTextColumn Header="Id" Binding="{Binding Id}" IsReadOnly="True"/>
-                                            <DataGridTextColumn Header="First Name" Binding="{Binding FirrstName}" IsReadOnly="True"/>
-                                            <DataGridTextColumn Header="Last Name" Binding="{Binding LastName}" IsReadOnly="True" />
-                                            <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True" />
-                                        </DataGrid.Columns>
-                                        <DataGrid.RowDetailsTemplate >
-                                            <DataTemplate>
-                                                <Border x:Name="RowDetailsContainer" BorderThickness="0" Background="#F7F7F7" Padding="10 10 10 10">
-                                                    <Grid>
-                                                        <Grid.RowDefinitions>
-                                                            <RowDefinition Height="*"></RowDefinition>
-                                                            <RowDefinition Height="*"></RowDefinition>
-                                                            <RowDefinition Height="*"></RowDefinition>
-                                                        </Grid.RowDefinitions>
-                                                        <Grid.ColumnDefinitions>
-                                                            <ColumnDefinition Width="160"></ColumnDefinition>
-                                                            <ColumnDefinition Width="160"></ColumnDefinition>
-                                                        </Grid.ColumnDefinitions>
+                                            </Grid>
+                                        </StackPanel>
+                                    </Grid>
+                                    <StackPanel HorizontalAlignment="Stretch">
+                                        <DataGrid Background="Blue" Name="dgSimple" VerticalAlignment="Center" VerticalContentAlignment="Center" CellStyle="{StaticResource Body_Content_DataGrid_Centering}" Height="350" EnableRowVirtualization="False">
+                                            <DataGrid.Columns>
+                                                <!--<DataGridTemplateColumn>
+                                                    <DataGridTemplateColumn.CellTemplate>
+                                                        <DataTemplate>
+                                                            <WrapPanel>
+                                                                <Ellipse Height="7" Width="7" Fill="Red" Margin="5,0"></Ellipse>
+                                                                <TextBlock Text="{Binding Id}"></TextBlock>
+                                                            </WrapPanel>
+                                                        </DataTemplate>
+                                                    </DataGridTemplateColumn.CellTemplate>
+                                                </DataGridTemplateColumn>-->
 
-                                                        <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0">
-                                                            <TextBlock FontSize="12" Text="Active Participants : " VerticalAlignment="Center" />
-                                                            <TextBlock FontSize="12" Text="{Binding ActiveParticipants}" VerticalAlignment="Center" />
-                                                        </StackPanel>
-                                                        <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="1"> 
-                                                            <TextBlock FontSize="12" Text="Held Participants : " VerticalAlignment="Center" />
-                                                            <TextBlock FontSize="12" Text="{Binding HeldParticipants}" VerticalAlignment="Center" />
-                                                        </StackPanel>
-                                                        <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="0">
-                                                            <TextBlock FontSize="12" Text="Duration : " VerticalAlignment="Center" />
-                                                            <TextBlock FontSize="12" Text="{Binding Duration}" VerticalAlignment="Center" />
-                                                        </StackPanel>
-                                                        <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1">
-                                                            <TextBlock FontSize="12" Text="Call Status : " VerticalAlignment="Center" />
-                                                            <TextBlock FontSize="12" Text="{Binding CallStatus}" VerticalAlignment="Center" />
-                                                        </StackPanel>
-                                                        <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="0">
-                                                            <TextBlock FontSize="12" Text="Queue Name : " VerticalAlignment="Center" />
-                                                            <TextBlock FontSize="12" Text="{Binding QueueName}" VerticalAlignment="Center" />
-                                                        </StackPanel>
-                                                    </Grid>
-                                                    
-                                                    
-                                                    
-                                                    <!--<StackPanel Orientation="Vertical">
+                                                <DataGridTextColumn Header="Agent Name" Binding="{Binding LastName}" IsReadOnly="True" />
+                                                <DataGridTemplateColumn Header="Status" CellTemplate="{StaticResource StatusTemplate}"/>
+                                                <DataGridTextColumn Header="Status" Binding="{Binding FirrstName}" IsReadOnly="True"/>
+                                                <DataGridTextColumn Header="Time" Binding="{Binding Time}" IsReadOnly="True"/>
+                                                <DataGridTextColumn Header="Extension" Binding="{Binding LastName}" IsReadOnly="True" />
+                                                <DataGridTemplateColumn Header="Status" CellTemplate="{StaticResource StatusTemplate}"/>
+                                                <!--<DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True" />
+                                                <DataGridTextColumn Header="Id" Binding="{Binding Id}" IsReadOnly="True"/>-->
+                                            </DataGrid.Columns>
+                                            <DataGrid.RowDetailsTemplate >
+                                                <DataTemplate>
+                                                    <Border x:Name="RowDetailsContainer" BorderThickness="0" Background="#F7F7F7" Padding="10 10 10 10">
+                                                        <Grid>
+                                                            <Grid.RowDefinitions>
+                                                                <RowDefinition Height="*"></RowDefinition>
+                                                                <RowDefinition Height="*"></RowDefinition>
+                                                                <RowDefinition Height="*"></RowDefinition>
+                                                            </Grid.RowDefinitions>
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="160"></ColumnDefinition>
+                                                                <ColumnDefinition Width="160"></ColumnDefinition>
+                                                            </Grid.ColumnDefinitions>
+
+                                                            <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0">
+                                                                <TextBlock FontSize="12" Text="Active Participants : " VerticalAlignment="Center" />
+                                                                <TextBlock FontSize="12" Text="{Binding ActiveParticipants}" VerticalAlignment="Center" />
+                                                            </StackPanel>
+                                                            <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="1">
+                                                                <TextBlock FontSize="12" Text="Held Participants : " VerticalAlignment="Center" />
+                                                                <TextBlock FontSize="12" Text="{Binding HeldParticipants}" VerticalAlignment="Center" />
+                                                            </StackPanel>
+                                                            <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="0">
+                                                                <TextBlock FontSize="12" Text="Duration : " VerticalAlignment="Center" />
+                                                                <TextBlock FontSize="12" Text="{Binding Duration}" VerticalAlignment="Center" />
+                                                            </StackPanel>
+                                                            <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1">
+                                                                <TextBlock FontSize="12" Text="Call Status : " VerticalAlignment="Center" />
+                                                                <TextBlock FontSize="12" Text="{Binding CallStatus}" VerticalAlignment="Center" />
+                                                            </StackPanel>
+                                                            <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="0">
+                                                                <TextBlock FontSize="12" Text="Queue Name : " VerticalAlignment="Center" />
+                                                                <TextBlock FontSize="12" Text="{Binding QueueName}" VerticalAlignment="Center" />
+                                                            </StackPanel>
+                                                        </Grid>
+
+
+
+                                                        <!--<StackPanel Orientation="Vertical">
                                                         <StackPanel Orientation="Horizontal">
                                                             <TextBlock FontSize="12" Text="Active Participants : " VerticalAlignment="Center" />
                                                             <TextBlock FontSize="12" Text="{Binding ActiveParticipants}" VerticalAlignment="Center" />
@@ -1937,22 +1732,24 @@
                                                             <TextBlock FontSize="12" Text="{Binding QueueName}" VerticalAlignment="Center" />
                                                         </StackPanel>
                                                     </StackPanel>-->
-                                                </Border>
-                                                <DataTemplate.Triggers>
-                                                    <DataTrigger Binding="{Binding CallStatus}" Value="Active">
-                                                        <Setter TargetName="RowDetailsContainer" Property="Visibility" Value="Collapsed"/>
-                                                    </DataTrigger>
-                                                </DataTemplate.Triggers>
-                                            </DataTemplate>
-                                        </DataGrid.RowDetailsTemplate>
-                                    </DataGrid>
-                                </StackPanel>
+                                                    </Border>
+                                                    <DataTemplate.Triggers>
+                                                        <DataTrigger Binding="{Binding isRowDetail}" Value="false">
+                                                            <Setter TargetName="RowDetailsContainer" Property="Visibility" Value="Collapsed"/>
+                                                        </DataTrigger>
+                                                    </DataTemplate.Triggers>
+                                                </DataTemplate>
+                                            </DataGrid.RowDetailsTemplate>
+                                        </DataGrid>
+                                    </StackPanel>
 
-                            </StackPanel>
-                        </TabItem>
-                        <!--End Team Performance Tab-->
-                    </TabControl>
-                </StackPanel>
+                                </StackPanel>
+                            </TabItem>
+                            <!--End Team Performance Tab-->
+                        </TabControl>
+                    </StackPanel>
+                </Border>
+
             </TabItem>
         </TabControl>
     </Grid>

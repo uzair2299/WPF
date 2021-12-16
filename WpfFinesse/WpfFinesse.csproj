@@ -69,14 +69,26 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Check\Window1.xaml.cs">
+      <DependentUpon>Window1.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Check\Window2.xaml.cs">
+      <DependentUpon>Window2.xaml</DependentUpon>
+    </Compile>
     <Compile Include="combo.xaml.cs">
       <DependentUpon>combo.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Combo\Window1.xaml.cs">
+      <DependentUpon>Window1.xaml</DependentUpon>
     </Compile>
     <Compile Include="Combo\Window2.xaml.cs">
       <DependentUpon>Window2.xaml</DependentUpon>
     </Compile>
     <Compile Include="Consultcall.xaml.cs">
       <DependentUpon>Consultcall.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CustomTab\Window1.xaml.cs">
+      <DependentUpon>Window1.xaml</DependentUpon>
     </Compile>
     <Compile Include="DGrid\GridEX_1.xaml.cs">
       <DependentUpon>GridEX_1.xaml</DependentUpon>
@@ -106,6 +118,9 @@
       <DependentUpon>MainWindow1.xaml</DependentUpon>
     </Compile>
     <Compile Include="Models\CallInfoData.cs" />
+    <Compile Include="Paths.xaml.cs">
+      <DependentUpon>Paths.xaml</DependentUpon>
+    </Compile>
     <Compile Include="PhoneWindow.xaml.cs">
       <DependentUpon>PhoneWindow.xaml</DependentUpon>
     </Compile>
@@ -122,7 +137,19 @@
     <Compile Include="Buttons.xaml.cs">
       <DependentUpon>Buttons.xaml</DependentUpon>
     </Compile>
+    <Page Include="Check\Window1.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Check\Window2.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="combo.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Combo\Window1.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -131,6 +158,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Consultcall.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="CustomTab\Window1.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -188,6 +219,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="MainWindow1.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Paths.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
