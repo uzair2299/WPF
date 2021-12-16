@@ -1663,12 +1663,10 @@
                                                     </DataGridTemplateColumn.CellTemplate>
                                                 </DataGridTemplateColumn>-->
 
-                                                <DataGridTextColumn Header="Agent Name" Binding="{Binding LastName}" IsReadOnly="True" />
-                                                <DataGridTemplateColumn Header="Status" CellTemplate="{StaticResource StatusTemplate}"/>
-                                                <DataGridTextColumn Header="Status" Binding="{Binding FirrstName}" IsReadOnly="True"/>
+                                                <DataGridTextColumn Header="Agent Name" Binding="{Binding AgentName}" IsReadOnly="True" />
+                                                <DataGridTemplateColumn SortMemberPath="CallStatus" CanUserSort="True" Header="Status" CellTemplate="{StaticResource StatusTemplate}"/>
                                                 <DataGridTextColumn Header="Time" Binding="{Binding Time}" IsReadOnly="True"/>
-                                                <DataGridTextColumn Header="Extension" Binding="{Binding LastName}" IsReadOnly="True" />
-                                                <DataGridTemplateColumn Header="Status" CellTemplate="{StaticResource StatusTemplate}"/>
+                                                <DataGridTextColumn Header="Extension" Binding="{Binding Extension}" IsReadOnly="True" />
                                                 <!--<DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True" />
                                                 <DataGridTextColumn Header="Id" Binding="{Binding Id}" IsReadOnly="True"/>-->
                                             </DataGrid.Columns>
