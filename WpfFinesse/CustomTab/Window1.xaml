@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:WpfFinesse.CustomTab"
         mc:Ignorable="d"
         Title="Window1" Height="300" Width="300">
-    <Window.Resources>
+    <!--<Window.Resources>
         <Style TargetType="{x:Type TabItem}">
             <Setter Property="Foreground" Value="Black"/>
             <Setter Property="FontSize" Value="13px"/>
@@ -28,7 +28,7 @@
                                 ContentSource="Header"/>
                             </Border>
                         </Grid>
-                        <!--<ControlTemplate.Triggers>
+                        --><!--<ControlTemplate.Triggers>
                             <Trigger Property="IsFocused" Value="True" >
                                 <Setter Property="Background" TargetName="Border" Value="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}" />
                             </Trigger>
@@ -39,17 +39,19 @@
                                 <Setter Property="Background" TargetName="Border" Value="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}" />
                                 <Setter Property="Margin" TargetName="Border" Value="10,10,10,-1" />
                             </Trigger>
-                        </ControlTemplate.Triggers>-->
+                        </ControlTemplate.Triggers>--><!--
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
         </Style>
-    </Window.Resources>
+    </Window.Resources>-->
     <Grid>
-        <TabControl Margin="10" BorderThickness="0" Background="LightGray">
+        <TabControl Margin="10">
           
             <TabItem Header="General">
-                <Label Content="Content goes here..." />
+                <DockPanel x:Name="userinfo" HorizontalAlignment="Left" Width="380" >
+                    <Label x:Name="lbExt1"  Content="hello"/>
+                </DockPanel>
             </TabItem>
             <TabItem Header="Security" />
             <TabItem Header="Details" />

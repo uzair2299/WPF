@@ -44,33 +44,33 @@ namespace WpfFinesse
             throw new NotImplementedException();
         }
 
-        private void btnCallVaribles_Click(object sender, RoutedEventArgs e)
-        {
-            Button b = (Button)sender;
-            string name = b.Name;
-            if (name == "btnConsultCallVaribles")
-            {
-                if (ConsultCallVariablePanel.Visibility == Visibility.Visible)
-                {
-                    ConsultCallVariablePanel.Visibility = Visibility.Collapsed;
-                }
-                else
-                {
-                    ConsultCallVariablePanel.Visibility = Visibility.Visible;
-                }
-            }
-            else if (name == "btnCallVaribles")
-            {
-                if (CallVariablePanel.Visibility == Visibility.Visible)
-                {
-                    CallVariablePanel.Visibility = Visibility.Collapsed;
-                }
-                else
-                {
-                    CallVariablePanel.Visibility = Visibility.Visible;
-                }
-            }
-        }
+        //private void btnCallVaribles_Click(object sender, RoutedEventArgs e)
+        //{
+        //    Button b = (Button)sender;
+        //    string name = b.Name;
+        //    if (name == "btnConsultCallVaribles")
+        //    {
+        //        if (ConsultCallVariablePanel.Visibility == Visibility.Visible)
+        //        {
+        //            ConsultCallVariablePanel.Visibility = Visibility.Collapsed;
+        //        }
+        //        else
+        //        {
+        //            ConsultCallVariablePanel.Visibility = Visibility.Visible;
+        //        }
+        //    }
+        //    else if (name == "btnCallVaribles")
+        //    {
+        //        if (CallVariablePanel.Visibility == Visibility.Visible)
+        //        {
+        //            CallVariablePanel.Visibility = Visibility.Collapsed;
+        //        }
+        //        else
+        //        {
+        //            CallVariablePanel.Visibility = Visibility.Visible;
+        //        }
+        //    }
+        //}
 
         public void RemoveText(object sender, EventArgs e)
         {

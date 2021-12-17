@@ -406,7 +406,7 @@
             <Setter Property="Height" Value="40"></Setter>
             <Setter Property="HorizontalAlignment" Value="Stretch"></Setter>
             <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
-           
+
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type DataGridColumnHeader}">
@@ -425,10 +425,76 @@
                                     </LinearGradientBrush>
                                 </Border.Background>-->
                                 <StackPanel Orientation="Horizontal">
+                                        <DockPanel  HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0 0 1 0">
+                                        <StackPanel>
 
+                                            <Path x:Name="DecreaseSortingArrow"
+                                              Grid.Row="0"
+                                              Grid.Column="0"
+                                              Stretch="Fill"
+                                              Width="8"
+                                              Height="6"
+                                              Visibility="Visible"
+                                              Data="F1 M 3.5,0L 0,7L 7,7L 3.5,0 Z "
+                                              Fill="#9b9898"
+                                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                              />
+
+                                            <Path x:Name="IncreaseSortingArrow"
+                                                  Margin="0 1 0 0"
+                                              Grid.Row="1"
+                                              Grid.Column="0"
+                                              Stretch="Fill"
+                                              Width="8"
+                                              Height="6"
+                                              Visibility="Visible"
+                                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                              Data="F1 M 3.5,7L 7,0L 0,0L 3.5,7 Z "
+                                              Fill="#9b9898" />
+                                        </StackPanel>
+
+                                        </DockPanel>
+
+                                    <!--<Grid Background="Yellow">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="7"/>
+                                            <RowDefinition Height="7"/>
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="10"></ColumnDefinition>
+                                        </Grid.ColumnDefinitions>
+                                        <Path x:Name="DecreaseSortingArrow"
+                                              Grid.Row="0"
+                                              Grid.Column="0"
+                                              Stretch="Fill"
+                                              Width="8"
+                                              Height="6"
+                                              Visibility="Visible"
+                                              Data="F1 M 3.5,0L 0,7L 7,7L 3.5,0 Z "
+                                              Fill="black"
+                                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                              />
+
+                                        <Path x:Name="IncreaseSortingArrow"
+                                              Grid.Row="1"
+                                              Grid.Column="0"
+                                              Stretch="Fill"
+                                              Width="8"
+                                              Height="6"
+                                              Visibility="Visible"
+                                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                              Data="F1 M 3.5,7L 7,0L 0,0L 3.5,7 Z "
+                                              Fill="Red" />
+
+                                    </Grid>-->
+                                    
                                     <!--Data Grid Sort Arrow-->
-                                    <Path x:Name="SortArrow"
-                                          Visibility="Collapsed"
+                                    <!--<Path x:Name="SortArrow"
+                                          Visibility="Visible"
                                           Data="M0,0 L1,0 0.5,1 z"
                                           Stretch="Fill"
                                           Width="8"
@@ -437,7 +503,7 @@
                                           Margin="0,5,3,0"
                                           RenderTransformOrigin="0.5,0.4"
                                           HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>-->
                                     <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                                       VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                                                       SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}">
@@ -447,16 +513,19 @@
                             </Border>
                         </Grid>
                         <ControlTemplate.Triggers>
-                            <Trigger Property="SortDirection" Value="Ascending">
+                            <!--<Trigger Property="SortDirection" Value="Ascending">
                                 <Setter TargetName="SortArrow" Property="Visibility" Value="Visible" />
                                 <Setter TargetName="SortArrow" Property="RenderTransform">
                                     <Setter.Value>
                                         <RotateTransform Angle="180" />
                                     </Setter.Value>
                                 </Setter>
-                            </Trigger>
+                            </Trigger>-->
                             <Trigger Property="SortDirection" Value="Descending">
-                                <Setter TargetName="SortArrow" Property="Visibility" Value="Visible" />
+                                <Setter TargetName="DecreaseSortingArrow" Property="Fill" Value="#605555" />
+                            </Trigger>
+                            <Trigger Property="SortDirection" Value="Ascending">
+                                <Setter TargetName="IncreaseSortingArrow" Property="Fill" Value="#605555" />
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -1190,6 +1259,72 @@
         </UniformGrid>
         <TabControl BorderThickness="0">
             <TabControl.Resources>
+                <Style TargetType="TabControl">
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="TabControl">
+                                <Grid KeyboardNavigation.TabNavigation="Local">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="*" />
+                                    </Grid.RowDefinitions>
+                                    <TabPanel x:Name="HeaderPanel"
+                    Grid.Row="0"
+
+                    IsItemsHost="True"
+                    KeyboardNavigation.TabIndex="1"
+                     />
+                                    <Border x:Name="Border"
+                  Grid.Row="1"
+                  BorderThickness="0"
+                  >
+                                        <ContentPresenter x:Name="PART_SelectedContentHost"
+                              ContentSource="SelectedContent" />
+                                    </Border>
+                                </Grid>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+
+
+                <Style TargetType="TabItem">
+                    <Setter Property="HeaderTemplate">
+                        <Setter.Value>
+                            <DataTemplate>
+                                <TextBlock FontWeight="Bold" Text="{Binding}" FontSize="13"/>
+                            </DataTemplate>
+                        </Setter.Value>
+                    </Setter>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="TabItem">
+                                <Grid x:Name="panel">
+                                    <ContentPresenter x:Name="ContentSite"
+                                        VerticalAlignment="Center"
+                                        HorizontalAlignment="Center"
+                                        ContentSource="Header"
+                                        Margin="0,0"/>
+                                </Grid>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsSelected" Value="True">
+                                        <Setter TargetName="panel" Property="Background" Value="#F4F4F4" />
+                                    </Trigger>
+                                    <Trigger Property="IsSelected" Value="False">
+                                        <Setter TargetName="panel" Property="Background" Value="White" />
+                                        <Setter Property="Foreground" Value="#d3d3d3"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </TabControl.Resources>
+
+            <!--<TabControl.Resources>
+                
+                
+                
                 <Style TargetType="TabItem">
                     <Setter Property="HeaderTemplate">
                         <Setter.Value>
@@ -1223,9 +1358,12 @@
                     </Setter>
                 </Style>
 
-            </TabControl.Resources>
-            <TabItem Header="Cisco CTI By Expertflow" Width="{Binding ElementName=c1, Path=ActualWidth}" Height="50">
-                <Border BorderBrush="#C8C6C6" BorderThickness="1">
+            </TabControl.Resources>-->
+            <TabItem BorderBrush="Green" BorderThickness="5" Header="Cisco CTI By Expertflow" Width="{Binding ElementName=c1, Path=ActualWidth}" Height="50" VerticalAlignment="Top">
+                <DockPanel x:Name="userinfo" HorizontalAlignment="Left" Width="380" >
+                    <Label x:Name="lbExt1" HorizontalAlignment="Right" Margin="0 0 12 0"/>
+                </DockPanel>
+                <!--<Border BorderBrush="#C8C6C6" BorderThickness="1">
                     <StackPanel>
                         <Border BorderBrush="#C8C6C6" BorderThickness="0 0 0 1" Margin="0 0 0 8" Height="50">
                             <DockPanel LastChildFill="False">
@@ -1285,14 +1423,15 @@
                                                 </Label.ToolTip>
                                             </Label>
 
-                                            <!--<Button Click="btnCallVaribles_Click" x:Name="btnCallVaribles" Style="{StaticResource callbtn}" Width="110" Height="20" VerticalAlignment="Center" HorizontalAlignment="Center" Background="#EEEEEE">
+                                            -->
+                <!--<Button Click="btnCallVaribles_Click" x:Name="btnCallVaribles" Style="{StaticResource callbtn}" Width="110" Height="20" VerticalAlignment="Center" HorizontalAlignment="Center" Background="#EEEEEE">
 
                                                 <Button.ToolTip>
                                                     <ToolTip Placement="Bottom" HorizontalOffset="15" VerticalOffset="15" BorderBrush="Transparent" Margin="0 10 0 0" Background="Transparent">
                                                         <StackPanel Width="110" Background="Aqua">
                                                             -->
-                                            <!--<Path Margin="10,0,0,0" Fill="#e5323232" Data="M 0 0 L -6 6 L -12 0 Z" HorizontalAlignment="Center" VerticalAlignment="Center"/>-->
-                                            <!--
+                <!--<Path Margin="10,0,0,0" Fill="#e5323232" Data="M 0 0 L -6 6 L -12 0 Z" HorizontalAlignment="Center" VerticalAlignment="Center"/>-->
+                <!--
                                                             <Polygon   Points="5,0 10,10, 0,10" Stroke="Aqua" Fill="Aqua" Grid.Row="0" HorizontalAlignment="Center" Margin="0,-8,0,8" Panel.ZIndex="1000" StrokeThickness="2" StrokeDashArray="1 0"   />
                                                             <Border x:Name="border1" HorizontalAlignment="Center" VerticalAlignment="Top">
                                                                 <TextBlock Text="22252 &#x0a;55514"></TextBlock>
@@ -1304,18 +1443,21 @@
                                                     <TextBlock FontFamily="Tahoma"  x:Name="txtlbl" Text="Call Variables" VerticalAlignment="Center" Margin="5 0 8 0"></TextBlock>
                                                     <Path x:Name="arrow" VerticalAlignment="Center"  HorizontalAlignment="Right" Stroke="#9D9D9D" StrokeThickness="2" Fill="#9D9D9D" Data="M 0 0 L 4 4 L 8 0 Z" Margin="0 1 8 0"/>
                                                     -->
-                                            <!--<Path Margin="10,0,0,0" Fill="#e5323232" Data="M 0 0 L 6 6 L 12 0 Z"/>-->
-                                            <!--<Polygon Points="0,0 8,5, 0,10" Stroke="Black" Fill="Black" />
+                <!--<Path Margin="10,0,0,0" Fill="#e5323232" Data="M 0 0 L 6 6 L 12 0 Z"/>-->
+                <!--<Polygon Points="0,0 8,5, 0,10" Stroke="Black" Fill="Black" />
                                         <Polygon Points="8,0 0,5, 8,10" Stroke="Black" Fill="Black" />-->
-                                            <!--
+                <!--
                                                 </StackPanel>
                                             </Button>-->
+                <!--
                                         </StackPanel>
 
 
-                                        <!--<ComboBox HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="0" Grid.Column="1" Width="100" Text="Call Variables" BorderBrush="#EEEEEE">
+                                        -->
+                <!--<ComboBox HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="0" Grid.Column="1" Width="100" Text="Call Variables" BorderBrush="#EEEEEE">
                                 <ComboBoxItem Content="Call Variables" IsSelected="True"></ComboBoxItem>
                             </ComboBox>-->
+                <!--
                                         <StackPanel Grid.Row="0" Grid.Column="3"  Margin="0 0 10 0" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
                                             <Button   Style="{StaticResource callvariable}" x:Name="btnCallPick" Padding="7" Margin="0 0 2 0" Background="#34BE82" Foreground="White" FontWeight="UltraBold" BorderBrush="Transparent" Width="25" Height="25" Visibility="Visible">
                                                 <Image Source="/Resources/call-answer-1.png" />
@@ -1392,8 +1534,10 @@
                                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
                                                     <TextBlock FontFamily="Tahoma"  x:Name="txtConsultlbl" Text="Call Variables" VerticalAlignment="Center" Margin="5 0 8 0"></TextBlock>
                                                     <Path x:Name="Consultarrow" VerticalAlignment="Center"  HorizontalAlignment="Right" Stroke="#9D9D9D" StrokeThickness="2" Fill="#9D9D9D" Data="M 0 0 L 4 4 L 8 0 Z" Margin="0 1 8 0"/>
-                                                    <!--<Polygon Points="0,0 8,5, 0,10" Stroke="Black" Fill="Black" />-->
-                                                    <!--<Polygon Points="8,0 0,5, 8,10" Stroke="Black" Fill="Black" />-->
+                                                    -->
+                <!--<Polygon Points="0,0 8,5, 0,10" Stroke="Black" Fill="Black" />-->
+                <!--<Polygon Points="8,0 0,5, 8,10" Stroke="Black" Fill="Black" />-->
+                <!--
                                                 </StackPanel>
                                             </Button>
                                         </StackPanel>
@@ -1448,7 +1592,7 @@
                             </StackPanel>
                         </Border>
                     </StackPanel>
-                </Border>
+                </Border>-->
             </TabItem>
             <TabItem Header="Supervisor Dashboard" Width="{Binding ElementName=c1, Path=ActualWidth}">
                 <Border BorderBrush="Transparent" BorderThickness="0">
@@ -1463,7 +1607,7 @@
                                     <Setter Property="HeaderTemplate">
                                         <Setter.Value>
                                             <DataTemplate>
-                                                <TextBlock FontWeight="Bold" Text="{Binding}" FontSize="13" Background="Orange"/>
+                                                <TextBlock FontWeight="Bold" Text="{Binding}" FontSize="13"/>
                                             </DataTemplate>
                                         </Setter.Value>
                                     </Setter>
@@ -1487,7 +1631,7 @@
                                                         <Setter TargetName="panel" Property="Background" Value="White" />
                                                     </Trigger>
                                                     <Trigger Property="IsSelected" Value="False">
-                                                        <Setter TargetName="panel" Property="Background" Value="Blue" />
+                                                        <Setter TargetName="panel" Property="Background" Value="#F4F4F4" />
                                                         <Setter Property="Foreground" Value="#d3d3d3"/>
                                                     </Trigger>
                                                 </ControlTemplate.Triggers>
@@ -1568,7 +1712,7 @@
                             </TabItem>
 
                             <!--Start Team Performance Tab-->
-                            <TabItem Header="Team Performance" Width="{Binding ElementName=c11, Path=ActualWidth}" BorderBrush="Yellow" BorderThickness="5" Height="50">
+                            <TabItem Header="Team Performance" Width="{Binding ElementName=c11, Path=ActualWidth}" Height="50">
                                 <StackPanel HorizontalAlignment="Stretch" >
                                     <!--<StackPanel HorizontalAlignment="Stretch" Margin="10" >
                                     <ComboBox x:Name="cbReasonCodes1" DockPanel.Dock="Right" IsEditable="True" IsReadOnly="True" Text="Talking"  HorizontalAlignment="Stretch" VerticalAlignment="Center"  BorderBrush="#EEEEEE" Style="{DynamicResource ComboBoxStyleTeamPerformance}">
@@ -1650,7 +1794,7 @@
                                         </StackPanel>
                                     </Grid>
                                     <StackPanel HorizontalAlignment="Stretch">
-                                        <DataGrid Background="Blue" Name="dgSimple" VerticalAlignment="Center" VerticalContentAlignment="Center" CellStyle="{StaticResource Body_Content_DataGrid_Centering}" Height="350" EnableRowVirtualization="False">
+                                        <DataGrid Name="dgSimple" VerticalAlignment="Center" VerticalContentAlignment="Center" CellStyle="{StaticResource Body_Content_DataGrid_Centering}" Height="350" EnableRowVirtualization="False">
                                             <DataGrid.Columns>
                                                 <!--<DataGridTemplateColumn>
                                                     <DataGridTemplateColumn.CellTemplate>
