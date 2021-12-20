@@ -87,6 +87,10 @@
     <Compile Include="Consultcall.xaml.cs">
       <DependentUpon>Consultcall.xaml</DependentUpon>
     </Compile>
+    <Compile Include="CustomTab\Pager.cs" />
+    <Compile Include="CustomTab\T1.xaml.cs">
+      <DependentUpon>T1.xaml</DependentUpon>
+    </Compile>
     <Compile Include="CustomTab\Window1.xaml.cs">
       <DependentUpon>Window1.xaml</DependentUpon>
     </Compile>
@@ -160,6 +164,10 @@
     <Page Include="Consultcall.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="CustomTab\T1.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="CustomTab\Window1.xaml">
       <SubType>Designer</SubType>
