@@ -349,5 +349,8 @@
     <Resource Include="Resources\search.ico" />
     <Resource Include="Resources\stocks_plus_hover.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="ToolTipConverter\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

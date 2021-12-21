@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -166,6 +167,29 @@ namespace WpfFinesse
             users.Add(new UserTab() { CallStatusColor = "#1BDA6D", Time = "00:00:00", QueueName = "AMQ", isRowDetail = false, CallStatus = "Ready", Duration = 1000, HeldParticipants = 500, ActiveParticipants = 30, Id = 3, AgentName = "John uzair Doe", Extension = "74441", Name = "Sammy Doe", Birthday = new DateTime(1991, 9, 2) });
             return users;
         }
+    }
+
+
+
+    public class ToolTipCon : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value.ToString().Length > 15)
+            {
+                return Visibility.Visible;
+            }
+            else
+                return Visibility.Collapsed;
+        }
+
+        
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+
+        
     }
 
 }
