@@ -952,16 +952,6 @@
         </Style>-->
 
 
-        <!--visual focus rectangle-->
-        <!--<Style x:Key="FocusVisual">
-            <Setter Property="Control.Template">
-                <Setter.Value>
-                    <ControlTemplate>
-                        <Rectangle StrokeDashArray="1 2" StrokeThickness="0" Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" SnapsToDevicePixels="true" Margin="2"/>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>-->
 
 
         <LinearGradientBrush x:Key="ComboBox.Static.Background" EndPoint="0,1" StartPoint="0,0">
@@ -1737,6 +1727,13 @@
                                         </Grid.ColumnDefinitions>
                                         <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Center" Orientation="Vertical"  Width="306">
                                             <ComboBox Height="25"  x:Name="cbReasonCodes1" DockPanel.Dock="Right" IsEditable="True" IsReadOnly="True" Text="MEDICARE TEAM"  HorizontalAlignment="Stretch" VerticalAlignment="Center"  BorderBrush="#EEEEEE" Style="{DynamicResource ComboBoxStyleTeamPerformance}">
+                                                <ComboBoxItem Content="Ready"/>
+                                                <ComboBoxItem Content="Ready"/>
+                                                <ComboBoxItem Content="Ready"/>
+                                                <ComboBoxItem Content="Ready"/>
+                                                <ComboBoxItem Content="Ready"/>
+                                                <ComboBoxItem Content="Ready"/>
+                                                <ComboBoxItem Content="Ready"/>
                                                 <ComboBoxItem Content="Ready"/>
                                             </ComboBox>
                                         </StackPanel>

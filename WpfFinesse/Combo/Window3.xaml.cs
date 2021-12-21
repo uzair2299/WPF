@@ -15,18 +15,13 @@ using System.Windows.Shapes;
 namespace WpfFinesse.Combo
 {
     /// <summary>
-    /// Interaction logic for Window1.xaml
+    /// Interaction logic for Window3.xaml
     /// </summary>
-    public partial class Window1 : Window
+    public partial class Window3 : Window
     {
-        public Window1()
+        public Window3()
         {
             InitializeComponent();
-        }
-
-        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-
         }
     }
 }
