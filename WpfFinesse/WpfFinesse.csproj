@@ -144,6 +144,9 @@
     <Compile Include="Buttons.xaml.cs">
       <DependentUpon>Buttons.xaml</DependentUpon>
     </Compile>
+    <Compile Include="WPFTimer\TimerWindow.xaml.cs">
+      <DependentUpon>TimerWindow.xaml</DependentUpon>
+    </Compile>
     <Page Include="Check\Window1.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -258,6 +261,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="TextBoxTrigger\TextboxTriggerEX.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="WPFTimer\TimerWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

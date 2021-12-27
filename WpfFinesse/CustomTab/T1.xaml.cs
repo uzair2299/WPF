@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 
@@ -417,8 +420,35 @@ namespace WpfFinesse.CustomTab
         }
     }
 
-    public class UserTab
+    public class UserTab  : INotifyPropertyChanged
     {
+        private System.Timers.Timer _timer = new System.Timers.Timer();
+        public UserTab()
+        {
+            _timer.Elapsed += _timer_Elapsed;
+            _timer.Interval = 60000; //each minute
+            _timer.Start();
+        }
+
+        void _timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            NotifyPropertyChanged("Date"); //refresh binding
+        }
+
+        private DateTime _date;
+        public DateTime Date
+        {
+            get { return _date; }
+            set { _date = value; NotifyPropertyChanged("Date"); }
+        }
+
+        private void NotifyPropertyChanged(string propertyName)
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
         public int Id { get; set; }
 
         public string AgentName { get; set; }
@@ -438,6 +468,8 @@ namespace WpfFinesse.CustomTab
         public string Time { get; set; }
         public string CallStatusColor { get; set; }
         public bool isRowDetail { get; set; }
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public List<UserTab> GetUsers()
         {
@@ -731,5 +763,30 @@ namespace WpfFinesse.CustomTab
 
             return users;
         }
+    }
+
+
+    public class ToolTipCon : IValueConverter
+    {
+        
+
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value.ToString().Length > 15)
+            {
+                return Visibility.Visible;
+            }
+            else
+                return Visibility.Collapsed;
+        }
+
+        
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+
+
     }
 }

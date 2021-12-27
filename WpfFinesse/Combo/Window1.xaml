@@ -7,13 +7,12 @@
         mc:Ignorable="d"
         Title="Window1" Height="300" Width="300">
     <Window.Resources>
-        <ControlTemplate x:Key="ComboBoxToggleButton" TargetType="{x:Type ToggleButton}">
+        <ControlTemplate x:Key="ComboBoxToggleButtonTeam" TargetType="{x:Type ToggleButton}">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
                     <ColumnDefinition Width="20" />
                 </Grid.ColumnDefinitions>
-                <!--Background="#FF3F3F3F"-->
                 <Border
                   x:Name="Border" 
                   Grid.ColumnSpan="2"
@@ -54,7 +53,7 @@
             </ControlTemplate.Triggers>
         </ControlTemplate>
 
-        <ControlTemplate x:Key="ComboBoxTextBox" TargetType="{x:Type TextBox}">
+        <ControlTemplate x:Key="ComboBoxTextBoxTeam" TargetType="{x:Type TextBox}">
             <Border  x:Name="PART_ContentHost" Focusable="False" />
         </ControlTemplate>
 
@@ -73,7 +72,7 @@
                         <Grid>
                             <ToggleButton 
                             Name="ToggleButton" 
-                            Template="{StaticResource ComboBoxToggleButton}" 
+                            Template="{StaticResource ComboBoxToggleButtonTeam}" 
                             Grid.Column="2" 
                             Focusable="false"
                             IsChecked="{Binding Path=IsDropDownOpen,Mode=TwoWay,RelativeSource={RelativeSource TemplatedParent}}"
@@ -87,7 +86,7 @@
                             HorizontalAlignment="Left" />
                             <TextBox x:Name="PART_EditableTextBox"
                             Style="{x:Null}" 
-                            Template="{StaticResource ComboBoxTextBox}" 
+                            Template="{StaticResource ComboBoxTextBoxTeam}" 
                             HorizontalAlignment="Left" 
                             VerticalAlignment="Center" 
                             Margin="3,3,23,3"
@@ -160,7 +159,6 @@
             </Style.Triggers>
         </Style>
 
-        <!-- SimpleStyles: ComboBoxItem -->
         <Style x:Key="{x:Type ComboBoxItem}" TargetType="{x:Type ComboBoxItem}">
             <Setter Property="SnapsToDevicePixels" Value="true"/>
             <Setter Property="Foreground" Value="White"/>

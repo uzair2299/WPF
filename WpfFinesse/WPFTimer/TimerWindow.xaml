@@ -1,18 +1,18 @@
-﻿<Window x:Class="WpfFinesse.Tabs"
+﻿<Window x:Class="WpfFinesse.WPFTimer.TimerWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:WpfFinesse"
-                xmlns:Themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2"
+        xmlns:local="clr-namespace:WpfFinesse.WPFTimer"
+        xmlns:Themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2"
         mc:Ignorable="d"
-        Title="Tabs" MinWidth="380" MaxWidth="380" MinHeight="500">
+        Title="TimerWindow" MinWidth="380" MaxWidth="380" MinHeight="500">
     <Window.Resources>
 
         <!--Start Converters-->
         <local:ToolTipCon x:Key="ToolTipCon"></local:ToolTipCon>
         <!--End Converters-->
-        
+
         <!--Start Colors-->
         <Color x:Key="TabItemNonActiveForegroundColor">#d3d3d3</Color>
         <Color x:Key="TabItemActiveColor">#F4F4F4</Color>
@@ -68,7 +68,7 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
-        
+
 
 
         <!--Start Data Grid StatusTemplate-->
@@ -691,7 +691,7 @@
             <Setter Property="SnapsToDevicePixels" Value="true"/>
             <Setter Property="Foreground" Value="Black"/>
             <Setter Property="OverridesDefaultStyle" Value="true"/>
-            
+
 
             <Setter Property="Template">
                 <Setter.Value>
@@ -745,7 +745,9 @@
         </LinearGradientBrush>
         <SolidColorBrush x:Key="ComboBox.Static.BorderTeam" Color="#FFACACAC"/>
         <SolidColorBrush x:Key="ComboBox.Static.Editable.BackgroundTeam" Color="#FFFFFFFF"/>
-        --><!--Border--><!--
+        -->
+        <!--Border-->
+        <!--
         <SolidColorBrush x:Key="ComboBox.Static.Editable.BorderTeam" Color="#FFABADB3"/>
         <SolidColorBrush x:Key="ComboBox.Static.Editable.Button.BackgroundTeam" Color="Transparent"/>
         <SolidColorBrush x:Key="ComboBox.Static.Editable.Button.BorderTeam" Color="Transparent"/>
@@ -793,7 +795,9 @@
                     <ControlTemplate TargetType="{x:Type ToggleButton}">
                         <Border CornerRadius="3" x:Name="templateRootTeam" BorderBrush="{StaticResource ComboBox.Static.BorderTeam}" BorderThickness="{TemplateBinding BorderThickness}" Background="{StaticResource ComboBox.Static.BackgroundTeam}" SnapsToDevicePixels="true">
                             <Border CornerRadius="3" x:Name="splitBorderTeam" BorderBrush="Transparent" BorderThickness="1" HorizontalAlignment="Right" Margin="0" SnapsToDevicePixels="true" Width="{DynamicResource {x:Static SystemParameters.VerticalScrollBarWidthKey}}">
-                                --><!--Downword Arrow--><!--
+                                -->
+        <!--Downword Arrow-->
+        <!--
                                 <Path x:Name="arrowTeam" VerticalAlignment="Center"  HorizontalAlignment="Center" Stroke="#9b9898" StrokeThickness="2" Fill="#9b9898" Data="M 0 0 L 4 4 L 8 0 Z" Margin="2 2 2 0"/>
                             </Border>
                         </Border>
@@ -1469,7 +1473,7 @@
                     </Setter>
                 </Style>
             </TabControl.Resources>
-            
+
             <TabItem BorderBrush="Green" BorderThickness="5" Header="Cisco CTI By Expertflow" Width="{Binding ElementName=c1, Path=ActualWidth}" Height="50" VerticalAlignment="Top">
                 <DockPanel x:Name="userinfo" HorizontalAlignment="Left" Width="380" >
                     <Label x:Name="lbExt1" HorizontalAlignment="Right" Margin="0 0 12 0"/>
@@ -1823,6 +1827,8 @@
                                             <RowDefinition Height="30"></RowDefinition>
                                             <RowDefinition Height="30"></RowDefinition>
                                             <RowDefinition Height="*"></RowDefinition>
+
+                                            <RowDefinition Height="*"></RowDefinition>
                                         </Grid.RowDefinitions>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="*"></ColumnDefinition>
@@ -1875,13 +1881,30 @@
                                                 </TextBox>
                                             </Grid>
                                         </StackPanel>
+                                        <StackPanel Grid.Row="4" HorizontalAlignment="Stretch" Orientation="Vertical"  Width="306">
+                                            <Grid>
+                                                <TextBox   VerticalAlignment="Center" HorizontalAlignment="Stretch" x:Name="TxtUserInput" Margin="0 5 0 5" Padding="4 0 0 0" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" KeyUp="SearchTermTextBox_KeyDown">
+                                                    <TextBox.Resources>
+                                                        <Style TargetType="{x:Type Border}">
+                                                            <Setter Property="CornerRadius" Value="5"/>
+                                                            <Setter Property="Height" Value="25"/>
+                                                            <Setter Property="BorderThickness" Value="1"></Setter>
+                                                        </Style>
+                                                    </TextBox.Resources>
+                                                </TextBox>
+                                            </Grid>
+                                            <Button Style="{StaticResource btnTeamPerformance}" Height="25"  Background="White" BorderBrush="#A7A5A5" BorderThickness="1" Name="btnChangeTimer" Click="btnChangeTimer_Click">
+                                                <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="Change Time" Padding="10 2 10 2" Foreground="#A7A5A5"></TextBlock>
+                                            </Button>
+                                        </StackPanel>
+
                                     </Grid>
                                     <StackPanel HorizontalAlignment="Stretch">
                                         <DataGrid Name="dgSimple" VerticalAlignment="Center" VerticalContentAlignment="Center" CellStyle="{StaticResource Body_Content_DataGrid_Centering}" Height="350" EnableRowVirtualization="False">
                                             <DataGrid.Columns>
                                                 <DataGridTextColumn Header="Agent Name" Binding="{Binding AgentName}" IsReadOnly="True" />
                                                 <DataGridTemplateColumn SortMemberPath="CallStatus" CanUserSort="True" Header="Status" CellTemplate="{StaticResource StatusTemplate}"/>
-                                                <DataGridTextColumn Header="Time" Binding="{Binding Time}" IsReadOnly="True"/>
+                                                <DataGridTextColumn Header="Time" Binding="{Binding DisplayTimeString}" IsReadOnly="True"/>
                                                 <DataGridTextColumn Header="Extension" Binding="{Binding Extension}" IsReadOnly="True" />
                                             </DataGrid.Columns>
                                             <DataGrid.RowDetailsTemplate >
