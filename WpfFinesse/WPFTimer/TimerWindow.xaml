@@ -72,22 +72,28 @@
 
 
         <!--Start Data Grid StatusTemplate-->
+
+
+
+
+
         <DataTemplate x:Key="StatusTemplate" >
-            <WrapPanel Orientation="Horizontal">
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Background="Red" Height="40" VerticalAlignment="Center">
                 <Ellipse Height="7" Width="7" Fill="{Binding CallStatusColor}" Margin="5,0"></Ellipse>
-                <TextBlock Text="{Binding CallStatus}" Width="70" TextTrimming="CharacterEllipsis">
+                <TextBlock Text="{Binding CallStatus}" Width="100" TextTrimming="CharacterEllipsis">
                     <TextBlock.ToolTip>
                         <ToolTip  ToolTipService.ShowDuration="12000" Placement="Bottom"  HorizontalOffset="0" VerticalOffset="0" BorderBrush="Transparent" Margin="0 10 0 0" Background="Transparent"  Panel.ZIndex="1000" Visibility="{Binding Path =CallStatus, Converter={StaticResource ToolTipCon}}">
                             <Grid Width="110" Background="{StaticResource BackgroundBrush}">
                                 <Polygon Points="5,0 10,10, 0,10" Stroke="{StaticResource BackgroundBrush}" Fill="{StaticResource BackgroundBrush}" Grid.Row="0" HorizontalAlignment="Center" Margin="0,-8,0,8" Panel.ZIndex="1000" StrokeThickness="2" StrokeDashArray="1 0"   />
-                                <Border x:Name="border" HorizontalAlignment="Center" VerticalAlignment="Top">
+                                <Border x:Name="border" HorizontalAlignment="Center" VerticalAlignment="Center">
                                     <TextBlock Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" Text="{Binding CallStatus}" Padding="10"></TextBlock>
                                 </Border>
                             </Grid>
                         </ToolTip>
                     </TextBlock.ToolTip>
                 </TextBlock>
-            </WrapPanel>
+            </StackPanel>
         </DataTemplate>
         <!--End Data Grid StatusTemplate-->
 
@@ -104,7 +110,7 @@
                             <Grid.RowDefinitions>
                                 <RowDefinition></RowDefinition>
                             </Grid.RowDefinitions>
-                            <Border Padding="10 0 20 0">
+                            <Border Padding="10 0 10 0">
                                 <ContentPresenter VerticalAlignment="Center" />
                             </Border>
                         </Grid>
@@ -385,6 +391,123 @@
         <!--End DataGrid-->
 
         <!--Start DataGridColumnHeader-->
+        <Style x:Key="DataGridColumnHeader1" TargetType="{x:Type DataGridColumnHeader}">
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="Height" Value="35" />
+            <Setter Property="SeparatorBrush" Value="DarkRed" />
+            <Setter Property="FontWeight" Value="Medium" />
+            <Setter Property="Foreground" Value="Black" />
+            <Setter Property="Background" Value="{StaticResource DataGridColumnHeaderColorBrush}"></Setter>
+            <Setter Property="Height" Value="40"></Setter>
+            <Setter Property="HorizontalAlignment" Value="Stretch"></Setter>
+            <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
+
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type DataGridColumnHeader}">
+                        <Grid  Background ="{StaticResource DataGridColumnHeaderColorBrush}">
+                            <Border x:Name="columnHeaderBorder" BorderThickness="1" Padding="10,0,10,0" Background ="{StaticResource DataGridColumnHeaderColorBrush}" Height="100" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <StackPanel Orientation="Horizontal">
+                                    <DockPanel  HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0 0 1 0">
+                                        <StackPanel>
+                                            <Path x:Name="DecreaseSortingArrow"
+                                                  Grid.Row="0"
+                                                  Grid.Column="0"
+                                                  Stretch="Fill"
+                                                  Width="8"
+                                                  Height="6"
+                                                  Visibility="Visible"
+                                                  Data="F1 M 3.5,0L 0,7L 7,7L 3.5,0 Z "
+                                                  Fill="{StaticResource GridSortingArrowColorBrush}"
+                                                  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                  VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                                  />
+
+                                            <Path x:Name="IncreaseSortingArrow"
+                                                  Margin="0 1 0 0"
+                                                  Fill="{StaticResource GridSortingArrowColorBrush}"
+                                                  Grid.Row="1"
+                                                  Grid.Column="0"
+                                                  Stretch="Fill"
+                                                  Width="8"
+                                                  Height="6"
+                                                  Visibility="Visible"
+                                                  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                  VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                                  Data="F1 M 3.5,7L 7,0L 0,0L 3.5,7 Z"
+                                                  />
+                                        </StackPanel>
+                                    </DockPanel>
+
+                                    <!--<Grid Background="Yellow">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="7"/>
+                                            <RowDefinition Height="7"/>
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="10"></ColumnDefinition>
+                                        </Grid.ColumnDefinitions>
+                                        <Path x:Name="DecreaseSortingArrow"
+                                              Grid.Row="0"
+                                              Grid.Column="0"
+                                              Stretch="Fill"
+                                              Width="8"
+                                              Height="6"
+                                              Visibility="Visible"
+                                              Data="F1 M 3.5,0L 0,7L 7,7L 3.5,0 Z "
+                                              Fill="black"
+                                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                              />
+
+                                        <Path x:Name="IncreaseSortingArrow"
+                                              Grid.Row="1"
+                                              Grid.Column="0"
+                                              Stretch="Fill"
+                                              Width="8"
+                                              Height="6"
+                                              Visibility="Visible"
+                                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                              Data="F1 M 3.5,7L 7,0L 0,0L 3.5,7 Z "
+                                              Fill="Red" />
+
+                                    </Grid>-->
+
+                                    <!--Data Grid Sort Arrow-->
+                                    <!--<Path x:Name="SortArrow"
+                                          Visibility="Visible"
+                                          Data="M0,0 L1,0 0.5,1 z"
+                                          Stretch="Fill"
+                                          Width="8"
+                                          Height="6"
+                                          Fill="#9b9898"
+                                          Margin="0,5,3,0"
+                                          RenderTransformOrigin="0.5,0.4"
+                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>-->
+                                    <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                      VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                                      SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}">
+                                    </ContentPresenter>
+
+                                </StackPanel>
+                            </Border>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="SortDirection" Value="Descending">
+                                <Setter TargetName="DecreaseSortingArrow" Property="Fill" Value="{StaticResource GridSortingArrowActiveColorBrush}" />
+                            </Trigger>
+                            <Trigger Property="SortDirection" Value="Ascending">
+                                <Setter TargetName="IncreaseSortingArrow" Property="Fill" Value="{StaticResource GridSortingArrowActiveColorBrush}" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+
         <Style TargetType="{x:Type DataGridColumnHeader}">
             <Setter Property="VerticalContentAlignment" Value="Center" />
             <Setter Property="Height" Value="35" />
@@ -400,7 +523,7 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type DataGridColumnHeader}">
                         <Grid  Background ="{StaticResource DataGridColumnHeaderColorBrush}">
-                            <Border x:Name="columnHeaderBorder" BorderThickness="1" Padding="10,0,40,0" Background ="{StaticResource DataGridColumnHeaderColorBrush}" Height="100" VerticalAlignment="Center">
+                            <Border x:Name="columnHeaderBorder" BorderThickness="1" Padding="10,0,10,0" Background ="{StaticResource DataGridColumnHeaderColorBrush}" Height="100"  VerticalAlignment="Center">
                                 <StackPanel Orientation="Horizontal">
                                     <DockPanel  HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0 0 1 0">
                                         <StackPanel>
@@ -1752,67 +1875,64 @@
                                     <StackPanel HorizontalAlignment="Stretch">
                                         <DataGrid  Name="dgSimple1" VerticalAlignment="Center" VerticalContentAlignment="Center" CellStyle="{StaticResource Body_Content_DataGrid_Centering}" Height="350" EnableRowVirtualization="False">
                                             <DataGrid.Columns>
-                                                <DataGridTemplateColumn>
-                                                    <DataGridTemplateColumn.CellTemplate>
-                                                        <DataTemplate>
-                                                            <WrapPanel>
-                                                                <Ellipse Height="7" Width="7" Fill="Red" Margin="5,0"></Ellipse>
-                                                                <TextBlock Text="{Binding Id}"></TextBlock>
-                                                            </WrapPanel>
-                                                        </DataTemplate>
-                                                    </DataGridTemplateColumn.CellTemplate>
-                                                </DataGridTemplateColumn>
-                                                <DataGridTextColumn Header="Birthday" Binding="{Binding Birthday}" IsReadOnly="True"/>
-                                                <DataGridTextColumn Header="Id" Binding="{Binding Id}" IsReadOnly="True"/>
-                                                <DataGridTextColumn Header="First Name" Binding="{Binding FirrstName}" IsReadOnly="True"/>
-                                                <DataGridTextColumn Header="Last Name" Binding="{Binding LastName}" IsReadOnly="True" />
-                                                <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True" />
-                                            </DataGrid.Columns>
-                                            <!--<DataGrid.RowDetailsTemplate >
-                                            <DataTemplate>
-                                                <Border x:Name="RowDetailsContainer" BorderThickness="0" Background="#F7F7F7" Padding="10 10 10 10">
-                                                    <Grid>
-                                                        <Grid.RowDefinitions>
-                                                            <RowDefinition Height="*"></RowDefinition>
-                                                            <RowDefinition Height="*"></RowDefinition>
-                                                            <RowDefinition Height="*"></RowDefinition>
-                                                        </Grid.RowDefinitions>
-                                                        <Grid.ColumnDefinitions>
-                                                            <ColumnDefinition Width="160"></ColumnDefinition>
-                                                            <ColumnDefinition Width="160"></ColumnDefinition>
-                                                        </Grid.ColumnDefinitions>
+                                                <DataGridTextColumn Header="Queue Name" Binding="{Binding QueueName}" IsReadOnly="True">
+                                                    <!--<DataGridTextColumn.HeaderStyle>
+                                                        <Style TargetType="DataGridColumnHeader">
+                                                            <Setter Property="Background" Value="Green"/>
+                                                        </Style>
+                                                    </DataGridTextColumn.HeaderStyle>-->
+                                                </DataGridTextColumn>
+                                                <DataGridTextColumn Header="Queued Calls" Binding="{Binding QueuedCalls}" IsReadOnly="True" HeaderStyle="{StaticResource DataGridColumnHeader1}">
+                                                    <DataGridTextColumn.ElementStyle>
+                                                        <Style TargetType="TextBlock">
+                                                            <Setter Property="HorizontalAlignment" Value="Center" />
+                                                        </Style>
+                                                    </DataGridTextColumn.ElementStyle>
+                                                </DataGridTextColumn>
+                                                <DataGridTextColumn Header="Max Time" Binding="{Binding MaxTime}" IsReadOnly="True" HeaderStyle="{StaticResource DataGridColumnHeader1}">
+                                                    <DataGridTextColumn.ElementStyle>
+                                                        <Style TargetType="TextBlock">
+                                                            <Setter Property="HorizontalAlignment" Value="Center" />
+                                                        </Style>
+                                                    </DataGridTextColumn.ElementStyle>
+                                                </DataGridTextColumn>
+                                                <DataGridTextColumn Header="Ready" Binding="{Binding Ready}" IsReadOnly="True" HeaderStyle="{StaticResource DataGridColumnHeader1}">
+                                                    <DataGridTextColumn.ElementStyle>
+                                                        <Style TargetType="TextBlock">
+                                                            <Setter Property="HorizontalAlignment" Value="Center" />
+                                                        </Style>
+                                                    </DataGridTextColumn.ElementStyle>
+                                                </DataGridTextColumn>
+                                                <DataGridTextColumn Header="Not Ready" Binding="{Binding NotReady}" IsReadOnly="True" HeaderStyle="{StaticResource DataGridColumnHeader1}">
+                                                    <DataGridTextColumn.ElementStyle>
+                                                        <Style TargetType="TextBlock">
+                                                            <Setter Property="HorizontalAlignment" Value="Center" />
+                                                        </Style>
+                                                    </DataGridTextColumn.ElementStyle>
+                                                </DataGridTextColumn>
+                                                <DataGridTextColumn Header="Talking-IN" Binding="{Binding TalkingIN}" IsReadOnly="True" HeaderStyle="{StaticResource DataGridColumnHeader1}">
+                                                    <DataGridTextColumn.ElementStyle>
+                                                        <Style TargetType="TextBlock">
+                                                            <Setter Property="HorizontalAlignment" Value="Center" />
+                                                        </Style>
+                                                    </DataGridTextColumn.ElementStyle>
+                                                </DataGridTextColumn>
 
-                                                        <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0">
-                                                            <TextBlock FontSize="12" Text="Active Participants : " VerticalAlignment="Center" />
-                                                            <TextBlock FontSize="12" Text="{Binding ActiveParticipants}" VerticalAlignment="Center" />
-                                                        </StackPanel>
-                                                        <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="1">
-                                                            <TextBlock FontSize="12" Text="Held Participants : " VerticalAlignment="Center" />
-                                                            <TextBlock FontSize="12" Text="{Binding HeldParticipants}" VerticalAlignment="Center" />
-                                                        </StackPanel>
-                                                        <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="0">
-                                                            <TextBlock FontSize="12" Text="Duration : " VerticalAlignment="Center" />
-                                                            <TextBlock FontSize="12" Text="{Binding Duration}" VerticalAlignment="Center" />
-                                                        </StackPanel>
-                                                        <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1">
-                                                            <TextBlock FontSize="12" Text="Call Status : " VerticalAlignment="Center" />
-                                                            <TextBlock FontSize="12" Text="{Binding CallStatus}" VerticalAlignment="Center" />
-                                                        </StackPanel>
-                                                        <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="0">
-                                                            <TextBlock FontSize="12" Text="Queue Name : " VerticalAlignment="Center" />
-                                                            <TextBlock FontSize="12" Text="{Binding QueueName}" VerticalAlignment="Center" />
-                                                        </StackPanel>
-                                                    </Grid>
-                                                </Border>
-                                                -->
-                                            <!--<DataTemplate.Triggers>
-                                                    <DataTrigger Binding="{Binding CallStatus}" Value="Active">
-                                                        <Setter TargetName="RowDetailsContainer" Property="Visibility" Value="Collapsed"/>
-                                                    </DataTrigger>
-                                                </DataTemplate.Triggers>-->
-                                            <!--
-                                            </DataTemplate>
-                                        </DataGrid.RowDetailsTemplate>-->
+                                                <DataGridTextColumn Header="Talking-OUT" Binding="{Binding TalkingOUT}" IsReadOnly="True" HeaderStyle="{StaticResource DataGridColumnHeader1}">
+                                                    <DataGridTextColumn.ElementStyle>
+                                                        <Style TargetType="TextBlock">
+                                                            <Setter Property="HorizontalAlignment" Value="Center" />
+                                                        </Style>
+                                                    </DataGridTextColumn.ElementStyle>
+                                                </DataGridTextColumn>
+                                                <DataGridTextColumn Header="Talking INT" Binding="{Binding TalkingINT}" IsReadOnly="True" HeaderStyle="{StaticResource DataGridColumnHeader1}">
+                                                    <DataGridTextColumn.ElementStyle>
+                                                        <Style TargetType="TextBlock">
+                                                            <Setter Property="HorizontalAlignment" Value="Center" />
+                                                        </Style>
+                                                    </DataGridTextColumn.ElementStyle>
+                                                </DataGridTextColumn>
+                                            </DataGrid.Columns>
                                         </DataGrid>
                                     </StackPanel>
                                 </Border>
@@ -1902,10 +2022,24 @@
                                     <StackPanel HorizontalAlignment="Stretch">
                                         <DataGrid Name="dgSimple" VerticalAlignment="Center" VerticalContentAlignment="Center" CellStyle="{StaticResource Body_Content_DataGrid_Centering}" Height="350" EnableRowVirtualization="False">
                                             <DataGrid.Columns>
-                                                <DataGridTextColumn Header="Agent Name" Binding="{Binding AgentName}" IsReadOnly="True" />
-                                                <DataGridTemplateColumn SortMemberPath="CallStatus" CanUserSort="True" Header="Status" CellTemplate="{StaticResource StatusTemplate}"/>
-                                                <DataGridTextColumn Header="Time" Binding="{Binding DisplayTimeString}" IsReadOnly="True"/>
-                                                <DataGridTextColumn Header="Extension" Binding="{Binding Extension}" IsReadOnly="True" />
+                                                <DataGridTextColumn Header="Agent Name" Binding="{Binding AgentName}" IsReadOnly="True"  />
+                                                <DataGridTemplateColumn  SortMemberPath="CallStatus" CanUserSort="True" Header="Status" CellTemplate="{StaticResource StatusTemplate}" HeaderStyle="{StaticResource DataGridColumnHeader1}">
+
+                                                </DataGridTemplateColumn>
+                                                <DataGridTextColumn Header="Time" Binding="{Binding DisplayTimeString}" IsReadOnly="True" HeaderStyle="{StaticResource DataGridColumnHeader1}">
+                                                    <DataGridTextColumn.ElementStyle>
+                                                        <Style TargetType="TextBlock">
+                                                            <Setter Property="HorizontalAlignment" Value="Center" />
+                                                        </Style>
+                                                    </DataGridTextColumn.ElementStyle>
+                                                </DataGridTextColumn>
+                                                <DataGridTextColumn Header="Extension" Binding="{Binding Extension}" IsReadOnly="True" HeaderStyle="{StaticResource DataGridColumnHeader1}">
+                                                    <DataGridTextColumn.ElementStyle>
+                                                        <Style TargetType="TextBlock">
+                                                            <Setter Property="HorizontalAlignment" Value="Center" />
+                                                        </Style>
+                                                    </DataGridTextColumn.ElementStyle>
+                                                </DataGridTextColumn>
                                             </DataGrid.Columns>
                                             <DataGrid.RowDetailsTemplate >
                                                 <DataTemplate>
@@ -1963,8 +2097,19 @@
                         </TabControl>
                     </StackPanel>
                 </Border>
-
             </TabItem>
         </TabControl>
     </Grid>
 </Window>
+
+
+<!--
+    Queue Name
+    Queue Call
+    Max Time
+    Ready
+    Not Ready
+    Talking-IN
+    Talking-OUT
+    Talking INT
+    -->

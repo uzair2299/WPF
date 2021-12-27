@@ -25,14 +25,21 @@ namespace WpfFinesse.WPFTimer
     {
         private List<UserTab> us;
         UserTab user = new UserTab();
+
+        private List<QueueStat> qs;
+        QueueStat Que = new QueueStat();
         public TimerWindow()
         {
             InitializeComponent();
+
+            qs = new List<QueueStat>();
+            qs = Que.getQueueStat();
+            dgSimple1.ItemsSource = qs;
+
+
             us = user.GetUsers();
             int totalItem = us.Count();
             int page_ = 1;
-
-            dgSimple1.ItemsSource = user.GetUsers();
             Pager pg = new Pager(totalItem, page_);
             dgSimple.ItemsSource = us.Skip((pg.CurrentPage - 1) * pg.PageSize).Take(pg.PageSize);
             if (pg.EndPage > 1)
@@ -137,7 +144,7 @@ namespace WpfFinesse.WPFTimer
             {
                 StackPagination.Children.Clear();
                 int totalItem = 0;
-                
+
                 us = user.GetUsers();
                 string searchtext = SearchTermTextBox.Text.ToLower();
                 if (string.IsNullOrEmpty(searchtext))
@@ -798,6 +805,34 @@ namespace WpfFinesse.WPFTimer
         }
     }
 
+
+
+    public class QueueStat
+    {
+        public string QueueName { get; set; }
+        public int QueuedCalls { get; set; }
+
+        public string MaxTime { get; set; }
+        public int Ready { get; set; }
+        public int NotReady { get; set; }
+        public int TalkingIN { get; set; }
+        public int TalkingOUT { get; set; }
+        public int TalkingINT { get; set; }
+
+        public List<QueueStat> getQueueStat()
+        {
+            List<QueueStat> list = new List<QueueStat>();
+            list.Add(new QueueStat { QueueName = "Marketing", QueuedCalls = 60, MaxTime = "01:36:25", Ready = 10, NotReady = 5, TalkingIN = 10, TalkingOUT = 10, TalkingINT = 10 });
+            list.Add(new QueueStat { QueueName = "Inbound", QueuedCalls = 6, MaxTime = "01:03:25", Ready = 6, NotReady = 10, TalkingIN = 10, TalkingOUT = 10, TalkingINT = 10 });
+            list.Add(new QueueStat { QueueName = "OutBound", QueuedCalls = 600, MaxTime = "00:36:25", Ready = 100, NotReady = 52, TalkingIN = 10, TalkingOUT = 10, TalkingINT = 10 });
+            list.Add(new QueueStat { QueueName = "Product Support", QueuedCalls = 6, MaxTime = "00:45:10", Ready = 6, NotReady = 100, TalkingIN = 10, TalkingOUT = 10, TalkingINT = 10 });
+            list.Add(new QueueStat { QueueName = "Product Information", QueuedCalls = 6, MaxTime = "02:36:25", Ready = 6, NotReady = 10, TalkingIN = 10, TalkingOUT = 10, TalkingINT = 10 });
+            list.Add(new QueueStat { QueueName = "Channel Marketing", QueuedCalls = 6, MaxTime = "01:36:25", Ready = 15, NotReady = 10, TalkingIN = 10, TalkingOUT = 10, TalkingINT = 10 });
+            list.Add(new QueueStat { QueueName = "Technical Support", QueuedCalls = 6, MaxTime = "01:36:25", Ready = 6, NotReady = 2, TalkingIN = 10, TalkingOUT = 10, TalkingINT = 10 });
+            list.Add(new QueueStat { QueueName = "Vip Technical Support", QueuedCalls = 6, MaxTime = "01:36:25", Ready = 6, NotReady = 10, TalkingIN = 10, TalkingOUT = 10, TalkingINT = 10 });
+            return list;
+        }
+    }
 
 
     public class ToolTipCon : IValueConverter
