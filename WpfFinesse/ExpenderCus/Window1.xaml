@@ -301,8 +301,9 @@
         </Style>
     </Window.Resources>
     <StackPanel Name="main">
-        <Expander Header="hello">
+        <Expander>
+
             <TextBlock Text="hello expender"></TextBlock>
-        </Expander>   
+        </Expander>
     </StackPanel>
 </Window>

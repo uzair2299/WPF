@@ -23,16 +23,17 @@
                     <ControlTemplate>
                         <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
                             <Grid>
-                                <TextBlock Text="enter your text here">
-                                              <Image Grid.Row="0" HorizontalAlignment="Right"  Source="/Resources/search.ico" Width="10" Height="10"></Image>
-                                    <TextBlock.Visibility>
+                                <Grid HorizontalAlignment="Stretch">
+                                    <Grid.Visibility>
                                         <MultiBinding Converter="{StaticResource TextInputToVisibilityConverter}">
-                                            <Binding ElementName="InputText" Path="Text.IsEmpty"></Binding>
-                                            <Binding ElementName="InputText" Path="IsFocused"></Binding>
+                                            <Binding ElementName="InputText" Path="Text.IsEmpty"/>
+                                            <Binding ElementName="InputText" Path="IsFocused"/>
                                         </MultiBinding>
-                                    </TextBlock.Visibility>
-                                </TextBlock>
-                                <TextBox x:Name="InputText" Background="Transparent"></TextBox>
+                                    </Grid.Visibility>
+                                    <TextBlock Text="enter your text here" HorizontalAlignment="Stretch"/>
+                                    <Image HorizontalAlignment="Right"  Source="/Resources/search.ico" Width="10" Height="10" Margin="0 0 5 0"/>
+                                </Grid>
+                                <TextBox x:Name="InputText" Background="Transparent"/>
                             </Grid>
                         </Border>
                     </ControlTemplate>
