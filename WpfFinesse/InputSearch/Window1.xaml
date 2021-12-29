@@ -1,0 +1,84 @@
+﻿<Window x:Class="WpfFinesse.InputSearch.Window1"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WpfFinesse.InputSearch"
+        mc:Ignorable="d"
+        Title="Window1" Height="300" Width="300">
+    <Window.Resources>
+        <SolidColorBrush x:Key="brushWatermarkBackground" Color="White" />
+        <SolidColorBrush x:Key="brushWatermarkForeground" Color="LightSteelBlue" />
+        <SolidColorBrush x:Key="brushWatermarkBorder" Color="Indigo" />
+
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+        <local:TextInputToVisibilityConverter x:Key="TextInputToVisibilityConverter" />
+
+
+        <Style x:Key="waterMark" TargetType="TextBox">
+            <Setter Property="BorderBrush" Value="Black"></Setter>
+            <Setter Property="BorderThickness" Value="1"></Setter>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
+                            <Grid>
+                                <TextBlock Text="enter your text here">
+                                              <Image Grid.Row="0" HorizontalAlignment="Right"  Source="/Resources/search.ico" Width="10" Height="10"></Image>
+                                    <TextBlock.Visibility>
+                                        <MultiBinding Converter="{StaticResource TextInputToVisibilityConverter}">
+                                            <Binding ElementName="InputText" Path="Text.IsEmpty"></Binding>
+                                            <Binding ElementName="InputText" Path="IsFocused"></Binding>
+                                        </MultiBinding>
+                                    </TextBlock.Visibility>
+                                </TextBlock>
+                                <TextBox x:Name="InputText" Background="Transparent"></TextBox>
+                            </Grid>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+
+        <Style x:Key="EntryFieldStyle" TargetType="Grid" >
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Margin" Value="20,0" />
+        </Style>
+
+
+
+
+        <Style x:Key="searchbox"  TargetType="TextBox">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Border BorderBrush="Gray" BorderThickness="1" CornerRadius="2">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="50"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Style="{x:Null}" Grid.Column="0" 
+                                       Text="{TemplateBinding Text}"
+                                       Foreground="{TemplateBinding Foreground}"                                           
+                                       Background="{TemplateBinding Background}" 
+                                       FontFamily="{TemplateBinding FontFamily}"
+                                       FontSize="{TemplateBinding FontSize}"
+                                       FontWeight="{TemplateBinding FontWeight}"/>
+                                <Image Grid.Column="1" Source="/Resources/search.ico"/>
+                            </Grid>
+                        </Border>
+
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+    <StackPanel>
+        <TextBox Height="15" Style="{StaticResource searchbox}"></TextBox>
+        <TextBox Style="{StaticResource waterMark}" Margin="0 20 0 0"></TextBox>
+
+    </StackPanel>
+</Window>

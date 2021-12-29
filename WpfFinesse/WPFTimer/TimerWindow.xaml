@@ -12,6 +12,10 @@
         <!--Start Converters-->
 
         <local:ToolTipCon x:Key="ToolTipCon"></local:ToolTipCon>
+
+
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+        <local:TextInputToVisibilityConverter x:Key="TextInputToVisibilityConverter" />
         <!--End Converters-->
 
         <!--Start Colors-->
@@ -26,6 +30,7 @@
         <Color x:Key="DataGridCellSelected">#CCDAFF</Color>
         <Color x:Key="BackgroundColor">#A6A6A6</Color>
         <Color x:Key="StandardColor">#A7A7A7</Color>
+        <Color x:Key="BorderColor">#C8C6C6</Color>
         <Color x:Key="HoverColor"></Color>
         <Color x:Key="PressedColor"></Color>
         <SolidColorBrush x:Key="StandardBrush" Color="{StaticResource StandardColor}" />
@@ -40,6 +45,7 @@
         <SolidColorBrush x:Key="GridSortingArrowActiveColorBrush" Color="{StaticResource GridSortingArrowActiveColor}"></SolidColorBrush>
         <SolidColorBrush x:Key="TabItemActiveColorBrush" Color="{StaticResource TabItemActiveColor}"></SolidColorBrush>
         <SolidColorBrush x:Key="TabItemNonActiveForegroundColorBrush" Color="{StaticResource TabItemNonActiveForegroundColor}"></SolidColorBrush>
+        <SolidColorBrush x:Key="BorderColorBrush" Color="{StaticResource BorderColor}"></SolidColorBrush>
         <!--End Colors-->
 
 
@@ -70,6 +76,32 @@
             </Style.Triggers>
         </Style>
 
+        
+        <!--Start Watermark Textbox-->
+        <Style x:Key="waterMark" TargetType="TextBox">
+            <Setter Property="BorderBrush" Value="{StaticResource BorderColorBrush}"></Setter>
+            <Setter Property="BorderThickness" Value="1"></Setter>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <Border CornerRadius="2" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1">
+                            <Grid>
+                                <TextBlock FontSize="12" Text="Search Contact" Height="25" Foreground="{StaticResource BorderColorBrush}" Padding="5 5 0 0" VerticalAlignment="Center">
+                                    <TextBlock.Visibility>
+                                        <MultiBinding Converter="{StaticResource TextInputToVisibilityConverter}">
+                                            <Binding ElementName="InputText" Path="Text.IsEmpty"></Binding>
+                                            <Binding ElementName="InputText" Path="IsFocused"></Binding>
+                                        </MultiBinding>
+                                    </TextBlock.Visibility>
+                                </TextBlock>
+                                <TextBox Height="25" Padding="5 0 0 0" FontSize="12" VerticalAlignment="Center" VerticalContentAlignment="Center" x:Name="InputText" Background="Transparent" BorderBrush="Transparent" BorderThickness="0"></TextBox>
+                            </Grid>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <!--End Watermark Textbox-->
 
 
         <!--Start Data Grid StatusTemplate-->
@@ -77,21 +109,21 @@
 
         <DataTemplate x:Key="StatusTemplate" >
             <Border VerticalAlignment="Center" HorizontalAlignment="Center" Width="120">
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Height="40" VerticalAlignment="Center" Width="auto">
-                <Ellipse Height="7" Width="7" Fill="{Binding CallStatusColor}" Margin="5,0" VerticalAlignment="Center" HorizontalAlignment="Center"></Ellipse>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Height="40" VerticalAlignment="Center" Width="auto">
+                    <Ellipse Height="7" Width="7" Fill="{Binding CallStatusColor}" Margin="5,0" VerticalAlignment="Center" HorizontalAlignment="Center"></Ellipse>
                     <TextBlock Text="{Binding CallStatus}" Width="100" TextTrimming="CharacterEllipsis"  VerticalAlignment="Center">
-                    <TextBlock.ToolTip>
-                        <ToolTip  ToolTipService.ShowDuration="12000" Placement="Bottom"  HorizontalOffset="0" VerticalOffset="0" BorderBrush="Transparent" Margin="0 10 0 0" Background="Transparent"  Panel.ZIndex="1000" Visibility="{Binding Path =CallStatus, Converter={StaticResource ToolTipCon}}">
-                            <Grid Width="110" Background="{StaticResource BackgroundBrush}">
-                                <Polygon Points="5,0 10,10, 0,10" Stroke="{StaticResource BackgroundBrush}" Fill="{StaticResource BackgroundBrush}" Grid.Row="0" HorizontalAlignment="Center" Margin="0,-8,0,8" Panel.ZIndex="1000" StrokeThickness="2" StrokeDashArray="1 0"   />
-                                <Border x:Name="border" HorizontalAlignment="Center" VerticalAlignment="Top">
-                                    <TextBlock Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" Text="{Binding CallStatus}" Padding="10"></TextBlock>
-                                </Border>
-                            </Grid>
-                        </ToolTip>
-                    </TextBlock.ToolTip>
+                        <TextBlock.ToolTip>
+                            <ToolTip  ToolTipService.ShowDuration="12000" Placement="Bottom"  HorizontalOffset="0" VerticalOffset="0" BorderBrush="Transparent" Margin="0 10 0 0" Background="Transparent"  Panel.ZIndex="1000" Visibility="{Binding Path =CallStatus, Converter={StaticResource ToolTipCon}}">
+                                <Grid Width="110" Background="{StaticResource BackgroundBrush}">
+                                    <Polygon Points="5,0 10,10, 0,10" Stroke="{StaticResource BackgroundBrush}" Fill="{StaticResource BackgroundBrush}" Grid.Row="0" HorizontalAlignment="Center" Margin="0,-8,0,8" Panel.ZIndex="1000" StrokeThickness="2" StrokeDashArray="1 0"   />
+                                    <Border x:Name="border" HorizontalAlignment="Center" VerticalAlignment="Top">
+                                        <TextBlock Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" Text="{Binding CallStatus}" Padding="10"></TextBlock>
+                                    </Border>
+                                </Grid>
+                            </ToolTip>
+                        </TextBlock.ToolTip>
                 </TextBlock>
-            </StackPanel>
+                </StackPanel>
             </Border>
         </DataTemplate>
         <!--End Data Grid StatusTemplate-->
@@ -1315,11 +1347,8 @@
                 </Style>
             </TabControl.Resources>
 
-            <TabItem BorderBrush="Green" BorderThickness="5" Header="Cisco CTI By Expertflow" Width="{Binding ElementName=c1, Path=ActualWidth}" Height="50" VerticalAlignment="Top">
-                <DockPanel x:Name="userinfo" HorizontalAlignment="Left" Width="380" >
-                    <Label x:Name="lbExt1" HorizontalAlignment="Right" Margin="0 0 12 0"/>
-                </DockPanel>
-                <!--<Border BorderBrush="#C8C6C6" BorderThickness="1">
+            <TabItem Header="Cisco CTI By Expertflow" Width="{Binding ElementName=c1, Path=ActualWidth}" Height="50" VerticalAlignment="Top">
+                <Border BorderBrush="#C8C6C6" BorderThickness="1">
                     <StackPanel>
                         <Border BorderBrush="#C8C6C6" BorderThickness="0 0 0 1" Margin="0 0 0 8" Height="50">
                             <DockPanel LastChildFill="False">
@@ -1332,7 +1361,6 @@
                                 </ComboBox>
                             </DockPanel>
                         </Border>
-
                         <StackPanel  Orientation="Horizontal" HorizontalAlignment="Center" Margin="0 0 0 8">
                             <Border BorderBrush="#C8C6C6" BorderThickness="1" Margin="0 0 3 0" Padding=" 3 0 3 0">
                                 <Button Style="{StaticResource btnpad}" Padding="10" Background="Transparent" FontWeight="UltraBold"  Height="25" Width="25">
@@ -1342,213 +1370,105 @@
                             <TextBox  x:Name="txtDailNumber" Width="120" Margin="2 0 0 0" BorderBrush="#C8C6C6" BorderThickness="1" Text="1702" VerticalAlignment="Center" Padding="10" FontWeight="Bold"></TextBox>
                         </StackPanel>
 
-
-
-                        <Border BorderBrush="#C8C6C6" BorderThickness="1" Background="#EEEEEE" Margin="5 0 5 0" Name="CallPanel"  Visibility="Visible">
+                        <Border Padding="8" BorderBrush="#C8C6C6" Background="{StaticResource TabItemActiveColorBrush}" CornerRadius="2"  Margin="10" BorderThickness="1">
                             <StackPanel>
-                                <Border BorderBrush="#9D9D9D" BorderThickness="1" Grid.Row="0" Margin="7 7 7 7" CornerRadius="2">
-                                    <Grid x:Name="toolbox">
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="40"></RowDefinition>
-                                            <RowDefinition Height="*"></RowDefinition>
-                                        </Grid.RowDefinitions>
+                                <StackPanel Name="SearchStackPanel">
+                                    <TextBlock Text="Phonebook" Foreground="#c7c2c2" FontWeight="Bold"></TextBlock>
+                                    <Grid  Margin="0 5 0 0">
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition></ColumnDefinition>
-                                            <ColumnDefinition></ColumnDefinition>
-                                            <ColumnDefinition></ColumnDefinition>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="140"/>
                                         </Grid.ColumnDefinitions>
-                                        <StackPanel Grid.Row="0" Grid.Column="0" Margin="7 3 10 0" >
-                                            <TextBlock x:Name="txtCallTiming" Foreground="#9D9D9D" Text="00:00:05" FontSize="14"></TextBlock>
-                                            <StackPanel Orientation="Horizontal">
-                                                <Image Source="/Resources/3050.png" Height="12" Width="12" Margin="0 0 3 0"/>
-                                                <TextBlock FontWeight="Bold" FontFamily="Tahoma"  x:Name="txtCallingNumber" Text="+923205500003"></TextBlock>
-                                            </StackPanel>
-
-                                        </StackPanel>
-                                        <StackPanel Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Vertical" Margin="0 5 0 0">
-                                            <Label Content="Testing" Width="100" HorizontalContentAlignment="Center"  HorizontalAlignment="Center" Background="Violet">
-                                                <Label.ToolTip>
-                                                    <ToolTip ToolTipService.ShowDuration="12000" Placement="Bottom"  HorizontalOffset="0" VerticalOffset="10" BorderBrush="Transparent" Margin="0 10 0 0" Background="Transparent">
-                                                        <StackPanel Width="110" Background="Aqua">
-                                                            <Polygon   Points="5,0 10,10, 0,10" Stroke="Aqua" Fill="Aqua" Grid.Row="0" HorizontalAlignment="Center" Margin="0,-8,0,8" Panel.ZIndex="1000" StrokeThickness="2" StrokeDashArray="1 0"   />
-                                                            <Border x:Name="border" HorizontalAlignment="Center" VerticalAlignment="Top">
-                                                                <TextBlock Text="22252 &#x0a;55514"></TextBlock>
-                                                            </Border>
-                                                        </StackPanel>
-                                                    </ToolTip>
-                                                </Label.ToolTip>
-                                            </Label>
-
-                                            -->
-                <!--<Button Click="btnCallVaribles_Click" x:Name="btnCallVaribles" Style="{StaticResource callbtn}" Width="110" Height="20" VerticalAlignment="Center" HorizontalAlignment="Center" Background="#EEEEEE">
-
-                                                <Button.ToolTip>
-                                                    <ToolTip Placement="Bottom" HorizontalOffset="15" VerticalOffset="15" BorderBrush="Transparent" Margin="0 10 0 0" Background="Transparent">
-                                                        <StackPanel Width="110" Background="Aqua">
-                                                            -->
-                <!--<Path Margin="10,0,0,0" Fill="#e5323232" Data="M 0 0 L -6 6 L -12 0 Z" HorizontalAlignment="Center" VerticalAlignment="Center"/>-->
-                <!--
-                                                            <Polygon   Points="5,0 10,10, 0,10" Stroke="Aqua" Fill="Aqua" Grid.Row="0" HorizontalAlignment="Center" Margin="0,-8,0,8" Panel.ZIndex="1000" StrokeThickness="2" StrokeDashArray="1 0"   />
-                                                            <Border x:Name="border1" HorizontalAlignment="Center" VerticalAlignment="Top">
-                                                                <TextBlock Text="22252 &#x0a;55514"></TextBlock>
-                                                            </Border>
-                                                        </StackPanel>
-                                                    </ToolTip>
-                                                </Button.ToolTip>
-                                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                                    <TextBlock FontFamily="Tahoma"  x:Name="txtlbl" Text="Call Variables" VerticalAlignment="Center" Margin="5 0 8 0"></TextBlock>
-                                                    <Path x:Name="arrow" VerticalAlignment="Center"  HorizontalAlignment="Right" Stroke="#9D9D9D" StrokeThickness="2" Fill="#9D9D9D" Data="M 0 0 L 4 4 L 8 0 Z" Margin="0 1 8 0"/>
-                                                    -->
-                <!--<Path Margin="10,0,0,0" Fill="#e5323232" Data="M 0 0 L 6 6 L 12 0 Z"/>-->
-                <!--<Polygon Points="0,0 8,5, 0,10" Stroke="Black" Fill="Black" />
-                                        <Polygon Points="8,0 0,5, 8,10" Stroke="Black" Fill="Black" />-->
-                <!--
-                                                </StackPanel>
-                                            </Button>-->
-                <!--
-                                        </StackPanel>
-
-
-                                        -->
-                <!--<ComboBox HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="0" Grid.Column="1" Width="100" Text="Call Variables" BorderBrush="#EEEEEE">
-                                <ComboBoxItem Content="Call Variables" IsSelected="True"></ComboBoxItem>
-                            </ComboBox>-->
-                <!--
-                                        <StackPanel Grid.Row="0" Grid.Column="3"  Margin="0 0 10 0" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
-                                            <Button   Style="{StaticResource callvariable}" x:Name="btnCallPick" Padding="7" Margin="0 0 2 0" Background="#34BE82" Foreground="White" FontWeight="UltraBold" BorderBrush="Transparent" Width="25" Height="25" Visibility="Visible">
-                                                <Image Source="/Resources/call-answer-1.png" />
-                                            </Button>
-                                            <Button  Style="{StaticResource callvariable}" x:Name="btnHoldcall"  Padding="7" Margin="2 0 2 0" Background="#B91646" Foreground="White" FontWeight="UltraBold" Width="25" Height="25" Visibility="Visible">
-                                                <Image Source="/Resources/call-hold.png" />
-                                            </Button>
-                                            <Button   Style="{StaticResource callvariable}" x:Name="btnResumecall"  Padding="7" Margin="2 0 2 0" Background="#B91646" Foreground="White" FontWeight="UltraBold" Width="25" Height="25" Visibility="Visible">
-                                                <Image Source="/Resources/call-resume.png" />
-                                            </Button>
-
-                                            <Button   Style="{StaticResource callvariable}" x:Name="btnConsultcall"  Padding="7" Margin="2 0 2 0" Background="#B91646" Foreground="White" FontWeight="UltraBold" Width="25" Height="25" Visibility="Visible">
-                                                <Image Source="/Resources/call-consult.png" />
-                                            </Button>
-
-                                            <Button  Style="{StaticResource callvariable}" x:Name="btntransfercall"  Padding="7" Margin="2 0 2 0" Background="#B91646" Foreground="White" FontWeight="UltraBold" Width="25" Height="25" Visibility="Collapsed">
-                                                <Image Source="/Resources/call-conference.png" />
-                                            </Button>
-                                            <Button  Style="{StaticResource callvariable}" x:Name="btnCallEnd"  Padding="7" Margin="2 0 2 0" Background="#B91646" Foreground="White" FontWeight="UltraBold"  Width="25" Height="25" Visibility="Collapsed">
-                                                <Image Source="/Resources/call-end.png" />
-                                            </Button>
-                                        </StackPanel>
-                                        <Border Padding="15 12 15 12" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Background="#e5e3e3" Margin="7 7 7 20" BorderBrush="#9D9D9D" BorderThickness="1" x:Name="CallVariablePanel" Visibility="Collapsed">
-                                            <Grid x:Name="tempgrid">
-                                                <Grid.RowDefinitions>
-                                                    <RowDefinition Height="*"></RowDefinition>
-                                                </Grid.RowDefinitions>
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition></ColumnDefinition>
-                                                    <ColumnDefinition></ColumnDefinition>
-                                                </Grid.ColumnDefinitions>
-                                                <StackPanel Grid.Row="0" Grid.Column="0">
-                                                    <TextBlock FontSize="14" FontWeight="DemiBold" Foreground="#6f6c6c" Text="Call Variable 1" Margin="0 0 0 7"></TextBlock>
-                                                    <TextBlock FontSize="14" FontWeight="DemiBold" Foreground="#6f6c6c" Text="Call Variable 2" Margin="0 0 0 7"></TextBlock>
-                                                    <TextBlock FontSize="14" FontWeight="DemiBold" Foreground="#6f6c6c" Text="Call Variable 3" Margin="0 0 0 7"></TextBlock>
-                                                    <TextBlock FontSize="14" FontWeight="DemiBold" Foreground="#6f6c6c" Text="Call Variable 4" Margin="0 0 0 7"></TextBlock>
-                                                    <TextBlock FontSize="14" FontWeight="DemiBold" Foreground="#6f6c6c" Text="Call Variable 5" Margin="0 0 0 7"></TextBlock>
-                                                </StackPanel>
-                                                <StackPanel Grid.Row="0" Grid.Column="1" HorizontalAlignment="Right">
-                                                    <TextBlock FontSize="14" FontWeight="DemiBold" Foreground="#6f6c6c" Text="Call Variable 6" Margin="0 0 0 7"></TextBlock>
-                                                    <TextBlock FontSize="14" FontWeight="DemiBold" Foreground="#6f6c6c" Text="Call Variable 7" Margin="0 0 0 7"></TextBlock>
-                                                    <TextBlock FontSize="14" FontWeight="DemiBold" Foreground="#6f6c6c" Text="Call Variable 8" Margin="0 0 0 7"></TextBlock>
-                                                    <TextBlock FontSize="14" FontWeight="DemiBold" Foreground="#6f6c6c" Text="Call Variable 9" Margin="0 0 0 7"></TextBlock>
-                                                    <TextBlock FontSize="14" FontWeight="DemiBold" Foreground="#6f6c6c" Text="Call Variable 10" Margin="0 0 0 7"></TextBlock>
-                                                </StackPanel>
-                                            </Grid>
-                                        </Border>
-                                    </Grid>
-                                </Border>
-
-
-
-                                <Border BorderBrush="#9D9D9D" BorderThickness="1" Grid.Row="0" Margin="7 20 7 7" CornerRadius="2" Visibility="Visible" x:Name="ConsultCallBar">
-                                    <Grid x:Name="ConsultCallPanelTool">
                                         <Grid.RowDefinitions>
-                                            <RowDefinition Height="40"></RowDefinition>
-                                            <RowDefinition Height="*"></RowDefinition>
+                                            <RowDefinition />
                                         </Grid.RowDefinitions>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition></ColumnDefinition>
-                                            <ColumnDefinition></ColumnDefinition>
-                                            <ColumnDefinition></ColumnDefinition>
-                                        </Grid.ColumnDefinitions>
-                                        <StackPanel Grid.Row="0" Grid.Column="0" Margin="7 3 10 0" >
-                                            <TextBlock x:Name="txtConsultCallTiming" Foreground="#9D9D9D" Text="00:00:50" FontSize="14"></TextBlock>
-                                            <StackPanel Orientation="Horizontal">
-                                                <Image Source="/Resources/3050.png" Height="12" Width="12" Margin="0 0 3 0"/>
-                                                <TextBlock FontWeight="Bold" FontFamily="Tahoma"  x:Name="txtConsultCallingNumber" Text="2204"></TextBlock>
-                                            </StackPanel>
+                                        <StackPanel Grid.Column="0" Grid.Row="0">
+                                            <TextBox BorderThickness="0" Style="{StaticResource waterMark}" ></TextBox>
 
                                         </StackPanel>
-                                        <StackPanel Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Vertical" Margin="0 5 0 0">
-                                            <Button Click="btnCallVaribles_Click"  x:Name="btnConsultCallVaribles" Style="{StaticResource callbtn}" Width="110" Height="20" VerticalAlignment="Center" HorizontalAlignment="Center" Background="#EEEEEE">
-                                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                                    <TextBlock FontFamily="Tahoma"  x:Name="txtConsultlbl" Text="Call Variables" VerticalAlignment="Center" Margin="5 0 8 0"></TextBlock>
-                                                    <Path x:Name="Consultarrow" VerticalAlignment="Center"  HorizontalAlignment="Right" Stroke="#9D9D9D" StrokeThickness="2" Fill="#9D9D9D" Data="M 0 0 L 4 4 L 8 0 Z" Margin="0 1 8 0"/>
-                                                    -->
-                <!--<Polygon Points="0,0 8,5, 0,10" Stroke="Black" Fill="Black" />-->
-                <!--<Polygon Points="8,0 0,5, 8,10" Stroke="Black" Fill="Black" />-->
-                <!--
-                                                </StackPanel>
-                                            </Button>
-                                        </StackPanel>
+                                        <StackPanel Grid.Column="1" Grid.Row="0"  Margin="10 0 0 0"></StackPanel>
 
-                                        <StackPanel Grid.Row="0" Grid.Column="3"  Margin="0 0 10 0" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
-                                            <Button    Style="{StaticResource callvariable}" x:Name="btnConsultCallPick" Padding="7" Margin="0 0 2 0" Background="#34BE82" Foreground="White" FontWeight="UltraBold" BorderBrush="Transparent" Width="25" Height="25" Visibility="Collapsed">
-                                                <Image Source="/Resources/call-answer-1.png" />
-                                            </Button>
-                                            <Button   Style="{StaticResource callvariable}" x:Name="btnConsultHoldcall"  Padding="7" Margin="2 0 2 0" Background="#B91646" Foreground="White" FontWeight="UltraBold" Width="25" Height="25" Visibility="Collapsed">
-                                                <Image Source="/Resources/call-hold.png" />
-                                            </Button>
-                                            <Button   Style="{StaticResource callvariable}" x:Name="btnConsultResumecall"  Padding="7" Margin="2 0 2 0" Background="#B91646" Foreground="White" FontWeight="UltraBold" Width="25" Height="25" Visibility="Visible">
-                                                <Image Source="/Resources/call-resume.png" />
-                                            </Button>
-
-
-                                            <Button  Style="{StaticResource callvariable}" x:Name="btnConsulttransfercall"  Padding="7" Margin="2 0 2 0" Background="#B91646" Foreground="White" FontWeight="UltraBold" Width="25" Height="25" Visibility="Visible">
-                                                <Image Source="/Resources/call-conference.png" />
-                                            </Button>
-                                            <Button   Style="{StaticResource callvariable}" x:Name="btnConsultCallEnd"  Padding="7" Margin="2 0 2 0" Background="#B91646" Foreground="White" FontWeight="UltraBold"  Width="25" Height="25" Visibility="Visible">
-                                                <Image Source="/Resources/call-end.png" />
-                                            </Button>
-
-                                        </StackPanel>
-                                        <Border Padding="15 12 15 12" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Background="#e5e3e3" Margin="7 7 7 20" BorderBrush="#9D9D9D" BorderThickness="1" x:Name="ConsultCallVariablePanel" Visibility="Collapsed">
-                                            <Grid x:Name="tempConsultgrid">
-                                                <Grid.RowDefinitions>
-                                                    <RowDefinition Height="*"></RowDefinition>
-                                                </Grid.RowDefinitions>
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition></ColumnDefinition>
-                                                    <ColumnDefinition></ColumnDefinition>
-                                                </Grid.ColumnDefinitions>
-                                                <StackPanel Grid.Row="0" Grid.Column="0">
-                                                    <TextBlock FontSize="14" FontWeight="DemiBold" Foreground="#6f6c6c" Text="Call Variable 1" Margin="0 0 0 7"></TextBlock>
-                                                    <TextBlock FontSize="14" FontWeight="DemiBold" Foreground="#6f6c6c" Text="Call Variable 2" Margin="0 0 0 7"></TextBlock>
-                                                    <TextBlock FontSize="14" FontWeight="DemiBold" Foreground="#6f6c6c" Text="Call Variable 3" Margin="0 0 0 7"></TextBlock>
-                                                    <TextBlock FontSize="14" FontWeight="DemiBold" Foreground="#6f6c6c" Text="Call Variable 4" Margin="0 0 0 7"></TextBlock>
-                                                    <TextBlock FontSize="14" FontWeight="DemiBold" Foreground="#6f6c6c" Text="Call Variable 5" Margin="0 0 0 7"></TextBlock>
-                                                </StackPanel>
-                                                <StackPanel Grid.Row="0" Grid.Column="1" HorizontalAlignment="Right">
-                                                    <TextBlock FontSize="14" FontWeight="DemiBold" Foreground="#6f6c6c" Text="Call Variable 6" Margin="0 0 0 7"></TextBlock>
-                                                    <TextBlock FontSize="14" FontWeight="DemiBold" Foreground="#6f6c6c" Text="Call Variable 7" Margin="0 0 0 7"></TextBlock>
-                                                    <TextBlock FontSize="14" FontWeight="DemiBold" Foreground="#6f6c6c" Text="Call Variable 8" Margin="0 0 0 7"></TextBlock>
-                                                    <TextBlock FontSize="14" FontWeight="DemiBold" Foreground="#6f6c6c" Text="Call Variable 9" Margin="0 0 0 7"></TextBlock>
-                                                    <TextBlock FontSize="14" FontWeight="DemiBold" Foreground="#6f6c6c" Text="Call Variable 10" Margin="0 0 0 7"></TextBlock>
-                                                </StackPanel>
-                                            </Grid>
-                                        </Border>
                                     </Grid>
-                                </Border>
+                                </StackPanel>
                             </StackPanel>
                         </Border>
+                        <!--call Panel-->
+
+                        <!--<Border Grid.Row="2" BorderBrush="#C8C6C6" BorderThickness="1" Background="#EEEEEE" Margin="5 10 5 5">
+                            <Border BorderBrush="#9D9D9D" BorderThickness="1" Grid.Row="0" Margin="7 7 7 7" CornerRadius="2">
+                                <Grid x:Name="toolbox">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="40"></RowDefinition>
+                                        <RowDefinition Height="*"></RowDefinition>
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition></ColumnDefinition>
+                                        <ColumnDefinition></ColumnDefinition>
+                                        <ColumnDefinition></ColumnDefinition>
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Grid.Row="0" Grid.Column="0" Margin="7 3 10 0">
+                                        <TextBlock x:Name="txtCallTiming" Foreground="#9D9D9D" Text="00:00:00" FontSize="14"></TextBlock>
+                                        <StackPanel Orientation="Horizontal">
+                                            <Image Source="/Resources/3050.png" Height="12" Width="12" Margin="0 0 3 0"/>
+                                            <TextBlock FontWeight="Bold" FontFamily="Tahoma"  x:Name="txtCallingNumber" Text="03336301122"></TextBlock>
+                                        </StackPanel>
+
+                                    </StackPanel>
+                                    <StackPanel Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Vertical" Margin="0 5 0 0">
+                                        <Button  x:Name="btnCallVaribles" Style="{StaticResource callbtn}" Width="110" Height="20" VerticalAlignment="Center" HorizontalAlignment="Center" Background="#EEEEEE" Click="btnCallVaribles_Click">
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                <TextBlock FontFamily="Tahoma"  x:Name="txtlbl" Text="Call Variables" VerticalAlignment="Center" Margin="5 0 8 0"></TextBlock>
+                                                <Path x:Name="arrow" VerticalAlignment="Center"  HorizontalAlignment="Right" Stroke="#9D9D9D" StrokeThickness="2" Fill="#9D9D9D" Data="M 0 0 L 4 4 L 8 0 Z" Margin="0 1 8 0"/>
+                                                --><!--<Polygon Points="0,0 8,5, 0,10" Stroke="Black" Fill="Black" />-->
+                                                <!--<Polygon Points="8,0 0,5, 8,10" Stroke="Black" Fill="Black" />--><!--
+                                            </StackPanel>
+                                        </Button>
+                                    </StackPanel>
+
+                                    <StackPanel Grid.Row="0" Grid.Column="3"  Margin="0 0 10 0" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                        <Button Style="{StaticResource callvariable}" x:Name="btnCallPick1" Padding="7" Margin="0 0 2 0" Background="#34BE82" Foreground="White" FontWeight="UltraBold" BorderBrush="Transparent" Width="25" Height="25">
+                                            <Image Source="/Resources/call-answer-1.png" />
+                                        </Button>
+                                        <Button Style="{StaticResource callvariable}" x:Name="btnCallDrop1"  Padding="7" Margin="2 0 2 0" Background="#B91646" Foreground="White" FontWeight="UltraBold" Width="25" Height="25">
+                                            <Image Source="/Resources/call-conference.png" />
+                                        </Button>
+                                        <Button Style="{StaticResource callvariable}" x:Name="btnCallEnd1"  Padding="7" Margin="2 0 2 0" Background="#B91646" Foreground="White" FontWeight="UltraBold"  Width="25" Height="25">
+                                            <Image Source="/Resources/call-end.png" />
+                                        </Button>
+                                    </StackPanel>
+                                    <Border Padding="15 12 15 12" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Background="#e5e3e3" Margin="7 7 7 20" BorderBrush="#9D9D9D" BorderThickness="1" x:Name="CallVariablePanel" Visibility="Collapsed">
+                                        <Grid x:Name="tempgrid">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="*"></RowDefinition>
+                                            </Grid.RowDefinitions>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition></ColumnDefinition>
+                                                <ColumnDefinition></ColumnDefinition>
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel Grid.Row="0" Grid.Column="0">
+                                                <TextBlock FontSize="14" FontWeight="DemiBold" Foreground="#6f6c6c" Text="Call Variable 1" Margin="0 0 0 7"></TextBlock>
+                                                <TextBlock FontSize="14" FontWeight="DemiBold" Foreground="#6f6c6c" Text="Call Variable 2" Margin="0 0 0 7"></TextBlock>
+                                                <TextBlock FontSize="14" FontWeight="DemiBold" Foreground="#6f6c6c" Text="Call Variable 3" Margin="0 0 0 7"></TextBlock>
+                                                <TextBlock FontSize="14" FontWeight="DemiBold" Foreground="#6f6c6c" Text="Call Variable 4" Margin="0 0 0 7"></TextBlock>
+                                                <TextBlock FontSize="14" FontWeight="DemiBold" Foreground="#6f6c6c" Text="Call Variable 5" Margin="0 0 0 7"></TextBlock>
+                                            </StackPanel>
+                                            <StackPanel Grid.Row="0" Grid.Column="1" HorizontalAlignment="Right">
+                                                <TextBlock FontSize="14" FontWeight="DemiBold" Foreground="#6f6c6c" Text="Call Variable 6" Margin="0 0 0 7"></TextBlock>
+                                                <TextBlock FontSize="14" FontWeight="DemiBold" Foreground="#6f6c6c" Text="Call Variable 7" Margin="0 0 0 7"></TextBlock>
+                                                <TextBlock FontSize="14" FontWeight="DemiBold" Foreground="#6f6c6c" Text="Call Variable 8" Margin="0 0 0 7"></TextBlock>
+                                                <TextBlock FontSize="14" FontWeight="DemiBold" Foreground="#6f6c6c" Text="Call Variable 9" Margin="0 0 0 7"></TextBlock>
+                                                <TextBlock FontSize="14" FontWeight="DemiBold" Foreground="#6f6c6c" Text="Call Variable 10" Margin="0 0 0 7"></TextBlock>
+                                            </StackPanel>
+                                        </Grid>
+                                    </Border>
+                                </Grid>
+                            </Border>
+                        </Border>-->
+                        <!-- end call Panel-->
                     </StackPanel>
-                </Border>-->
+                </Border>
+
+
             </TabItem>
             <TabItem Header="Supervisor Dashboard" Width="{Binding ElementName=c1, Path=ActualWidth}">
                 <Border BorderBrush="{StaticResource TransparentColorBrush}" BorderThickness="0">
