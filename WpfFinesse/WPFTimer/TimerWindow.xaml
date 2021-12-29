@@ -31,6 +31,7 @@
         <Color x:Key="BackgroundColor">#A6A6A6</Color>
         <Color x:Key="StandardColor">#A7A7A7</Color>
         <Color x:Key="BorderColor">#C8C6C6</Color>
+        <Color x:Key="ForegroundPhonebookColor">#c7c2c2</Color>
         <Color x:Key="HoverColor"></Color>
         <Color x:Key="PressedColor"></Color>
         <SolidColorBrush x:Key="StandardBrush" Color="{StaticResource StandardColor}" />
@@ -46,6 +47,7 @@
         <SolidColorBrush x:Key="TabItemActiveColorBrush" Color="{StaticResource TabItemActiveColor}"></SolidColorBrush>
         <SolidColorBrush x:Key="TabItemNonActiveForegroundColorBrush" Color="{StaticResource TabItemNonActiveForegroundColor}"></SolidColorBrush>
         <SolidColorBrush x:Key="BorderColorBrush" Color="{StaticResource BorderColor}"></SolidColorBrush>
+        <SolidColorBrush x:Key="ForegroundPhonebookColorBrush" Color="{StaticResource ForegroundPhonebookColor}"></SolidColorBrush>
         <!--End Colors-->
 
         
@@ -105,15 +107,15 @@
                     <Path x:Name="CollapsedArrow"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
-            Data="M 0 0 L 4 4 L 8 0 Z" Fill="{StaticResource GridSortingArrowColorBrush}">
+            Data="M 0 0 L 8 8 L 16 0 Z" Fill="{StaticResource ForegroundPhonebookColorBrush}">
                        
                     </Path>
                     <Path x:Name="ExpandededArrow"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
             Visibility="Collapsed"
-            Data="M 0 4 L 4 0 L 8 4 Z"
-                          Fill="{StaticResource GridSortingArrowColorBrush}">
+            Data="M 0 8 L 8 0 L 16 8 Z"
+                          Fill="{StaticResource ForegroundPhonebookColorBrush}">
                      
                     </Path>
                 </Grid>
@@ -133,10 +135,9 @@
                             <Border x:Name="Border"
                                     Padding="5"
                                     Background="White"
-                  Grid.Row="0"
-                  BorderThickness="1 1 1 .5"
-                                    BorderBrush="{StaticResource BorderColorBrush}"
-                                  >
+                                    Grid.Row="0"
+                                    BorderThickness="1 1 1 .5"
+                                    BorderBrush="{StaticResource BorderColorBrush}">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*" />
@@ -157,20 +158,19 @@
                             </Border>
                             <Border x:Name="Content"
                                     Background="White"
-                  Grid.Row="1"
-                  BorderThickness="1,0,1,1"
+                                    Grid.Row="1"
+                                    BorderThickness="1,0,1,1"
                                     BorderBrush="{StaticResource BorderColorBrush}">
-
                                 <ContentPresenter Margin="10" />
                             </Border>
                         </Grid>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsExpanded" Value="True">
-                                <Setter Property="Background" Value="Red"></Setter>
+                                <Setter TargetName="Border" Property="BorderThickness" Value="1 1 1 0"></Setter>
+                                <Setter TargetName="Content" Property="BorderThickness" Value="1 0 1 0"></Setter>
                             </Trigger>
 
                             <Trigger Property="IsExpanded" Value="True">
-
                                 <Setter TargetName="ContentRow" Property="Height" Value="{Binding Height, ElementName=Content}" />
                             </Trigger>
                         </ControlTemplate.Triggers>
@@ -218,15 +218,15 @@
                     <ControlTemplate>
                         <Border CornerRadius="2" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1">
                             <Grid>
-                                <TextBlock FontSize="12" Text="Search Contact" Height="25" Foreground="{StaticResource BorderColorBrush}" Padding="5 5 0 0" VerticalAlignment="Center">
-                                    <TextBlock.Visibility>
+                                <Label FontSize="12" Content="Search Contact" Height="27" Foreground="{StaticResource BorderColorBrush}" Padding="5 0 0 0" VerticalAlignment="Center" VerticalContentAlignment="Center">
+                                    <Label.Visibility>
                                         <MultiBinding Converter="{StaticResource TextInputToVisibilityConverter}">
                                             <Binding ElementName="InputText" Path="Text.IsEmpty"></Binding>
                                             <Binding ElementName="InputText" Path="IsFocused"></Binding>
                                         </MultiBinding>
-                                    </TextBlock.Visibility>
-                                </TextBlock>
-                                <TextBox Height="25" Padding="5 0 0 0" FontSize="12" VerticalAlignment="Center" VerticalContentAlignment="Center" x:Name="InputText" Background="Transparent" BorderBrush="Transparent" BorderThickness="0"></TextBox>
+                                    </Label.Visibility>
+                                </Label>
+                                <TextBox Height="27" Padding="5 0 0 0" FontSize="12" VerticalAlignment="Center" VerticalContentAlignment="Center" x:Name="InputText" Background="Transparent" BorderBrush="Transparent" BorderThickness="0"></TextBox>
                             </Grid>
                         </Border>
                     </ControlTemplate>
@@ -832,7 +832,7 @@
                   Grid.ColumnSpan="2"
                   CornerRadius="2"
                     Background="White"
-                  BorderBrush="#FF97A0A5"
+                  BorderBrush="{StaticResource BorderColorBrush}"
                   BorderThickness="1 1 1 1" Height="Auto" />
                 <Border 
                   Grid.Column="0"
@@ -840,7 +840,7 @@
                   Margin="1" 
                   BorderThickness="0,0,1,0" />
 
-                <Path Grid.Column="1" x:Name="Arrow" VerticalAlignment="Center"  HorizontalAlignment="Center" Stroke="#9b9898" StrokeThickness="2" Fill="#9b9898" Data="M 0 0 L 4 4 L 8 0 Z" Margin="2 2 2 0"/>
+                <Path Grid.Column="1" x:Name="Arrow" VerticalAlignment="Center"  HorizontalAlignment="Center" Stroke="{StaticResource ForegroundPhonebookColorBrush}" StrokeThickness="2" Fill="{StaticResource ForegroundPhonebookColorBrush}" Data="M 0 0 L 4 4 L 8 0 Z" Margin="2 2 2 0"/>
 
                 <!--<Path 
                   x:Name="Arrow"
@@ -1518,18 +1518,26 @@
                                             <TextBox BorderThickness="0" Style="{StaticResource waterMark}" ></TextBox>
 
                                         </StackPanel>
-                                        <StackPanel Grid.Column="1" Grid.Row="0"  Margin="10 0 0 0"></StackPanel>
+                                        <StackPanel Grid.Column="1" Grid.Row="0"  Margin="10 0 0 0">
+                                            <ComboBox Height="28.5"  x:Name="cbReasonCoes1"  IsEditable="True" IsReadOnly="True" Text="Phone Book"  HorizontalAlignment="Stretch" VerticalAlignment="Center">
+                                                <ComboBoxItem Content="Team 1"/>
+                                                <ComboBoxItem Content="Team 2"/>
+                                                <ComboBoxItem Content="Team 3"/>
+                                                <ComboBoxItem Content="Team 4"/>
+                                                <ComboBoxItem Content="Team 5"/>
+                                            </ComboBox>
+                                        </StackPanel>
 
                                     </Grid>
                                 </StackPanel>
                                 <StackPanel Margin="0 10 0 0" Height="400">
-                                    <Expander Header="Hello" Foreground="Red" FontWeight="Bold" >
+                                    <Expander Header="Glenn Helgass" Foreground="#938c8c" FontWeight="SemiBold" FontSize="14" >
 
-                                        <TextBlock Text="hello expender" FontWeight="Normal" Foreground="Yellow"></TextBlock>
+                                        <TextBlock Text="Under development" FontWeight="ExtraBold" Foreground="Yellow" FontSize="20"></TextBlock>
                                     </Expander>
-                                    <Expander Header="Hello" Foreground="Red" FontWeight="Bold" >
+                                    <Expander Header="Edam Jimes" Foreground="#938c8c" FontWeight="Bold" >
 
-                                        <TextBlock Text="hello expender" FontWeight="Normal" Foreground="Yellow"></TextBlock>
+                                        <TextBlock Text="hello expender" FontWeight="SemiBold" Foreground="Yellow"></TextBlock>
                                     </Expander>
                                 </StackPanel>
                             </StackPanel>
