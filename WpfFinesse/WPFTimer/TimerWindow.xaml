@@ -107,14 +107,14 @@
                     <Path x:Name="CollapsedArrow"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
-            Data="M 0 0 L 8 8 L 16 0 Z" Fill="{StaticResource ForegroundPhonebookColorBrush}">
+            Data="M 0 0 L 6 6 L 12 0 Z" Fill="{StaticResource ForegroundPhonebookColorBrush}">
 
                     </Path>
                     <Path x:Name="ExpandededArrow"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
             Visibility="Collapsed"
-            Data="M 0 8 L 8 0 L 16 8 Z"
+            Data="M 0 6 L 6 0 L 12 6 Z"
                           Fill="{StaticResource ForegroundPhonebookColorBrush}">
 
                     </Path>
@@ -129,8 +129,7 @@
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
-                                <RowDefinition x:Name="ContentRow"
-                           Height="0" />
+                                <RowDefinition x:Name="ContentRow" Height="0" />
                             </Grid.RowDefinitions>
                             <Border x:Name="Border"
                                     Padding="5"
@@ -145,15 +144,10 @@
                                     </Grid.ColumnDefinitions>
                                     <ToggleButton OverridesDefaultStyle="True"
                                                   Grid.Column="1"
-                            Template="{StaticResource ExpanderToggleButton}"
-                            IsChecked="{Binding IsExpanded, Mode=TwoWay, 
-                  RelativeSource={RelativeSource TemplatedParent}}">
-
+                                                  Template="{StaticResource ExpanderToggleButton}"
+                                                  IsChecked="{Binding IsExpanded, Mode=TwoWay,RelativeSource={RelativeSource TemplatedParent}}">
                                     </ToggleButton>
-                                    <ContentPresenter Grid.Column="0"
-                                Margin="4"
-                                ContentSource="Header"
-                                RecognizesAccessKey="True" />
+                                    <ContentPresenter Grid.Column="0" Margin="4" ContentSource="Header" RecognizesAccessKey="True" />
                                 </Grid>
                             </Border>
                             <Border x:Name="Content"
@@ -210,8 +204,8 @@
         </Style>
         <!--end pagination-->
 
-        <!--Start Watermark Textbox-->
-        <Style x:Key="waterMark" TargetType="TextBox">
+        <!--Start Watermark Textbox for Search Phonebook-->
+        <Style x:Key="WaterMarkPhoneSearch" TargetType="TextBox">
             <Setter Property="BorderBrush" Value="{StaticResource BorderColorBrush}"></Setter>
             <Setter Property="BorderThickness" Value="1"></Setter>
             <Setter Property="Template">
@@ -219,7 +213,7 @@
                     <ControlTemplate>
                         <Border CornerRadius="2" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1">
                             <Grid>
-                                <Label FontSize="12" Content="Search Contact" Height="27" Foreground="{StaticResource BorderColorBrush}" Padding="5 0 0 0" VerticalAlignment="Center" VerticalContentAlignment="Center">
+                                <Label FontSize="12" Content="Search contact" Height="27" Foreground="{StaticResource BorderColorBrush}" Padding="5 0 0 0" VerticalAlignment="Center" VerticalContentAlignment="Center">
                                     <Label.Visibility>
                                         <MultiBinding Converter="{StaticResource TextInputToVisibilityConverter}">
                                             <Binding ElementName="InputText" Path="Text.IsEmpty"></Binding>
@@ -234,12 +228,37 @@
                 </Setter.Value>
             </Setter>
         </Style>
-        <!--End Watermark Textbox-->
+        <!--End Watermark Textbox Search Phonebook-->
+
+
+        <!--Start Watermark Textbox for Search Team Performance-->
+        <Style x:Key="WaterMarkTeamPerformanceSearch" TargetType="TextBox">
+            <Setter Property="BorderBrush" Value="{StaticResource BorderColorBrush}"></Setter>
+            <Setter Property="BorderThickness" Value="1"></Setter>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <Border CornerRadius="2" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1">
+                            <Grid>
+                                <Label FontSize="12" Content="Search" Height="27" Foreground="{StaticResource BorderColorBrush}" Padding="5 0 0 0" VerticalAlignment="Center" VerticalContentAlignment="Center">
+                                    <Label.Visibility>
+                                        <MultiBinding Converter="{StaticResource TextInputToVisibilityConverter}">
+                                            <Binding ElementName="InputText" Path="Text.IsEmpty"></Binding>
+                                            <Binding ElementName="InputText" Path="IsFocused"></Binding>
+                                        </MultiBinding>
+                                    </Label.Visibility>
+                                </Label>
+                                <TextBox Height="27" Padding="5 0 0 0" FontSize="12" VerticalAlignment="Center" VerticalContentAlignment="Center" x:Name="InputText" Background="Transparent" BorderBrush="Transparent" BorderThickness="0"></TextBox>
+                            </Grid>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <!--End Watermark Textbox Search Team Performance-->
 
 
         <!--Start Data Grid StatusTemplate-->
-
-
         <DataTemplate x:Key="StatusTemplate" >
             <Border VerticalAlignment="Center" HorizontalAlignment="Center" Width="120">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Height="40" VerticalAlignment="Center" Width="auto">
@@ -429,7 +448,7 @@
         </Style>
         <!--End Horizontal Scrolbar track-->
 
-        
+
         <!--Start Phonebook Scrolviewer-->
         <ControlTemplate x:Key="ScrollViewerControlTemplate1" TargetType="{x:Type ScrollViewer}">
             <Grid x:Name="Grid" Background="{TemplateBinding Background}">
@@ -448,8 +467,8 @@
             </Grid>
         </ControlTemplate>
         <!--End Phonebook Scrollviewer-->
-        
-        
+
+
         <!--Start DataGrid-->
         <Style TargetType="DataGrid">
             <Setter Property="CanUserResizeRows" Value="False"></Setter>
@@ -1536,11 +1555,11 @@
                                             <RowDefinition />
                                         </Grid.RowDefinitions>
                                         <StackPanel Grid.Column="0" Grid.Row="0">
-                                            <TextBox BorderThickness="0" Style="{StaticResource waterMark}" ></TextBox>
+                                            <TextBox BorderThickness="0" Style="{StaticResource WaterMarkPhoneSearch}" ></TextBox>
 
                                         </StackPanel>
                                         <StackPanel Grid.Column="1" Grid.Row="0"  Margin="10 0 0 0">
-                                            <ComboBox  Height="28.5"  x:Name="cbReasonCoes1"  IsEditable="True" IsReadOnly="True" Text="Phone Book"  HorizontalAlignment="Stretch" VerticalAlignment="Center">
+                                            <ComboBox  Height="28.6"  x:Name="cbReasonCoes1"  IsEditable="True" IsReadOnly="True" Text="Phone Book"  HorizontalAlignment="Stretch" VerticalAlignment="Center">
                                                 <ComboBoxItem Content="Item 1"/>
                                                 <ComboBoxItem Content="Item 2"/>
                                                 <ComboBoxItem Content="Item 3"/>
@@ -1812,7 +1831,7 @@
                                             <ColumnDefinition Width="*"></ColumnDefinition>
                                         </Grid.ColumnDefinitions>
                                         <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Center" Orientation="Vertical"  Width="306">
-                                            <ComboBox Height="25"  x:Name="cbReasonCodes1" DockPanel.Dock="Right" IsEditable="True" IsReadOnly="True" Text="MEDICARE TEAM"  HorizontalAlignment="Stretch" VerticalAlignment="Center"  BorderBrush="#EEEEEE">
+                                            <ComboBox Height="28.5"  x:Name="cbReasonCodes1" DockPanel.Dock="Right" IsEditable="True" IsReadOnly="True" Text="MEDICARE TEAM"  HorizontalAlignment="Stretch" VerticalAlignment="Center"  BorderBrush="#EEEEEE">
                                                 <ComboBoxItem Content="Team 1"/>
                                                 <ComboBoxItem Content="Team 2"/>
                                                 <ComboBoxItem Content="Team 3"/>
@@ -1847,7 +1866,9 @@
                                         </StackPanel>
 
                                         <StackPanel Grid.Row="3" HorizontalAlignment="Stretch" Orientation="Vertical"  Width="306">
-                                            <Grid>
+                                            <TextBox BorderThickness="0" Style="{StaticResource WaterMarkTeamPerformanceSearch}" x:Name="SearchTermTextBox"></TextBox>
+
+                                            <!--<Grid>
                                                 <TextBox   VerticalAlignment="Center" HorizontalAlignment="Stretch" x:Name="SearchTermTextBox" Margin="0 5 0 5" Padding="4 0 0 0" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" KeyUp="SearchTermTextBox_KeyDown">
                                                     <TextBox.Resources>
                                                         <Style TargetType="{x:Type Border}">
@@ -1857,7 +1878,7 @@
                                                         </Style>
                                                     </TextBox.Resources>
                                                 </TextBox>
-                                            </Grid>
+                                            </Grid>-->
                                         </StackPanel>
                                         <StackPanel Grid.Row="4" HorizontalAlignment="Stretch" Orientation="Vertical"  Width="306">
                                             <Grid>
