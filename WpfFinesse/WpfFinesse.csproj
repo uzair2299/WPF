@@ -140,6 +140,9 @@
     <Compile Include="ScrollBar\ScrollBar.xaml.cs">
       <DependentUpon>ScrollBar.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ScrollBar\Window1.xaml.cs">
+      <DependentUpon>Window1.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Tabs.xaml.cs">
       <DependentUpon>Tabs.xaml</DependentUpon>
     </Compile>
@@ -266,6 +269,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="ScrollBar\Window1.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Tabs.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -370,8 +377,6 @@
     <Resource Include="Resources\search.ico" />
     <Resource Include="Resources\stocks_plus_hover.png" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="ToolTipConverter\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

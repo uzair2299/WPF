@@ -50,7 +50,7 @@
         <SolidColorBrush x:Key="ForegroundPhonebookColorBrush" Color="{StaticResource ForegroundPhonebookColor}"></SolidColorBrush>
         <!--End Colors-->
 
-        
+
         <!--start expender-->
         <ControlTemplate x:Key="ExpanderToggleButton"
                  TargetType="{x:Type ToggleButton}">
@@ -108,7 +108,7 @@
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
             Data="M 0 0 L 8 8 L 16 0 Z" Fill="{StaticResource ForegroundPhonebookColorBrush}">
-                       
+
                     </Path>
                     <Path x:Name="ExpandededArrow"
             HorizontalAlignment="Center"
@@ -116,7 +116,7 @@
             Visibility="Collapsed"
             Data="M 0 8 L 8 0 L 16 8 Z"
                           Fill="{StaticResource ForegroundPhonebookColorBrush}">
-                     
+
                     </Path>
                 </Grid>
             </Border>
@@ -179,8 +179,9 @@
             </Setter>
         </Style>
         <!--end expender-->
-        
 
+
+        <!--start pagination-->
         <Style x:Key="btnPagination" TargetType="Button">
             <Setter Property="Cursor" Value="Hand"></Setter>
             <Setter Property="Height" Value="18"></Setter>
@@ -207,8 +208,8 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
+        <!--end pagination-->
 
-        
         <!--Start Watermark Textbox-->
         <Style x:Key="waterMark" TargetType="TextBox">
             <Setter Property="BorderBrush" Value="{StaticResource BorderColorBrush}"></Setter>
@@ -428,6 +429,27 @@
         </Style>
         <!--End Horizontal Scrolbar track-->
 
+        
+        <!--Start Phonebook Scrolviewer-->
+        <ControlTemplate x:Key="ScrollViewerControlTemplate1" TargetType="{x:Type ScrollViewer}">
+            <Grid x:Name="Grid" Background="{TemplateBinding Background}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Rectangle x:Name="Corner" Grid.Column="1" Fill="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" Grid.Row="1"/>
+                <ScrollContentPresenter x:Name="PART_ScrollContentPresenter" CanContentScroll="{TemplateBinding CanContentScroll}" CanHorizontallyScroll="False" CanVerticallyScroll="False" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" Grid.Column="0" Margin="{TemplateBinding Padding}" Grid.Row="0"/>
+                <ScrollBar  Style="{DynamicResource MyScrollBar}" x:Name="PART_VerticalScrollBar" AutomationProperties.AutomationId="VerticalScrollBar" Cursor="Arrow" Grid.Column="1" Maximum="{TemplateBinding ScrollableHeight}" Minimum="0" Grid.Row="0" Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}" Value="{Binding VerticalOffset, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}" ViewportSize="{TemplateBinding ViewportHeight}"/>
+                <ScrollBar x:Name="PART_HorizontalScrollBar" AutomationProperties.AutomationId="HorizontalScrollBar" Cursor="Arrow" Grid.Column="0" Maximum="{TemplateBinding ScrollableWidth}" Minimum="0" Orientation="Horizontal" Grid.Row="1" Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}" Value="{Binding HorizontalOffset, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}" Width="10" ViewportSize="{TemplateBinding ViewportWidth}"/>
+            </Grid>
+        </ControlTemplate>
+        <!--End Phonebook Scrollviewer-->
+        
+        
         <!--Start DataGrid-->
         <Style TargetType="DataGrid">
             <Setter Property="CanUserResizeRows" Value="False"></Setter>
@@ -831,7 +853,7 @@
                   x:Name="Border" 
                   Grid.ColumnSpan="2"
                   CornerRadius="2"
-                    Background="White"
+                  Background="White"
                   BorderBrush="{StaticResource BorderColorBrush}"
                   BorderThickness="1 1 1 1" Height="Auto" />
                 <Border 
@@ -839,7 +861,6 @@
                   CornerRadius="0" 
                   Margin="1" 
                   BorderThickness="0,0,1,0" />
-
                 <Path Grid.Column="1" x:Name="Arrow" VerticalAlignment="Center"  HorizontalAlignment="Center" Stroke="{StaticResource ForegroundPhonebookColorBrush}" StrokeThickness="2" Fill="{StaticResource ForegroundPhonebookColorBrush}" Data="M 0 0 L 4 4 L 8 0 Z" Margin="2 2 2 0"/>
 
                 <!--<Path 
@@ -906,8 +927,8 @@
                             Margin="3,3,23,3"
                             Focusable="True" 
                             Background="White"
-                            Foreground="Black"
                             Visibility="Hidden"
+                                     Foreground="{StaticResource ForegroundPhonebookColorBrush}"
                             IsReadOnly="{TemplateBinding IsReadOnly}"/>
                             <!--<Border>
                                 <StackPanel>-->
@@ -1508,8 +1529,8 @@
                                     <TextBlock Text="Phonebook" Foreground="#c7c2c2" FontWeight="Bold"></TextBlock>
                                     <Grid  Margin="0 5 0 0">
                                         <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="140"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="140"/>
                                         </Grid.ColumnDefinitions>
                                         <Grid.RowDefinitions>
                                             <RowDefinition />
@@ -1519,27 +1540,79 @@
 
                                         </StackPanel>
                                         <StackPanel Grid.Column="1" Grid.Row="0"  Margin="10 0 0 0">
-                                            <ComboBox Height="28.5"  x:Name="cbReasonCoes1"  IsEditable="True" IsReadOnly="True" Text="Phone Book"  HorizontalAlignment="Stretch" VerticalAlignment="Center">
-                                                <ComboBoxItem Content="Team 1"/>
-                                                <ComboBoxItem Content="Team 2"/>
-                                                <ComboBoxItem Content="Team 3"/>
-                                                <ComboBoxItem Content="Team 4"/>
-                                                <ComboBoxItem Content="Team 5"/>
+                                            <ComboBox  Height="28.5"  x:Name="cbReasonCoes1"  IsEditable="True" IsReadOnly="True" Text="Phone Book"  HorizontalAlignment="Stretch" VerticalAlignment="Center">
+                                                <ComboBoxItem Content="Item 1"/>
+                                                <ComboBoxItem Content="Item 2"/>
+                                                <ComboBoxItem Content="Item 3"/>
+                                                <ComboBoxItem Content="Item 4"/>
+                                                <ComboBoxItem Content="Item 5"/>
                                             </ComboBox>
                                         </StackPanel>
 
                                     </Grid>
                                 </StackPanel>
-                                <StackPanel Margin="0 10 0 0" Height="400">
-                                    <Expander Header="Glenn Helgass" Foreground="#938c8c" FontWeight="SemiBold" FontSize="14" >
+                                <ScrollViewer Margin="0 10 0 0" Height="400" VerticalScrollBarVisibility="Auto" Template="{DynamicResource ScrollViewerControlTemplate1}">
+                                    <StackPanel  >
+                                        <Expander Header="Glenn Helgass" Foreground="#938c8c" FontWeight="SemiBold" FontSize="14" >
 
-                                        <TextBlock Text="Under development" FontWeight="ExtraBold" Foreground="Yellow" FontSize="20"></TextBlock>
-                                    </Expander>
-                                    <Expander Header="Edam Jimes" Foreground="#938c8c" FontWeight="Bold" >
+                                            <TextBlock Text="Under development" FontWeight="ExtraBold" Foreground="Yellow" FontSize="20"></TextBlock>
+                                        </Expander>
+                                        <Expander Header="Edam Jimes" Foreground="#938c8c" FontWeight="Bold" >
 
-                                        <TextBlock Text="hello expender" FontWeight="SemiBold" Foreground="Yellow"></TextBlock>
-                                    </Expander>
-                                </StackPanel>
+                                            <TextBlock Text="hello expender" FontWeight="SemiBold" Foreground="Yellow"></TextBlock>
+                                        </Expander>
+                                        <Expander Header="Edam Jimes" Foreground="#938c8c" FontWeight="Bold" >
+
+                                            <TextBlock Text="hello expender" FontWeight="SemiBold" Foreground="Yellow"></TextBlock>
+                                        </Expander>
+                                        <Expander Header="Edam Jimes" Foreground="#938c8c" FontWeight="Bold" >
+
+                                            <TextBlock Text="hello expender" FontWeight="SemiBold" Foreground="Yellow"></TextBlock>
+                                        </Expander>
+                                        <Expander Header="Edam Jimes" Foreground="#938c8c" FontWeight="Bold" >
+
+                                            <TextBlock Text="hello expender" FontWeight="SemiBold" Foreground="Yellow"></TextBlock>
+                                        </Expander>
+                                        <Expander Header="Edam Jimes" Foreground="#938c8c" FontWeight="Bold" >
+
+                                            <TextBlock Text="hello expender" FontWeight="SemiBold" Foreground="Yellow"></TextBlock>
+                                        </Expander>
+                                        <Expander Header="Edam Jimes" Foreground="#938c8c" FontWeight="Bold" >
+
+                                            <TextBlock Text="hello expender" FontWeight="SemiBold" Foreground="Yellow"></TextBlock>
+                                        </Expander>
+                                        <Expander Header="Edam Jimes" Foreground="#938c8c" FontWeight="Bold" >
+
+                                            <TextBlock Text="hello expender" FontWeight="SemiBold" Foreground="Yellow"></TextBlock>
+                                        </Expander>
+                                        <Expander Header="Edam Jimes" Foreground="#938c8c" FontWeight="Bold" >
+
+                                            <TextBlock Text="hello expender" FontWeight="SemiBold" Foreground="Yellow"></TextBlock>
+                                        </Expander>
+                                        <Expander Header="Edam Jimes" Foreground="#938c8c" FontWeight="Bold" >
+
+                                            <TextBlock Text="hello expender" FontWeight="SemiBold" Foreground="Yellow"></TextBlock>
+                                        </Expander>
+
+                                        <Expander Header="Edam Jimes" Foreground="#938c8c" FontWeight="Bold" >
+
+                                            <TextBlock Text="hello expender" FontWeight="SemiBold" Foreground="Yellow"></TextBlock>
+                                        </Expander>
+                                        <Expander Header="Edam Jimes" Foreground="#938c8c" FontWeight="Bold" >
+
+                                            <TextBlock Text="hello expender" FontWeight="SemiBold" Foreground="Yellow"></TextBlock>
+                                        </Expander>
+                                        <Expander Header="Edam Jimes" Foreground="#938c8c" FontWeight="Bold" >
+
+                                            <TextBlock Text="hello expender" FontWeight="SemiBold" Foreground="Yellow"></TextBlock>
+                                        </Expander>
+                                        <Expander Header="Edam Jimes" Foreground="#938c8c" FontWeight="Bold" >
+
+                                            <TextBlock Text="hello expender" FontWeight="SemiBold" Foreground="Yellow"></TextBlock>
+                                        </Expander>
+                                    </StackPanel>
+
+                                </ScrollViewer>
                             </StackPanel>
                         </Border>
                         <!--call Panel-->
@@ -1569,8 +1642,10 @@
                                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
                                                 <TextBlock FontFamily="Tahoma"  x:Name="txtlbl" Text="Call Variables" VerticalAlignment="Center" Margin="5 0 8 0"></TextBlock>
                                                 <Path x:Name="arrow" VerticalAlignment="Center"  HorizontalAlignment="Right" Stroke="#9D9D9D" StrokeThickness="2" Fill="#9D9D9D" Data="M 0 0 L 4 4 L 8 0 Z" Margin="0 1 8 0"/>
-                                                --><!--<Polygon Points="0,0 8,5, 0,10" Stroke="Black" Fill="Black" />-->
-                                                <!--<Polygon Points="8,0 0,5, 8,10" Stroke="Black" Fill="Black" />--><!--
+                                                -->
+                        <!--<Polygon Points="0,0 8,5, 0,10" Stroke="Black" Fill="Black" />-->
+                        <!--<Polygon Points="8,0 0,5, 8,10" Stroke="Black" Fill="Black" />-->
+                        <!--
                                             </StackPanel>
                                         </Button>
                                     </StackPanel>
@@ -1664,11 +1739,6 @@
                                         <DataGrid  Name="dgSimple1" VerticalAlignment="Center" VerticalContentAlignment="Center" CellStyle="{StaticResource Body_Content_DataGrid_Centering}" Height="350" EnableRowVirtualization="False">
                                             <DataGrid.Columns>
                                                 <DataGridTextColumn Header="Queue Name" Binding="{Binding QueueName}" IsReadOnly="True">
-                                                    <!--<DataGridTextColumn.HeaderStyle>
-                                                        <Style TargetType="DataGridColumnHeader">
-                                                            <Setter Property="Background" Value="Green"/>
-                                                        </Style>
-                                                    </DataGridTextColumn.HeaderStyle>-->
                                                 </DataGridTextColumn>
                                                 <DataGridTextColumn Header="Queued Calls" Binding="{Binding QueuedCalls}" IsReadOnly="True" HeaderStyle="{StaticResource DataGridColumnHeader1}">
                                                     <DataGridTextColumn.ElementStyle>
