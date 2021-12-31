@@ -294,6 +294,7 @@
             <Setter Property="Height" Value="40"></Setter>
             <Setter Property="BorderBrush" Value="Transparent"></Setter>
             <Setter Property="BorderThickness" Value="0"></Setter>
+            <!--<Setter Property="Cursor" Value="Hand"></Setter>-->
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type DataGridCell}">
@@ -323,6 +324,7 @@
         <!--Start Vertical Thumb-->
         <Style x:Key="ScrollThumbs" TargetType="{x:Type Thumb}">
             <Setter Property="Background" Value="{StaticResource BackgroundBrush}" />
+            <Setter Property="Cursor" Value="Hand"></Setter>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type Thumb}">
@@ -338,6 +340,7 @@
         <!--Start Horizontal Thumb-->
         <Style x:Key="ScrollThumbsHorizontal" TargetType="{x:Type Thumb}">
             <Setter Property="Background" Value="{StaticResource BackgroundBrush}" />
+            <Setter Property="Cursor" Value="Hand"></Setter>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type Thumb}">
@@ -356,9 +359,19 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type RepeatButton}">
-                        <Border Name="Border" Background="{StaticResource TransparentColorBrush}">
+                        <Border CornerRadius="1" Name="Border" Background="{StaticResource TransparentColorBrush}">
                             <ContentPresenter />
                         </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsKeyboardFocused" Value="true">
+                                <Setter Property="BorderBrush" Value="Transparent" TargetName="Border"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter Property="Background" Value="#bfbfbf" TargetName="Border"/>                            </Trigger>
+                            <Trigger Property="IsPressed" Value="true">
+                                <Setter Property="Background" Value="#bfbfbf" TargetName="Border"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
@@ -369,7 +382,6 @@
         <Style x:Key="MyScrollBar" TargetType="{x:Type ScrollBar}">
             <Setter Property="Background" Value="{StaticResource ScrollBarTrackColorBrush}" />
             <Setter Property="Width" Value="10" />
-            <Setter Property="Cursor" Value="Hand"></Setter>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type ScrollBar}">
@@ -401,7 +413,6 @@
         <Style x:Key="MyScrollBar1" TargetType="{x:Type ScrollBar}">
             <Setter Property="Background" Value="{StaticResource ScrollBarTrackColorBrush}" />
             <Setter Property="Width" Value="Auto" />
-            <Setter Property="Cursor" Value="Hand"></Setter>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type ScrollBar}">
@@ -616,6 +627,7 @@
             <Setter Property="Height" Value="40"></Setter>
             <Setter Property="HorizontalAlignment" Value="Stretch"></Setter>
             <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
+            <Setter Property="Cursor" Value="Hand"></Setter>
 
             <Setter Property="Template">
                 <Setter.Value>
@@ -733,6 +745,7 @@
             <Setter Property="Height" Value="40"></Setter>
             <Setter Property="HorizontalAlignment" Value="Stretch"></Setter>
             <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
+            <Setter Property="Cursor" Value="Hand"></Setter>
 
             <Setter Property="Template">
                 <Setter.Value>
@@ -1483,6 +1496,7 @@
         </UniformGrid>
         <TabControl BorderThickness="0">
             <TabControl.Resources>
+                
                 <Style TargetType="TabControl">
                     <Setter Property="Template">
                         <Setter.Value>
@@ -1503,6 +1517,7 @@
                 </Style>
 
                 <Style TargetType="TabItem">
+                    <!--<Setter Property="Cursor" Value="Hand"></Setter>-->
                     <Setter Property="HeaderTemplate">
                         <Setter.Value>
                             <DataTemplate>
@@ -1735,6 +1750,7 @@
                         <TabControl  BorderThickness="0" Margin="1 0">
                             <TabControl.Resources>
                                 <Style TargetType="TabItem">
+
                                     <Setter Property="HeaderTemplate">
                                         <Setter.Value>
                                             <DataTemplate>
