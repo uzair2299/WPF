@@ -6,7 +6,8 @@
         xmlns:local="clr-namespace:WpfFinesse.WPFTimer"
         xmlns:Themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2"
         mc:Ignorable="d"
-        Title="TimerWindow" MinWidth="380" MaxWidth="380" MinHeight="500">
+        Title="TimerWindow" MinWidth="380" MaxWidth="380" MinHeight="500"
+        WindowStartupLocation="CenterScreen">
     <Window.Resources>
 
         <!--Start Converters-->
@@ -1933,10 +1934,10 @@
                                                 <DataGridTemplateColumn  SortMemberPath="CallStatus" CanUserSort="True" Header="Status" CellTemplate="{StaticResource StatusTemplate}">
 
                                                 </DataGridTemplateColumn>
-                                                <DataGridTextColumn Header="Time" Binding="{Binding DisplayTimeString}" IsReadOnly="True" >
+                                                <DataGridTextColumn  Header="Time" Binding="{Binding DisplayTimeString}" IsReadOnly="True">
                                                     <DataGridTextColumn.ElementStyle>
                                                         <Style TargetType="TextBlock">
-                                                            <Setter Property="HorizontalAlignment" Value="Center" />
+                                                            <Setter Property="HorizontalAlignment" Value="Left" />
                                                         </Style>
                                                     </DataGridTextColumn.ElementStyle>
                                                 </DataGridTextColumn>
