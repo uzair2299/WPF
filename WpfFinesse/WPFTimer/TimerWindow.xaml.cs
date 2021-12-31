@@ -14,6 +14,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using WpfFinesse.ControlUtility;
 using WpfFinesse.CustomTab;
 
 namespace WpfFinesse.WPFTimer
@@ -95,6 +96,53 @@ namespace WpfFinesse.WPFTimer
             }
             this.StartMockValue();
             this.StartRefreshDataGrid();
+
+
+
+
+            //phone book
+            /* main stack for holding content of expender control*/
+
+
+            for (var i = 0; i <= 20; i++)
+            {
+
+                StackPanel mainPhoneBookStackPanel = new StackPanel();
+                Expander expender = DynamicControlUtility.GetExpenderPhoneBook("Jhon Smith " + i);
+                Border b = DynamicControlUtility.GetBorderPhoneBook("#C8C6C6", 5, 5, 5, 1);
+
+                StackPanel phoneNoStackPanel = new StackPanel();
+                TextBlock tb = DynamicControlUtility.GetTextBlockPhoneBook("Phone No");
+
+                TextBox txt = DynamicControlUtility.GetTextBoxPhoneBook("+92320550000"+i);
+                phoneNoStackPanel.Children.Add(tb);
+                phoneNoStackPanel.Children.Add(txt);
+                b.Child = phoneNoStackPanel;
+
+
+                //notes penal
+                Border b1 = DynamicControlUtility.GetBorderPhoneBook("#C8C6C6", 5, 5, 5, 1);
+
+                StackPanel notesStackPanel = new StackPanel();
+                TextBlock tb1 = DynamicControlUtility.GetTextBlockPhoneBook("Notes");
+
+                TextBox txt1 = DynamicControlUtility.GetTextBoxPhoneBook("Note "+ i);
+                notesStackPanel.Children.Add(tb1);
+                notesStackPanel.Children.Add(txt1);
+                b1.Child = notesStackPanel;
+
+                //apend phone nd notes into main stackpanel
+                mainPhoneBookStackPanel.Children.Add(b);
+                mainPhoneBookStackPanel.Children.Add(b1);
+
+                //set expendercontent
+                expender.Content = mainPhoneBookStackPanel;
+
+                //set expender into ui stackpanel
+                PhoneBookStackPanel.Children.Add(expender);
+            }
+
+
         }
 
         private void StartMockValue()

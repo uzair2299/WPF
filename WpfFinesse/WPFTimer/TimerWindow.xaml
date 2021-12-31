@@ -32,6 +32,7 @@
         <Color x:Key="StandardColor">#A7A7A7</Color>
         <Color x:Key="BorderColor">#C8C6C6</Color>
         <Color x:Key="ForegroundPhonebookColor">#c7c2c2</Color>
+        <Color x:Key="ForegroundPhonebookContactColor">#938c8c</Color>
         <Color x:Key="HoverColor"></Color>
         <Color x:Key="PressedColor"></Color>
         <SolidColorBrush x:Key="StandardBrush" Color="{StaticResource StandardColor}" />
@@ -48,6 +49,8 @@
         <SolidColorBrush x:Key="TabItemNonActiveForegroundColorBrush" Color="{StaticResource TabItemNonActiveForegroundColor}"></SolidColorBrush>
         <SolidColorBrush x:Key="BorderColorBrush" Color="{StaticResource BorderColor}"></SolidColorBrush>
         <SolidColorBrush x:Key="ForegroundPhonebookColorBrush" Color="{StaticResource ForegroundPhonebookColor}"></SolidColorBrush>
+        <SolidColorBrush x:Key="ForegroundPhonebookContactColorBrush" Color="{StaticResource ForegroundPhonebookContactColor}"></SolidColorBrush>
+
         <!--End Colors-->
 
 
@@ -123,6 +126,9 @@
         </ControlTemplate>
 
         <Style TargetType="{x:Type Expander}">
+            <Setter Property="Foreground" Value="{StaticResource ForegroundPhonebookContactColorBrush}"></Setter>
+            <Setter Property="FontWeight" Value="SemiBold"></Setter>
+            <Setter Property="FontSize" Value="14"></Setter>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type Expander}">
@@ -142,7 +148,9 @@
                                         <ColumnDefinition Width="*" />
                                         <ColumnDefinition Width="20" />
                                     </Grid.ColumnDefinitions>
-                                    <ToggleButton OverridesDefaultStyle="True"
+                                    <ToggleButton
+                                        Cursor="Hand"
+                                        OverridesDefaultStyle="True"
                                                   Grid.Column="1"
                                                   Template="{StaticResource ExpanderToggleButton}"
                                                   IsChecked="{Binding IsExpanded, Mode=TwoWay,RelativeSource={RelativeSource TemplatedParent}}">
@@ -153,7 +161,7 @@
                             <Border x:Name="Content"
                                     Background="White"
                                     Grid.Row="1"
-                                    BorderThickness="1,0,1,1"
+                                    BorderThickness="1,.5,1,1"
                                     BorderBrush="{StaticResource BorderColorBrush}">
                                 <ContentPresenter Margin="10" />
                             </Border>
@@ -161,7 +169,7 @@
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsExpanded" Value="True">
                                 <Setter TargetName="Border" Property="BorderThickness" Value="1 1 1 0"></Setter>
-                                <Setter TargetName="Content" Property="BorderThickness" Value="1 0 1 0"></Setter>
+                                <Setter TargetName="Content" Property="BorderThickness" Value="1 0 1 1"></Setter>
                             </Trigger>
 
                             <Trigger Property="IsExpanded" Value="True">
@@ -344,6 +352,7 @@
 
         <!--Start RepeatButton-->
         <Style x:Key="ScrollButtons" TargetType="{x:Type RepeatButton}">
+            <Setter Property="Cursor" Value="Hand"></Setter>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type RepeatButton}">
@@ -360,6 +369,7 @@
         <Style x:Key="MyScrollBar" TargetType="{x:Type ScrollBar}">
             <Setter Property="Background" Value="{StaticResource ScrollBarTrackColorBrush}" />
             <Setter Property="Width" Value="10" />
+            <Setter Property="Cursor" Value="Hand"></Setter>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type ScrollBar}">
@@ -391,6 +401,7 @@
         <Style x:Key="MyScrollBar1" TargetType="{x:Type ScrollBar}">
             <Setter Property="Background" Value="{StaticResource ScrollBarTrackColorBrush}" />
             <Setter Property="Width" Value="Auto" />
+            <Setter Property="Cursor" Value="Hand"></Setter>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type ScrollBar}">
@@ -925,6 +936,7 @@
                     <ControlTemplate TargetType="{x:Type ComboBox}">
                         <Grid>
                             <ToggleButton 
+                                Cursor="Hand"
                             Name="ToggleButton" 
                             Template="{StaticResource ComboBoxToggleButtonTeam}" 
                             Grid.Column="2" 
@@ -1017,7 +1029,7 @@
             <Setter Property="SnapsToDevicePixels" Value="true"/>
             <Setter Property="Foreground" Value="Black"/>
             <Setter Property="OverridesDefaultStyle" Value="true"/>
-
+            <Setter Property="Cursor" Value="Hand"></Setter>
 
             <Setter Property="Template">
                 <Setter.Value>
@@ -1046,9 +1058,9 @@
                                 <Setter TargetName="Border" Property="Background" Value="{StaticResource AlternativeGridRowColorBrush}"/>
                                 <Setter TargetName="Arrow1" Property="Visibility" Value="Visible"></Setter>
                             </Trigger>
-                            <!--<Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" Value="AliceBlue" />
-                            </Trigger>-->
+                            <Trigger Property="ComboBoxItem.IsMouseOver" Value="True">
+                                <Setter TargetName="Border" Property="Background" Value="{StaticResource AlternativeGridRowColorBrush}" />
+                            </Trigger>
                             <Trigger Property="IsHighlighted" Value="true">
                                 <Setter TargetName="Border" Property="Background" Value="{StaticResource AlternativeGridRowColorBrush}"/>
                                 <Setter Property="Foreground" Value="Black"></Setter>
@@ -1571,12 +1583,16 @@
                                     </Grid>
                                 </StackPanel>
                                 <ScrollViewer Margin="0 10 0 0" Height="400" VerticalScrollBarVisibility="Auto" Template="{DynamicResource ScrollViewerControlTemplate1}">
-                                    <StackPanel  >
-                                        <Expander Header="Glenn Helgass" Foreground="#938c8c" FontWeight="SemiBold" FontSize="14" >
+                                    <StackPanel Name="PhoneBookStackPanel">
+                                        <!--<Expander Header="Glenn Helgass">
 
                                             <TextBlock Text="Under development" FontWeight="ExtraBold" Foreground="Yellow" FontSize="20"></TextBlock>
                                         </Expander>
-                                        <Expander Header="Edam Jimes" Foreground="#938c8c" FontWeight="Bold" >
+                                        <Expander Header="Glenn Helgass">
+
+                                            <TextBlock Text="hello expender" FontWeight="SemiBold" Foreground="Yellow"></TextBlock>
+                                        </Expander>-->
+                                        <!--<Expander Header="Edam Jimes" Foreground="#938c8c" FontWeight="Bold" >
 
                                             <TextBlock Text="hello expender" FontWeight="SemiBold" Foreground="Yellow"></TextBlock>
                                         </Expander>
@@ -1608,10 +1624,6 @@
 
                                             <TextBlock Text="hello expender" FontWeight="SemiBold" Foreground="Yellow"></TextBlock>
                                         </Expander>
-                                        <Expander Header="Edam Jimes" Foreground="#938c8c" FontWeight="Bold" >
-
-                                            <TextBlock Text="hello expender" FontWeight="SemiBold" Foreground="Yellow"></TextBlock>
-                                        </Expander>
 
                                         <Expander Header="Edam Jimes" Foreground="#938c8c" FontWeight="Bold" >
 
@@ -1625,10 +1637,10 @@
 
                                             <TextBlock Text="hello expender" FontWeight="SemiBold" Foreground="Yellow"></TextBlock>
                                         </Expander>
-                                        <Expander Header="Edam Jimes" Foreground="#938c8c" FontWeight="Bold" >
+                                        <Expander Margin="0 0 0 10" Header="Edam Jimes" Foreground="#938c8c" FontWeight="Bold" >
 
                                             <TextBlock Text="hello expender" FontWeight="SemiBold" Foreground="Yellow"></TextBlock>
-                                        </Expander>
+                                        </Expander>-->
                                     </StackPanel>
 
                                 </ScrollViewer>

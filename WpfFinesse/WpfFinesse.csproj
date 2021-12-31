@@ -90,6 +90,7 @@
     <Compile Include="Consultcall.xaml.cs">
       <DependentUpon>Consultcall.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ControlUtility\DynamicControlUtility.cs" />
     <Compile Include="CustomTab\Pager.cs" />
     <Compile Include="CustomTab\T1.xaml.cs">
       <DependentUpon>T1.xaml</DependentUpon>
