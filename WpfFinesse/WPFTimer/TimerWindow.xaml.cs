@@ -110,7 +110,7 @@ namespace WpfFinesse.WPFTimer
                 StackPanel mainPhoneBookStackPanel = new StackPanel();
                 Expander expender = DynamicControlUtility.GetExpenderPhoneBook("Jhon Smith " + i);
                 Border b = DynamicControlUtility.GetBorderPhoneBook("#C8C6C6", 5, 5, 5, 1);
-
+                
                 StackPanel phoneNoStackPanel = new StackPanel();
                 TextBlock tb = DynamicControlUtility.GetTextBlockPhoneBook("Phone No");
 
