@@ -928,4 +928,5 @@ namespace WpfFinesse.WPFTimer
             throw new NotImplementedException();
         }
     }
+
 }

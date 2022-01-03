@@ -20,9 +20,9 @@ namespace WpfFinesse.ControlUtility
             grid.ColumnDefinitions.Clear();
 
             ColumnDefinition c1 = new ColumnDefinition();
-            c1.Width = new GridLength(70, GridUnitType.Star);
+            c1.Width = new GridLength(65, GridUnitType.Star);
             ColumnDefinition c2 = new ColumnDefinition();
-            c2.Width = new GridLength(30, GridUnitType.Star);
+            c2.Width = new GridLength(35, GridUnitType.Star);
             grid.ColumnDefinitions.Add(c1);
             grid.ColumnDefinitions.Add(c2);
 
@@ -43,6 +43,7 @@ namespace WpfFinesse.ControlUtility
             bn.BorderBrush = Brushes.Transparent;
             bn.Width = 28;
             bn.Height = 28;
+            bn.Click += Bn_Click;
             bn.Margin = new Thickness(1);
             bn.BorderThickness = new Thickness(0);
             bn.Content = new Image
@@ -59,6 +60,7 @@ namespace WpfFinesse.ControlUtility
             bn1.Cursor = Cursors.Hand;
             bn1.Width = 28;
             bn1.Height = 28;
+            bn1.Click += Bn_Click;
             bn1.BorderThickness = new Thickness(0);
             bn1.Content = new Image
             {
@@ -68,8 +70,27 @@ namespace WpfFinesse.ControlUtility
                 Height = 25
             };
 
+
+            Button bn3 = new Button();
+            bn3.BorderBrush = Brushes.Transparent;
+            bn3.Cursor = Cursors.Hand;
+            bn3.Width = 28;
+            bn3.Height = 28;
+            bn3.Click += Bn_Click;
+            bn3.BorderThickness = new Thickness(0);
+            bn3.Content = new Image
+            {
+                Source = new BitmapImage(new Uri("/Resources/call-transfer.png", UriKind.RelativeOrAbsolute)),
+                VerticalAlignment = VerticalAlignment.Center,
+                Width = 25,
+                Height = 25
+            };
+
+
+
             callControlsStackPanel.Children.Add(bn);
             callControlsStackPanel.Children.Add(bn1);
+            callControlsStackPanel.Children.Add(bn3);
 
 
             grid.Children.Add(tb);
@@ -81,6 +102,11 @@ namespace WpfFinesse.ControlUtility
 
             Exp.Header = grid;
             return Exp;
+        }
+
+        private static void Bn_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Call");
         }
 
         public static Border GetBorderPhoneBook(string BorderColorBrush, int CornerRadius,int Margin,int Padding,int BorderThickness)
