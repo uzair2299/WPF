@@ -104,17 +104,79 @@ namespace WpfFinesse.WPFTimer
             /* main stack for holding content of expender control*/
 
 
-            for (var i = 0; i <= 20; i++)
-            {
+            List<UserTab> phoneBookSource = us.Skip((pg.CurrentPage - 1) * pg.PageSize).Take(pg.PageSize).ToList();
+            SetPhoneBookSource(phoneBookSource);
 
+
+            if (pg.EndPage > 1)
+            {
+                if (pg.CurrentPage > 1)
+                {
+                    Button First = new Button();
+                    First.Name = "FirstPage";
+                    First.Click += Btn_ClickPhoneBook;
+                    First.Content = "<<";
+                    First.Tag = 1;
+                    First.Style = (Style)FindResource("btnPagination");
+                    PhoneBookPagination.Children.Add(First);
+
+                    Button Previous = new Button();
+                    Previous.Click += Btn_ClickPhoneBook;
+                    Previous.Content = "<;";
+                    Previous.Tag = pg.CurrentPage - 1;
+                    Previous.Style = (Style)FindResource("btnPagination");
+                    PhoneBookPagination.Children.Add(Previous);
+                }
+                for (var page = pg.StartPage; page <= pg.EndPage; page++)
+                {
+                    Button btn = new Button();
+                    btn.Click += Btn_ClickPhoneBook;
+                    btn.Content = page;
+                    btn.Tag = page;
+                    btn.Style = (Style)FindResource("btnPagination");
+                    if (page == 1)
+                    {
+
+                        btn.FontWeight = FontWeights.UltraBold;
+                    }
+                    PhoneBookPagination.Children.Add(btn);
+
+                }
+                if (pg.CurrentPage < pg.TotalPages)
+                {
+                    Button Next = new Button();
+                    Next.Click += Btn_ClickPhoneBook;
+                    Next.Content = ">";
+                    Next.Tag = pg.CurrentPage + 1;
+                    Next.Style = (Style)FindResource("btnPagination");
+                    PhoneBookPagination.Children.Add(Next);
+
+                    Button Last = new Button();
+                    Last.Click += Btn_ClickPhoneBook;
+                    Last.Content = ">>";
+                    Last.Tag = pg.TotalPages;
+                    Last.Style = (Style)FindResource("btnPagination");
+                    PhoneBookPagination.Children.Add(Last);
+                }
+            }
+
+
+        }
+
+
+        private void SetPhoneBookSource(List<UserTab> phoneBookSource)
+        {
+            PhoneBookStackPanel.Children.Clear();
+            foreach (var item in phoneBookSource)
+            {
                 StackPanel mainPhoneBookStackPanel = new StackPanel();
-                Expander expender = DynamicControlUtility.GetExpenderPhoneBook("Jhon Smith " + i);
+                Expander expender = DynamicControlUtility.GetExpenderPhoneBook(item.AgentName);
                 Border b = DynamicControlUtility.GetBorderPhoneBook("#C8C6C6", 5, 5, 5, 1);
-                
+
                 StackPanel phoneNoStackPanel = new StackPanel();
                 TextBlock tb = DynamicControlUtility.GetTextBlockPhoneBook("Phone No");
 
-                TextBox txt = DynamicControlUtility.GetTextBoxPhoneBook("+92320550000"+i);
+                TextBox txt = DynamicControlUtility.GetTextBoxPhoneBook(item.Extension);
                 phoneNoStackPanel.Children.Add(tb);
                 phoneNoStackPanel.Children.Add(txt);
                 b.Child = phoneNoStackPanel;
@@ -126,7 +188,7 @@ namespace WpfFinesse.WPFTimer
                 StackPanel notesStackPanel = new StackPanel();
                 TextBlock tb1 = DynamicControlUtility.GetTextBlockPhoneBook("Notes");
 
-                TextBox txt1 = DynamicControlUtility.GetTextBoxPhoneBook("Note "+ i);
+                TextBox txt1 = DynamicControlUtility.GetTextBoxPhoneBook("Note");
                 notesStackPanel.Children.Add(tb1);
                 notesStackPanel.Children.Add(txt1);
                 b1.Child = notesStackPanel;
@@ -140,9 +202,8 @@ namespace WpfFinesse.WPFTimer
 
                 //set expender into ui stackpanel
                 PhoneBookStackPanel.Children.Add(expender);
+
             }
-
-
         }
 
         private void StartMockValue()
@@ -333,6 +394,175 @@ namespace WpfFinesse.WPFTimer
         }
 
 
+        private void Btn_ClickPhoneBook(object sender, RoutedEventArgs e)
+        {
+            Button bt = (Button)sender;
+
+            if (!string.IsNullOrEmpty(txtPhoneBookSearch.Text.ToLower()))
+            {
+                PhoneBookPagination.Children.Clear();
+                int totalItem = 0;
+
+                us = user.GetUsers();
+                string searchtext = txtPhoneBookSearch.Text.ToLower();
+                if (string.IsNullOrEmpty(searchtext))
+                {
+                    //dgSimple.ItemsSource = u;
+                    totalItem = us.Count();
+
+                }
+                else
+                {
+                    us = us.Where(x => x.AgentName.ToLower().Contains(searchtext) || x.Extension.ToLower().Contains(searchtext)).ToList();
+                    totalItem = us.Count();
+                    // dgSimple.ItemsSource = u.Where(x => x.AgentName.ToLower().Contains(searchtext));
+                }
+
+
+
+                int page_ = Convert.ToInt32(bt.Tag);
+                Pager pg = new Pager(totalItem, page_);
+                int setHeight = totalItem % pg.PageSize;
+
+                PhoneBookScrollViewerSetHeight(setHeight, page_, pg.EndPage);
+                List<UserTab> phoneBookSource = us.Skip((pg.CurrentPage - 1) * pg.PageSize).Take(pg.PageSize).ToList();
+                SetPhoneBookSource(phoneBookSource);
+                if (pg.EndPage > 1)
+                {
+                    if (pg.CurrentPage > 1)
+                    {
+                        Button First = new Button();
+                        First.Name = "FirstPage";
+                        First.Click += Btn_ClickPhoneBook;
+                        First.Content = "<<";
+                        First.Tag = 1;
+                        First.Style = (Style)FindResource("btnPagination");
+                        PhoneBookPagination.Children.Add(First);
+
+                        Button Previous = new Button();
+                        Previous.Click += Btn_ClickPhoneBook;
+                        Previous.Content = "<";
+                        Previous.Tag = pg.CurrentPage - 1;
+                        Previous.Style = (Style)FindResource("btnPagination");
+                        PhoneBookPagination.Children.Add(Previous);
+                    }
+                    for (var page = pg.StartPage; page <= pg.EndPage; page++)
+                    {
+                        Button btn = new Button();
+                        btn.Click += Btn_ClickPhoneBook;
+                        btn.Content = page;
+                        btn.Tag = page;
+                        btn.Style = (Style)FindResource("btnPagination");
+                        if (page == page_)
+                        {
+
+                            btn.FontWeight = FontWeights.UltraBold;
+                        }
+                        PhoneBookPagination.Children.Add(btn);
+
+                    }
+                    if (pg.CurrentPage < pg.TotalPages)
+                    {
+                        Button Next = new Button();
+                        Next.Click += Btn_ClickPhoneBook;
+                        Next.Content = ">";
+                        Next.Tag = pg.CurrentPage + 1;
+                        Next.Style = (Style)FindResource("btnPagination");
+                        PhoneBookPagination.Children.Add(Next);
+
+                        Button Last = new Button();
+                        Last.Click += Btn_ClickPhoneBook;
+                        Last.Content = ">>";
+                        Last.Tag = pg.TotalPages;
+                        Last.Style = (Style)FindResource("btnPagination");
+                        PhoneBookPagination.Children.Add(Last);
+                    }
+                }
+            }
+            else
+            {
+                //MessageBox.Show(bt.Tag.ToString());
+                PhoneBookPagination.Children.Clear();
+
+
+                us = user.GetUsers();
+
+                int totalItem = us.Count();
+                int page_ = Convert.ToInt32(bt.Tag);
+                Pager pg = new Pager(totalItem, page_);
+                int setHeight = totalItem % pg.PageSize;
+
+                PhoneBookScrollViewerSetHeight(setHeight, page_, pg.EndPage);
+                List<UserTab> phoneBookSource = us.Skip((pg.CurrentPage - 1) * pg.PageSize).Take(pg.PageSize).ToList();
+                SetPhoneBookSource(phoneBookSource);
+                if (pg.EndPage > 1)
+                {
+                    if (pg.CurrentPage > 1)
+                    {
+                        Button First = new Button();
+                        First.Name = "FirstPage";
+                        First.Click += Btn_ClickPhoneBook;
+                        First.Content = "<<";
+                        First.Tag = 1;
+                        First.Style = (Style)FindResource("btnPagination");
+                        PhoneBookPagination.Children.Add(First);
+
+                        Button Previous = new Button();
+                        Previous.Click += Btn_ClickPhoneBook;
+                        Previous.Content = "<";
+                        Previous.Tag = pg.CurrentPage - 1;
+                        Previous.Style = (Style)FindResource("btnPagination");
+                        PhoneBookPagination.Children.Add(Previous);
+                    }
+                    for (var page = pg.StartPage; page <= pg.EndPage; page++)
+                    {
+                        Button btn = new Button();
+                        btn.Click += Btn_ClickPhoneBook;
+                        btn.Content = page;
+                        btn.Tag = page;
+                        btn.Style = (Style)FindResource("btnPagination");
+                        if (page == page_)
+                        {
+
+                            btn.FontWeight = FontWeights.UltraBold;
+                        }
+                        PhoneBookPagination.Children.Add(btn);
+
+                    }
+                    if (pg.CurrentPage < pg.TotalPages)
+                    {
+                        Button Next = new Button();
+                        Next.Click += Btn_ClickPhoneBook;
+                        Next.Content = ">";
+                        Next.Tag = pg.CurrentPage + 1;
+                        Next.Style = (Style)FindResource("btnPagination");
+                        PhoneBookPagination.Children.Add(Next);
+
+                        Button Last = new Button();
+                        Last.Click += Btn_ClickPhoneBook;
+                        Last.Content = ">>";
+                        Last.Tag = pg.TotalPages;
+                        Last.Style = (Style)FindResource("btnPagination");
+                        PhoneBookPagination.Children.Add(Last);
+                    }
+                }
+
+            }
+        }
+
+
+        private void PhoneBookScrollViewerSetHeight(int setHeight, int page_, int endPage)
+        {
+            if (setHeight != 0 && page_ == endPage)
+            {
+                PhoneBookScrollViewer.Height = Double.NaN;
+            }
+            else
+            {
+                PhoneBookScrollViewer.Height = 400;
+            }
+        }
+
         //private void btnCallVaribles_Click(object sender, RoutedEventArgs e)
         //{
         //    Button b = (Button)sender;
@@ -360,6 +590,108 @@ namespace WpfFinesse.WPFTimer
         //        }
         //    }
         //}
+
+
+
+        private void PhoneBookSearch_KeyDown(object sender, KeyEventArgs e)
+        {
+            PhoneBookPagination.Children.Clear();
+            var tct = (TextBox)sender;
+            int totalItem = 0;
+            us = user.GetUsers();
+            string searchtext = txtPhoneBookSearch.Text.ToLower();
+            string searchtext1 = txtPhoneBookSearch1.Text.ToLower();
+
+            if (string.IsNullOrEmpty(searchtext))
+            {
+                //dgSimple.ItemsSource = u;
+                totalItem = us.Count();
+                PhoneBookNoDataStack.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                us = us.Where(x => x.AgentName.ToLower().Contains(searchtext) || x.Extension.ToLower().Contains(searchtext)).ToList();
+                totalItem = us.Count();
+                if (totalItem == 0)
+                {
+                    PhoneBookNoDataStack.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    PhoneBookNoDataStack.Visibility = Visibility.Collapsed;
+                    //dgSimple.Visibility = Visibility.Visible;
+                }
+                // dgSimple.ItemsSource = u.Where(x => x.AgentName.ToLower().Contains(searchtext));
+            }
+
+
+            if (totalItem <= 10)
+            {
+                PhoneBookScrollViewer.Height = Double.NaN;
+            }
+            else
+            {
+                PhoneBookScrollViewer.Height = 400;
+            }
+
+            Pager pg = new Pager(totalItem, 1);
+            List<UserTab> phoneBookSource = us.Skip((pg.CurrentPage - 1) * pg.PageSize).Take(pg.PageSize).ToList();
+            SetPhoneBookSource(phoneBookSource);
+
+            if (pg.EndPage > 1)
+            {
+                if (pg.CurrentPage > 1)
+                {
+                    Button First = new Button();
+                    First.Name = "FirstPage";
+                    First.Click += Btn_ClickPhoneBook;
+                    First.Content = "<<";
+                    First.Tag = 1;
+                    First.Style = (Style)FindResource("btnPagination");
+                    PhoneBookPagination.Children.Add(First);
+
+                    Button Previous = new Button();
+                    Previous.Click += Btn_ClickPhoneBook;
+                    Previous.Content = "<";
+                    Previous.Tag = pg.CurrentPage - 1;
+                    Previous.Style = (Style)FindResource("btnPagination");
+                    PhoneBookPagination.Children.Add(Previous);
+                }
+                for (var page = pg.StartPage; page <= pg.EndPage; page++)
+                {
+                    Button btn = new Button();
+                    btn.Click += Btn_ClickPhoneBook;
+                    btn.Content = page;
+                    btn.Tag = page;
+                    btn.Style = (Style)FindResource("btnPagination");
+                    if (page == 1)
+                    {
+
+                        btn.FontWeight = FontWeights.UltraBold;
+                    }
+                    PhoneBookPagination.Children.Add(btn);
+
+                }
+                if (pg.CurrentPage < pg.TotalPages)
+                {
+                    Button Next = new Button();
+                    Next.Click += Btn_ClickPhoneBook;
+                    Next.Content = ">";
+                    Next.Tag = pg.CurrentPage + 1;
+                    Next.Style = (Style)FindResource("btnPagination");
+                    PhoneBookPagination.Children.Add(Next);
+
+                    Button Last = new Button();
+                    Last.Click += Btn_ClickPhoneBook;
+                    Last.Content = ">>";
+                    Last.Tag = pg.TotalPages;
+                    Last.Style = (Style)FindResource("btnPagination");
+                    PhoneBookPagination.Children.Add(Last);
+                }
+            }
+        }
+
+
 
 
         private void SearchTermTextBox_KeyDown(object sender, KeyEventArgs e)
@@ -562,10 +894,10 @@ namespace WpfFinesse.WPFTimer
         public List<UserTab> GetUsers()
         {
             List<UserTab> users = new List<UserTab>();
-            users.Add(new UserTab() { CallStatusColor = "#1BDA6D", Time = 100, QueueName = "AMQ", isRowDetail = false, CallStatus = "Ready", Duration = 1000, HeldParticipants = 500, ActiveParticipants = 30, Id = 1, AgentName = "John Doe", Extension = "42033", Name = "John Doe", Birthday = new DateTime(1971, 7, 23) });
+            users.Add(new UserTab() { CallStatusColor = "#1BDA6D", Time = 100, QueueName = "AMQ", isRowDetail = false, CallStatus = "Ready", Duration = 1000, HeldParticipants = 500, ActiveParticipants = 30, Id = 1, AgentName = "ZZJohn Doe", Extension = "42033", Name = "John Doe", Birthday = new DateTime(1971, 7, 23) });
             users.Add(new UserTab() { CallStatusColor = "#d70d0d", Time = 200, QueueName = "AMQ", isRowDetail = false, CallStatus = "Not Ready - Lunch", Duration = 1000, HeldParticipants = 500, ActiveParticipants = 30, Id = 3, AgentName = "John Doe", Extension = "42034", Name = "Sammy Doe", Birthday = new DateTime(1991, 9, 2) });
-            users.Add(new UserTab() { CallStatusColor = "#E6A30C", Time = 210, QueueName = "AMQ", isRowDetail = true, CallStatus = "Talking", Duration = 1000, HeldParticipants = 500, ActiveParticipants = 30, Id = 1, AgentName = "John Doe", Extension = "42035", Name = "John Doe", Birthday = new DateTime(1971, 7, 23) });
-            users.Add(new UserTab() { CallStatusColor = "#E6A30C", Time = 220, QueueName = "AMQ", isRowDetail = true, CallStatus = "Talking", Duration = 1000, HeldParticipants = 500, ActiveParticipants = 30, Id = 2, AgentName = "AJohn Doe", Extension = "42036", Name = "Jane Doe", Birthday = new DateTime(1974, 1, 17) });
+            users.Add(new UserTab() { CallStatusColor = "#E6A30C", Time = 210, QueueName = "AMQ", isRowDetail = true, CallStatus = "Talking", Duration = 1000, HeldParticipants = 500, ActiveParticipants = 30, Id = 1, AgentName = "ZZJohn Doe", Extension = "42035", Name = "John Doe", Birthday = new DateTime(1971, 7, 23) });
+            users.Add(new UserTab() { CallStatusColor = "#E6A30C", Time = 220, QueueName = "AMQ", isRowDetail = true, CallStatus = "Talking", Duration = 1000, HeldParticipants = 500, ActiveParticipants = 30, Id = 2, AgentName = "ZZAJohn Doe", Extension = "42036", Name = "Jane Doe", Birthday = new DateTime(1974, 1, 17) });
             users.Add(new UserTab() { CallStatusColor = "#E6A30C", Time = 230, QueueName = "AMQ", isRowDetail = true, CallStatus = "Talking", Duration = 1000, HeldParticipants = 500, ActiveParticipants = 30, Id = 3, AgentName = "BJohn Doe", Extension = "42037", Name = "Sammy Doe", Birthday = new DateTime(1991, 9, 2) });
             users.Add(new UserTab() { CallStatusColor = "#E6A30C", Time = 240, QueueName = "AMQ", isRowDetail = true, CallStatus = "Talking", Duration = 1000, HeldParticipants = 500, ActiveParticipants = 30, Id = 1, AgentName = "CJohn Doe", Extension = "42038", Name = "John Doe", Birthday = new DateTime(1971, 7, 23) });
             users.Add(new UserTab() { CallStatusColor = "#E6A30C", Time = 250, QueueName = "AMQ", isRowDetail = true, CallStatus = "Talking", Duration = 1000, HeldParticipants = 500, ActiveParticipants = 30, Id = 2, AgentName = "DJohn Doe", Extension = "42039", Name = "Jane Doe", Birthday = new DateTime(1974, 1, 17) });
@@ -613,8 +945,6 @@ namespace WpfFinesse.WPFTimer
             users.Add(new UserTab() { CallStatusColor = "#1BDA6D", Time = 200, QueueName = "AMQ", isRowDetail = false, CallStatus = "Ready", Duration = 1000, HeldParticipants = 500, ActiveParticipants = 30, Id = 1, AgentName = "KJohn Doe", Extension = "42000", Name = "John Doe", Birthday = new DateTime(1971, 7, 23) });
             users.Add(new UserTab() { CallStatusColor = "#1BDA6D", Time = 200, QueueName = "AMQ", isRowDetail = false, CallStatus = "Ready", Duration = 1000, HeldParticipants = 500, ActiveParticipants = 30, Id = 2, AgentName = "LJohn Doe", Extension = "47033", Name = "Jane Doe", Birthday = new DateTime(1974, 1, 17) });
             users.Add(new UserTab() { CallStatusColor = "#1BDA6D", Time = 200, QueueName = "AMQ", isRowDetail = false, CallStatus = "Ready", Duration = 1000, HeldParticipants = 500, ActiveParticipants = 30, Id = 3, AgentName = "John uzair Doe", Extension = "74441", Name = "Sammy Doe", Birthday = new DateTime(1991, 9, 2) });
-
-
             users.Add(new UserTab() { CallStatusColor = "#1BDA6D", Time = 300, QueueName = "AMQ", isRowDetail = false, CallStatus = "Ready", Duration = 1000, HeldParticipants = 500, ActiveParticipants = 30, Id = 1, AgentName = "John Doe", Extension = "42033", Name = "John Doe", Birthday = new DateTime(1971, 7, 23) });
             users.Add(new UserTab() { CallStatusColor = "#d70d0d", Time = 300, QueueName = "AMQ", isRowDetail = false, CallStatus = "Not Ready - Lunch", Duration = 1000, HeldParticipants = 500, ActiveParticipants = 30, Id = 3, AgentName = "John Doe", Extension = "42034", Name = "Sammy Doe", Birthday = new DateTime(1991, 9, 2) });
             users.Add(new UserTab() { CallStatusColor = "#E6A30C", Time = 300, QueueName = "AMQ", isRowDetail = true, CallStatus = "Talking", Duration = 1000, HeldParticipants = 500, ActiveParticipants = 30, Id = 1, AgentName = "John Doe", Extension = "42035", Name = "John Doe", Birthday = new DateTime(1971, 7, 23) });
@@ -632,8 +962,6 @@ namespace WpfFinesse.WPFTimer
             users.Add(new UserTab() { CallStatusColor = "#1BDA6D", Time = 300, QueueName = "AMQ", isRowDetail = false, CallStatus = "Ready", Duration = 1000, HeldParticipants = 500, ActiveParticipants = 30, Id = 1, AgentName = "KJohn Doe", Extension = "42000", Name = "John Doe", Birthday = new DateTime(1971, 7, 23) });
             users.Add(new UserTab() { CallStatusColor = "#1BDA6D", Time = 300, QueueName = "AMQ", isRowDetail = false, CallStatus = "Ready", Duration = 1000, HeldParticipants = 500, ActiveParticipants = 30, Id = 2, AgentName = "LJohn Doe", Extension = "47033", Name = "Jane Doe", Birthday = new DateTime(1974, 1, 17) });
             users.Add(new UserTab() { CallStatusColor = "#1BDA6D", Time = 300, QueueName = "AMQ", isRowDetail = false, CallStatus = "Ready", Duration = 1000, HeldParticipants = 500, ActiveParticipants = 30, Id = 3, AgentName = "John uzair Doe", Extension = "74441", Name = "Sammy Doe", Birthday = new DateTime(1991, 9, 2) });
-
-
             users.Add(new UserTab() { CallStatusColor = "#1BDA6D", Time = 400, QueueName = "AMQ", isRowDetail = false, CallStatus = "Ready", Duration = 1000, HeldParticipants = 500, ActiveParticipants = 30, Id = 1, AgentName = "John Doe", Extension = "42033", Name = "John Doe", Birthday = new DateTime(1971, 7, 23) });
             users.Add(new UserTab() { CallStatusColor = "#d70d0d", Time = 400, QueueName = "AMQ", isRowDetail = false, CallStatus = "Not Ready - Lunch", Duration = 1000, HeldParticipants = 500, ActiveParticipants = 30, Id = 3, AgentName = "John Doe", Extension = "42034", Name = "Sammy Doe", Birthday = new DateTime(1991, 9, 2) });
             users.Add(new UserTab() { CallStatusColor = "#E6A30C", Time = 400, QueueName = "AMQ", isRowDetail = true, CallStatus = "Talking", Duration = 1000, HeldParticipants = 500, ActiveParticipants = 30, Id = 1, AgentName = "John Doe", Extension = "42035", Name = "John Doe", Birthday = new DateTime(1971, 7, 23) });
@@ -651,8 +979,6 @@ namespace WpfFinesse.WPFTimer
             users.Add(new UserTab() { CallStatusColor = "#1BDA6D", Time = 400, QueueName = "AMQ", isRowDetail = false, CallStatus = "Ready", Duration = 1000, HeldParticipants = 500, ActiveParticipants = 30, Id = 1, AgentName = "KJohn Doe", Extension = "42000", Name = "John Doe", Birthday = new DateTime(1971, 7, 23) });
             users.Add(new UserTab() { CallStatusColor = "#1BDA6D", Time = 400, QueueName = "AMQ", isRowDetail = false, CallStatus = "Ready", Duration = 1000, HeldParticipants = 500, ActiveParticipants = 30, Id = 2, AgentName = "LJohn Doe", Extension = "47033", Name = "Jane Doe", Birthday = new DateTime(1974, 1, 17) });
             users.Add(new UserTab() { CallStatusColor = "#1BDA6D", Time = 400, QueueName = "AMQ", isRowDetail = false, CallStatus = "Ready", Duration = 1000, HeldParticipants = 500, ActiveParticipants = 30, Id = 3, AgentName = "John uzair Doe", Extension = "74441", Name = "Sammy Doe", Birthday = new DateTime(1991, 9, 2) });
-
-
             users.Add(new UserTab() { CallStatusColor = "#1BDA6D", Time = 500, QueueName = "AMQ", isRowDetail = false, CallStatus = "Ready", Duration = 1000, HeldParticipants = 500, ActiveParticipants = 30, Id = 1, AgentName = "John Doe", Extension = "42033", Name = "John Doe", Birthday = new DateTime(1971, 7, 23) });
             users.Add(new UserTab() { CallStatusColor = "#d70d0d", Time = 500, QueueName = "AMQ", isRowDetail = false, CallStatus = "Not Ready - Lunch", Duration = 1000, HeldParticipants = 500, ActiveParticipants = 30, Id = 3, AgentName = "John Doe", Extension = "42034", Name = "Sammy Doe", Birthday = new DateTime(1991, 9, 2) });
             users.Add(new UserTab() { CallStatusColor = "#E6A30C", Time = 500, QueueName = "AMQ", isRowDetail = true, CallStatus = "Talking", Duration = 1000, HeldParticipants = 500, ActiveParticipants = 30, Id = 1, AgentName = "John Doe", Extension = "42035", Name = "John Doe", Birthday = new DateTime(1971, 7, 23) });
@@ -670,7 +996,6 @@ namespace WpfFinesse.WPFTimer
             users.Add(new UserTab() { CallStatusColor = "#1BDA6D", Time = 500, QueueName = "AMQ", isRowDetail = false, CallStatus = "Ready", Duration = 1000, HeldParticipants = 500, ActiveParticipants = 30, Id = 1, AgentName = "KJohn Doe", Extension = "42000", Name = "John Doe", Birthday = new DateTime(1971, 7, 23) });
             users.Add(new UserTab() { CallStatusColor = "#1BDA6D", Time = 500, QueueName = "AMQ", isRowDetail = false, CallStatus = "Ready", Duration = 1000, HeldParticipants = 500, ActiveParticipants = 30, Id = 2, AgentName = "LJohn Doe", Extension = "47033", Name = "Jane Doe", Birthday = new DateTime(1974, 1, 17) });
             users.Add(new UserTab() { CallStatusColor = "#1BDA6D", Time = 500, QueueName = "AMQ", isRowDetail = false, CallStatus = "Ready", Duration = 1000, HeldParticipants = 500, ActiveParticipants = 30, Id = 3, AgentName = "John uzair Doe", Extension = "74441", Name = "Sammy Doe", Birthday = new DateTime(1991, 9, 2) });
-
             users.Add(new UserTab() { CallStatusColor = "#1BDA6D", Time = 600, QueueName = "AMQ", isRowDetail = false, CallStatus = "Ready", Duration = 1000, HeldParticipants = 500, ActiveParticipants = 30, Id = 1, AgentName = "John Doe", Extension = "42033", Name = "John Doe", Birthday = new DateTime(1971, 7, 23) });
             users.Add(new UserTab() { CallStatusColor = "#d70d0d", Time = 600, QueueName = "AMQ", isRowDetail = false, CallStatus = "Not Ready - Lunch", Duration = 1000, HeldParticipants = 500, ActiveParticipants = 30, Id = 3, AgentName = "John Doe", Extension = "42034", Name = "Sammy Doe", Birthday = new DateTime(1991, 9, 2) });
             users.Add(new UserTab() { CallStatusColor = "#E6A30C", Time = 600, QueueName = "AMQ", isRowDetail = true, CallStatus = "Talking", Duration = 1000, HeldParticipants = 500, ActiveParticipants = 30, Id = 1, AgentName = "John Doe", Extension = "42035", Name = "John Doe", Birthday = new DateTime(1971, 7, 23) });
@@ -756,8 +1081,6 @@ namespace WpfFinesse.WPFTimer
             users.Add(new UserTab() { CallStatusColor = "#1BDA6D", Time = 600, QueueName = "AMQ", isRowDetail = false, CallStatus = "Ready", Duration = 1000, HeldParticipants = 500, ActiveParticipants = 30, Id = 1, AgentName = "KJohn Doe", Extension = "42000", Name = "John Doe", Birthday = new DateTime(1971, 7, 23) });
             users.Add(new UserTab() { CallStatusColor = "#1BDA6D", Time = 600, QueueName = "AMQ", isRowDetail = false, CallStatus = "Ready", Duration = 1000, HeldParticipants = 500, ActiveParticipants = 30, Id = 2, AgentName = "LJohn Doe", Extension = "47033", Name = "Jane Doe", Birthday = new DateTime(1974, 1, 17) });
             users.Add(new UserTab() { CallStatusColor = "#1BDA6D", Time = 600, QueueName = "AMQ", isRowDetail = false, CallStatus = "Ready", Duration = 1000, HeldParticipants = 500, ActiveParticipants = 30, Id = 3, AgentName = "John uzair Doe", Extension = "74441", Name = "Sammy Doe", Birthday = new DateTime(1991, 9, 2) });
-
-
             users.Add(new UserTab() { CallStatusColor = "#1BDA6D", Time = 800, QueueName = "AMQ", isRowDetail = false, CallStatus = "Ready", Duration = 1000, HeldParticipants = 500, ActiveParticipants = 30, Id = 1, AgentName = "John Doe", Extension = "42033", Name = "John Doe", Birthday = new DateTime(1971, 7, 23) });
             users.Add(new UserTab() { CallStatusColor = "#d70d0d", Time = 800, QueueName = "AMQ", isRowDetail = false, CallStatus = "Not Ready - Lunch", Duration = 1000, HeldParticipants = 500, ActiveParticipants = 30, Id = 3, AgentName = "John Doe", Extension = "42034", Name = "Sammy Doe", Birthday = new DateTime(1991, 9, 2) });
             users.Add(new UserTab() { CallStatusColor = "#E6A30C", Time = 800, QueueName = "AMQ", isRowDetail = true, CallStatus = "Talking", Duration = 1000, HeldParticipants = 500, ActiveParticipants = 30, Id = 1, AgentName = "John Doe", Extension = "42035", Name = "John Doe", Birthday = new DateTime(1971, 7, 23) });
@@ -775,8 +1098,6 @@ namespace WpfFinesse.WPFTimer
             users.Add(new UserTab() { CallStatusColor = "#1BDA6D", Time = 800, QueueName = "AMQ", isRowDetail = false, CallStatus = "Ready", Duration = 1000, HeldParticipants = 500, ActiveParticipants = 30, Id = 1, AgentName = "KJohn Doe", Extension = "42000", Name = "John Doe", Birthday = new DateTime(1971, 7, 23) });
             users.Add(new UserTab() { CallStatusColor = "#1BDA6D", Time = 800, QueueName = "AMQ", isRowDetail = false, CallStatus = "Ready", Duration = 1000, HeldParticipants = 500, ActiveParticipants = 30, Id = 2, AgentName = "LJohn Doe", Extension = "47033", Name = "Jane Doe", Birthday = new DateTime(1974, 1, 17) });
             users.Add(new UserTab() { CallStatusColor = "#1BDA6D", Time = 800, QueueName = "AMQ", isRowDetail = false, CallStatus = "Ready", Duration = 1000, HeldParticipants = 500, ActiveParticipants = 30, Id = 3, AgentName = "John uzair Doe", Extension = "74441", Name = "Sammy Doe", Birthday = new DateTime(1991, 9, 2) });
-
-
             users.Add(new UserTab() { CallStatusColor = "#1BDA6D", Time = 850, QueueName = "AMQ", isRowDetail = false, CallStatus = "Ready", Duration = 1000, HeldParticipants = 500, ActiveParticipants = 30, Id = 1, AgentName = "John Doe", Extension = "42033", Name = "John Doe", Birthday = new DateTime(1971, 7, 23) });
             users.Add(new UserTab() { CallStatusColor = "#d70d0d", Time = 850, QueueName = "AMQ", isRowDetail = false, CallStatus = "Not Ready - Lunch", Duration = 1000, HeldParticipants = 500, ActiveParticipants = 30, Id = 3, AgentName = "John Doe", Extension = "42034", Name = "Sammy Doe", Birthday = new DateTime(1991, 9, 2) });
             users.Add(new UserTab() { CallStatusColor = "#E6A30C", Time = 850, QueueName = "AMQ", isRowDetail = true, CallStatus = "Talking", Duration = 1000, HeldParticipants = 500, ActiveParticipants = 30, Id = 1, AgentName = "John Doe", Extension = "42035", Name = "John Doe", Birthday = new DateTime(1971, 7, 23) });
@@ -794,8 +1115,6 @@ namespace WpfFinesse.WPFTimer
             users.Add(new UserTab() { CallStatusColor = "#1BDA6D", Time = 850, QueueName = "AMQ", isRowDetail = false, CallStatus = "Ready", Duration = 1000, HeldParticipants = 500, ActiveParticipants = 30, Id = 1, AgentName = "KJohn Doe", Extension = "42000", Name = "John Doe", Birthday = new DateTime(1971, 7, 23) });
             users.Add(new UserTab() { CallStatusColor = "#1BDA6D", Time = 850, QueueName = "AMQ", isRowDetail = false, CallStatus = "Ready", Duration = 1000, HeldParticipants = 500, ActiveParticipants = 30, Id = 2, AgentName = "LJohn Doe", Extension = "47033", Name = "Jane Doe", Birthday = new DateTime(1974, 1, 17) });
             users.Add(new UserTab() { CallStatusColor = "#1BDA6D", Time = 850, QueueName = "AMQ", isRowDetail = false, CallStatus = "Ready", Duration = 1000, HeldParticipants = 500, ActiveParticipants = 30, Id = 3, AgentName = "John uzair Doe", Extension = "74441", Name = "Sammy Doe", Birthday = new DateTime(1991, 9, 2) });
-
-
             users.Add(new UserTab() { CallStatusColor = "#1BDA6D", Time = 900, QueueName = "AMQ", isRowDetail = false, CallStatus = "Ready", Duration = 1000, HeldParticipants = 500, ActiveParticipants = 30, Id = 1, AgentName = "John Doe", Extension = "42033", Name = "John Doe", Birthday = new DateTime(1971, 7, 23) });
             users.Add(new UserTab() { CallStatusColor = "#d70d0d", Time = 900, QueueName = "AMQ", isRowDetail = false, CallStatus = "Not Ready - Lunch", Duration = 1000, HeldParticipants = 500, ActiveParticipants = 30, Id = 3, AgentName = "John Doe", Extension = "42034", Name = "Sammy Doe", Birthday = new DateTime(1991, 9, 2) });
             users.Add(new UserTab() { CallStatusColor = "#E6A30C", Time = 900, QueueName = "AMQ", isRowDetail = true, CallStatus = "Talking", Duration = 1000, HeldParticipants = 500, ActiveParticipants = 30, Id = 1, AgentName = "John Doe", Extension = "42035", Name = "John Doe", Birthday = new DateTime(1971, 7, 23) });
@@ -813,7 +1132,6 @@ namespace WpfFinesse.WPFTimer
             users.Add(new UserTab() { CallStatusColor = "#1BDA6D", Time = 900, QueueName = "AMQ", isRowDetail = false, CallStatus = "Ready", Duration = 1000, HeldParticipants = 500, ActiveParticipants = 30, Id = 1, AgentName = "KJohn Doe", Extension = "42000", Name = "John Doe", Birthday = new DateTime(1971, 7, 23) });
             users.Add(new UserTab() { CallStatusColor = "#1BDA6D", Time = 900, QueueName = "AMQ", isRowDetail = false, CallStatus = "Ready", Duration = 1000, HeldParticipants = 500, ActiveParticipants = 30, Id = 2, AgentName = "LJohn Doe", Extension = "47033", Name = "Jane Doe", Birthday = new DateTime(1974, 1, 17) });
             users.Add(new UserTab() { CallStatusColor = "#1BDA6D", Time = 900, QueueName = "AMQ", isRowDetail = false, CallStatus = "Ready", Duration = 1000, HeldParticipants = 500, ActiveParticipants = 30, Id = 3, AgentName = "John uzair Doe", Extension = "74441", Name = "Sammy Doe", Birthday = new DateTime(1991, 9, 2) });
-
             users.Add(new UserTab() { CallStatusColor = "#1BDA6D", Time = 250, QueueName = "AMQ", isRowDetail = false, CallStatus = "Ready", Duration = 1000, HeldParticipants = 500, ActiveParticipants = 30, Id = 1, AgentName = "John Doe", Extension = "42033", Name = "John Doe", Birthday = new DateTime(1971, 7, 23) });
             users.Add(new UserTab() { CallStatusColor = "#d70d0d", Time = 250, QueueName = "AMQ", isRowDetail = false, CallStatus = "Not Ready - Lunch", Duration = 1000, HeldParticipants = 500, ActiveParticipants = 30, Id = 3, AgentName = "John Doe", Extension = "42034", Name = "Sammy Doe", Birthday = new DateTime(1991, 9, 2) });
             users.Add(new UserTab() { CallStatusColor = "#E6A30C", Time = 250, QueueName = "AMQ", isRowDetail = true, CallStatus = "Talking", Duration = 1000, HeldParticipants = 500, ActiveParticipants = 30, Id = 1, AgentName = "John Doe", Extension = "42035", Name = "John Doe", Birthday = new DateTime(1971, 7, 23) });

@@ -128,10 +128,14 @@
     <Compile Include="InputSearch\Window1.xaml.cs">
       <DependentUpon>Window1.xaml</DependentUpon>
     </Compile>
+    <Compile Include="InputSearch\Window2.xaml.cs">
+      <DependentUpon>Window2.xaml</DependentUpon>
+    </Compile>
     <Compile Include="MainWindow1.xaml.cs">
       <DependentUpon>MainWindow1.xaml</DependentUpon>
     </Compile>
     <Compile Include="Models\CallInfoData.cs" />
+    <Compile Include="PageSet\WFPPageSet.cs" />
     <Compile Include="Paths.xaml.cs">
       <DependentUpon>Paths.xaml</DependentUpon>
     </Compile>
@@ -230,6 +234,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="InputSearch\Window1.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="InputSearch\Window2.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

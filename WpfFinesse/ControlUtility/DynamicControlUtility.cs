@@ -25,15 +25,12 @@ namespace WpfFinesse.ControlUtility
             c2.Width = new GridLength(35, GridUnitType.Star);
             grid.ColumnDefinitions.Add(c1);
             grid.ColumnDefinitions.Add(c2);
-
-            //grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = GridLength.Auto });
-            //grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = GridLength.Auto });
             
             TextBlock tb = new TextBlock();
             tb.FontWeight = FontWeights.SemiBold;
             tb.FontSize = 14;
             tb.VerticalAlignment = VerticalAlignment.Center;
-            tb.Text = "Uzair Anwar " + Header;
+            tb.Text =Header;
 
             StackPanel callControlsStackPanel = new StackPanel();
             callControlsStackPanel.Orientation = Orientation.Horizontal;

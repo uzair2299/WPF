@@ -227,17 +227,65 @@
                                 <Label FontSize="12" Content="Search contact" Height="27" Foreground="{StaticResource BorderColorBrush}" Padding="5 0 0 0" VerticalAlignment="Center" VerticalContentAlignment="Center">
                                     <Label.Visibility>
                                         <MultiBinding Converter="{StaticResource TextInputToVisibilityConverter}">
-                                            <Binding ElementName="InputText" Path="Text.IsEmpty"></Binding>
-                                            <Binding ElementName="InputText" Path="IsFocused"></Binding>
+                                            <Binding ElementName="txtPhoneBookSearch" Path="Text.IsEmpty"></Binding>
+                                            <Binding ElementName="txtPhoneBookSearch" Path="IsFocused"></Binding>
+                                            <Binding ElementName="txtPhoneBookSearch" Path="Text"></Binding>
                                         </MultiBinding>
                                     </Label.Visibility>
                                 </Label>
-                                <TextBox Height="27" Padding="5 0 0 0" FontSize="12" VerticalAlignment="Center" VerticalContentAlignment="Center" x:Name="InputText" Background="Transparent" BorderBrush="Transparent" BorderThickness="0"></TextBox>
+                                <TextBox Height="27" Padding="5 0 0 0" FontSize="12" VerticalAlignment="Center" VerticalContentAlignment="Center" x:Name="txtPhoneBookSearch" Background="Transparent" BorderBrush="Transparent" BorderThickness="0"></TextBox>
                             </Grid>
                         </Border>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
+        </Style>
+
+        <Style x:Key="WaterMarkPhoneSearch1" TargetType="TextBox">
+            <Setter Property="BorderBrush" Value="{StaticResource BorderColorBrush}"></Setter>
+            <Setter Property="BorderThickness" Value="1"></Setter>
+            <Setter Property="Background" Value="Transparent"></Setter>
+            <Setter Property="Cursor" Value="Hand"></Setter>
+            <Setter Property="Foreground" Value="Red"></Setter>
+       
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <Border Height="28" CornerRadius="2" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1">
+                            <ContentPresenter Height="28"></ContentPresenter>
+                            <!--<Grid>
+                                <Label FontSize="12" Content="Search contact" Height="27" Foreground="{StaticResource BorderColorBrush}" Padding="5 0 0 0" VerticalAlignment="Center" VerticalContentAlignment="Center">
+                                    <Label.Visibility>
+                                        <MultiBinding Converter="{StaticResource TextInputToVisibilityConverter}">
+                                            <Binding ElementName="txtPhoneBookSearch" Path="Text.IsEmpty"></Binding>
+                                            <Binding ElementName="txtPhoneBookSearch" Path="IsFocused"></Binding>
+                                            <Binding ElementName="txtPhoneBookSearch" Path="Text"></Binding>
+                                        </MultiBinding>
+                                    </Label.Visibility>
+                                </Label>
+                                <TextBox Height="27" Padding="5 0 0 0" FontSize="12" VerticalAlignment="Center" VerticalContentAlignment="Center" x:Name="txtPhoneBookSearch" Background="Transparent" BorderBrush="Transparent" BorderThickness="0"></TextBox>
+                            </Grid>-->
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsFocused" Value="True">
+                                <Setter Property="Foreground" Value="Red"></Setter>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <!--<Style.Triggers>
+                <Trigger  Property="IsFocused"  Value="True">
+                    <Setter Property="Background" Value="White"/>
+                    <Setter Property="Panel.ZIndex=" Value="1000"></Setter>
+                </Trigger>
+            </Style.Triggers>-->
+        </Style>
+
+
+        <Style x:Key="EntryFieldStyle" TargetType="Grid" >
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
         <!--End Watermark Textbox Search Phonebook-->
 
@@ -1575,7 +1623,7 @@
                         <Border Padding="8" BorderBrush="#C8C6C6" Background="{StaticResource TabItemActiveColorBrush}" CornerRadius="2"  Margin="10" BorderThickness="1">
                             <StackPanel>
                                 <StackPanel Name="SearchStackPanel">
-                                    <TextBlock Text="Phonebook" Foreground="#c7c2c2" FontWeight="Bold"></TextBlock>
+                                    <TextBlock Text="Phonebook" Foreground="#c7c2c2" FontWeight="Bold" Name="txtPhoneBookSearch1"></TextBlock>
                                     <Grid  Margin="0 5 0 0">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="*"/>
@@ -1585,11 +1633,30 @@
                                             <RowDefinition />
                                         </Grid.RowDefinitions>
                                         <StackPanel Grid.Column="0" Grid.Row="0">
-                                            <TextBox BorderThickness="0" Style="{StaticResource WaterMarkPhoneSearch}" ></TextBox>
+                                            <!--<TextBox BorderThickness="0" Style="{StaticResource WaterMarkPhoneSearch}" Name="txtPhoneBookSearch" KeyUp="PhoneBookSearch_KeyDown"  Panel.ZIndex="10000"></TextBox>-->
+                                            <Grid>
+
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition />
+                                                </Grid.RowDefinitions>
+                                                <Grid Grid.Row="1" Background="White" Style="{StaticResource EntryFieldStyle}" >
+                                                    <Label Height="27" Content="Search Contact" Foreground="{StaticResource ForegroundPhonebookColorBrush}" VerticalContentAlignment="Center">
+                                                        <Label.Visibility>
+                                                            <MultiBinding Converter="{StaticResource TextInputToVisibilityConverter}">
+                                                                <Binding ElementName="txtPhoneBookSearch" Path="Text.IsEmpty" />
+                                                                <Binding ElementName="txtPhoneBookSearch" Path="IsFocused" />
+                                                            </MultiBinding>
+                                                        </Label.Visibility>
+                                                    </Label>
+                                                    <Border CornerRadius="2" BorderBrush="{StaticResource  BorderColorBrush}" BorderThickness="1">
+                                                        <TextBox Padding="3 0 0 0" BorderBrush="Transparent" BorderThickness="0" Height="27" Name="txtPhoneBookSearch" Background="Transparent"  KeyUp="PhoneBookSearch_KeyDown" VerticalContentAlignment="Center" Foreground="{StaticResource ForegroundPhonebookColorBrush}"/>
+                                                    </Border>
+                                                </Grid>
+                                            </Grid>
 
                                         </StackPanel>
                                         <StackPanel Grid.Column="1" Grid.Row="0"  Margin="10 0 0 0">
-                                            <ComboBox  Height="28.6"  x:Name="cbReasonCoes1"  IsEditable="True" IsReadOnly="True" Text="Phone Book"  HorizontalAlignment="Stretch" VerticalAlignment="Center">
+                                            <ComboBox  Height="28"  x:Name="cbReasonCoes1"  IsEditable="True" IsReadOnly="True" Text="Phone Book"  HorizontalAlignment="Stretch" VerticalAlignment="Center">
                                                 <ComboBoxItem Content="Item 1"/>
                                                 <ComboBoxItem Content="Item 2"/>
                                                 <ComboBoxItem Content="Item 3"/>
@@ -1600,68 +1667,24 @@
 
                                     </Grid>
                                 </StackPanel>
-                                <ScrollViewer Margin="0 10 0 0" Height="400" VerticalScrollBarVisibility="Auto" Template="{DynamicResource ScrollViewerControlTemplate1}">
-                                    <StackPanel Name="PhoneBookStackPanel">
-                                        <!--<Expander Header="Glenn Helgass">
+                                <StackPanel>
+                                    <ScrollViewer Name="PhoneBookScrollViewer" Height="400" Margin="0 10 0 0" VerticalScrollBarVisibility="Auto" Template="{DynamicResource ScrollViewerControlTemplate1}">
+                                        <StackPanel Name="PhoneBookStackPanel">
+                                            <!--<Expander Header="Glenn Helgass">
 
                                             <TextBlock Text="Under development" FontWeight="ExtraBold" Foreground="Yellow" FontSize="20"></TextBlock>
-                                        </Expander>
-                                        <Expander Header="Glenn Helgass">
-
-                                            <TextBlock Text="hello expender" FontWeight="SemiBold" Foreground="Yellow"></TextBlock>
                                         </Expander>-->
-                                        <!--<Expander Header="Edam Jimes" Foreground="#938c8c" FontWeight="Bold" >
 
-                                            <TextBlock Text="hello expender" FontWeight="SemiBold" Foreground="Yellow"></TextBlock>
-                                        </Expander>
-                                        <Expander Header="Edam Jimes" Foreground="#938c8c" FontWeight="Bold" >
-
-                                            <TextBlock Text="hello expender" FontWeight="SemiBold" Foreground="Yellow"></TextBlock>
-                                        </Expander>
-                                        <Expander Header="Edam Jimes" Foreground="#938c8c" FontWeight="Bold" >
-
-                                            <TextBlock Text="hello expender" FontWeight="SemiBold" Foreground="Yellow"></TextBlock>
-                                        </Expander>
-                                        <Expander Header="Edam Jimes" Foreground="#938c8c" FontWeight="Bold" >
-
-                                            <TextBlock Text="hello expender" FontWeight="SemiBold" Foreground="Yellow"></TextBlock>
-                                        </Expander>
-                                        <Expander Header="Edam Jimes" Foreground="#938c8c" FontWeight="Bold" >
-
-                                            <TextBlock Text="hello expender" FontWeight="SemiBold" Foreground="Yellow"></TextBlock>
-                                        </Expander>
-                                        <Expander Header="Edam Jimes" Foreground="#938c8c" FontWeight="Bold" >
-
-                                            <TextBlock Text="hello expender" FontWeight="SemiBold" Foreground="Yellow"></TextBlock>
-                                        </Expander>
-                                        <Expander Header="Edam Jimes" Foreground="#938c8c" FontWeight="Bold" >
-
-                                            <TextBlock Text="hello expender" FontWeight="SemiBold" Foreground="Yellow"></TextBlock>
-                                        </Expander>
-                                        <Expander Header="Edam Jimes" Foreground="#938c8c" FontWeight="Bold" >
-
-                                            <TextBlock Text="hello expender" FontWeight="SemiBold" Foreground="Yellow"></TextBlock>
-                                        </Expander>
-
-                                        <Expander Header="Edam Jimes" Foreground="#938c8c" FontWeight="Bold" >
-
-                                            <TextBlock Text="hello expender" FontWeight="SemiBold" Foreground="Yellow"></TextBlock>
-                                        </Expander>
-                                        <Expander Header="Edam Jimes" Foreground="#938c8c" FontWeight="Bold" >
-
-                                            <TextBlock Text="hello expender" FontWeight="SemiBold" Foreground="Yellow"></TextBlock>
-                                        </Expander>
-                                        <Expander Header="Edam Jimes" Foreground="#938c8c" FontWeight="Bold" >
-
-                                            <TextBlock Text="hello expender" FontWeight="SemiBold" Foreground="Yellow"></TextBlock>
-                                        </Expander>
-                                        <Expander Margin="0 0 0 10" Header="Edam Jimes" Foreground="#938c8c" FontWeight="Bold" >
-
-                                            <TextBlock Text="hello expender" FontWeight="SemiBold" Foreground="Yellow"></TextBlock>
-                                        </Expander>-->
+                                        </StackPanel>
+                                    </ScrollViewer>
+                                    <StackPanel Visibility="Collapsed"  Name="PhoneBookNoDataStack" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0 3 5 0">
+                                        <TextBlock Text="No Data Found" FontSize="15" FontWeight="DemiBold" Foreground="{StaticResource BackgroundBrush}" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
                                     </StackPanel>
 
-                                </ScrollViewer>
+                                    <StackPanel Name="PhoneBookPagination" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0 3 0 0">
+                                       
+                                    </StackPanel>
+                                </StackPanel>
                             </StackPanel>
                         </Border>
                         <!--call Panel-->
@@ -1897,9 +1920,9 @@
                                         </StackPanel>
 
                                         <StackPanel Grid.Row="3" HorizontalAlignment="Stretch" Orientation="Vertical"  Width="306">
-                                            <TextBox BorderThickness="0" Style="{StaticResource WaterMarkTeamPerformanceSearch}" x:Name="SearchTermTextBox"></TextBox>
+                                            <!--<TextBox BorderThickness="0" Style="{StaticResource WaterMarkTeamPerformanceSearch}" x:Name="SearchTermTextBox"></TextBox>-->
 
-                                            <!--<Grid>
+                                            <Grid>
                                                 <TextBox   VerticalAlignment="Center" HorizontalAlignment="Stretch" x:Name="SearchTermTextBox" Margin="0 5 0 5" Padding="4 0 0 0" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" KeyUp="SearchTermTextBox_KeyDown">
                                                     <TextBox.Resources>
                                                         <Style TargetType="{x:Type Border}">
@@ -1909,7 +1932,7 @@
                                                         </Style>
                                                     </TextBox.Resources>
                                                 </TextBox>
-                                            </Grid>-->
+                                            </Grid>
                                         </StackPanel>
                                         <StackPanel Grid.Row="4" HorizontalAlignment="Stretch" Orientation="Vertical"  Width="306">
                                             <Grid>
