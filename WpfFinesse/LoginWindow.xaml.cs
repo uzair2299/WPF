@@ -28,7 +28,7 @@ namespace WpfFinesse
             phoneWindow = new MainWindow1();
             aMQManager = AMQManager.GetInstance();
             aMQManager.InitializeAMQ();
-            aMQManager.SendMessageToQueue(GC_AllCommand.Hello.ToString() + "#192.168.1.31", null);
+            aMQManager.SendMessageToQueue(GC_AllCommand.Hello.ToString() + "#192.168.1.148", null);
             aMQManager.messageArrived += AMQManager_messageArrived;
             aMQManager.UpdateTopic();
             Destination = ConfigurationManager.AppSettings["Destination"].ToString();
@@ -45,9 +45,9 @@ namespace WpfFinesse
 
 
             string command = GC_Utility.CreateComand(GC_AllCommand.Connect.ToString(), agent.AgentID);
-            aMQManager.SendMessageToQueue(command, "192.168.1.31," + agent.AgentPassword);
+            aMQManager.SendMessageToQueue(command, "192.168.1.148," + agent.AgentPassword);
             aMQManager.UpdateTopic();
-            bool result = aMQManager.SendMessageToQueue("Login#ehtasham4", "123456,2204");
+            bool result = aMQManager.SendMessageToQueue("Login#565656", "Expertflow464,42033");
             //aMQManager.messageArrived += AMQManager_messageArrived;
             aMQManager.UpdateTopic();
 

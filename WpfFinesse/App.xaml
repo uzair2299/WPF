@@ -2,8 +2,14 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:WpfFinesse"
-             StartupUri="/WPFTimer/TimerWindow.xaml">
+             StartupUri="/LoginWindow.xaml">
     <Application.Resources>
         <FontFamily x:Key="FontAwesome">/Fonts/fontawesome-webfont.ttf#FontAwesome</FontFamily>
     </Application.Resources>
+    
+    
 </Application>
+    
+    
+    
+    

@@ -52,13 +52,13 @@ namespace WpfFinesse.AMQ
         {
             try
             {
-                IConnectionFactory factory = new ConnectionFactory("tcp://192.168.1.31:61616");
+                IConnectionFactory factory = new ConnectionFactory("tcp://192.168.1.148:61616");
                 connection = factory.CreateConnection();
                 connection.Start();
                 producerSession = connection.CreateSession();
                 consumerSession = connection.CreateSession();
                 queue = producerSession.GetQueue("Connector1");
-                topic = producerSession.GetTopic("192.168.1.31");
+                topic = producerSession.GetTopic("192.168.1.148");
                 producer = producerSession.CreateProducer(queue);
                 consumer = consumerSession.CreateConsumer(topic);
                 //consumer.Listener += Consumer_Listener;
@@ -214,7 +214,7 @@ namespace WpfFinesse.AMQ
         public void UpdateTopic()
         {
             consumer.Listener -= Consumer_Listener;
-            topic = consumerSession.GetTopic("192.168.1.31");
+            topic = consumerSession.GetTopic("192.168.1.148");
             consumer = consumerSession.CreateConsumer(topic);
             consumer.Listener += Consumer_Listener;
         }
