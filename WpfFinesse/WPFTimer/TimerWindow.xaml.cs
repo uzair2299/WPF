@@ -14,8 +14,10 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using WpfFinesse.AMQ;
 using WpfFinesse.ControlUtility;
 using WpfFinesse.CustomTab;
+using WpfFinesse.Models;
 
 namespace WpfFinesse.WPFTimer
 {
@@ -24,14 +26,56 @@ namespace WpfFinesse.WPFTimer
     /// </summary>
     public partial class TimerWindow : Window
     {
+        private bool timerOnce = false;
         private List<UserTab> us;
+        List<UserTab> teamUserList = new List<UserTab>();
         UserTab user = new UserTab();
 
+        AMQManager aMQManager = AMQManager.GetInstance();
         private List<QueueStat> qs;
         QueueStat Que = new QueueStat();
         public TimerWindow()
         {
+            aMQManager = AMQManager.GetInstance();
+            aMQManager.InitializeAMQ();
+            aMQManager.messageArrived -= AMQManager_messageArrived;
+            aMQManager.messageArrived += AMQManager_messageArrived;
+            aMQManager.UpdateTopic();
             InitializeComponent();
+            try
+            {
+                List<ComboBoxPair> cb = new List<ComboBoxPair>();
+                string[] teams = CallEventInfoListing.Teams.Split('|');
+
+                if (teams.Length == 0)
+                {
+
+                }
+                else
+                {
+                    foreach (string item in teams)
+                    {
+                        cb.Add(new ComboBoxPair(item.Split(',')[0], item.Split(',')[1]));
+
+                    }
+                    CTITeams.DisplayMemberPath = "_Value";
+                    CTITeams.SelectedValuePath = "_Key";
+                    CTITeams.ItemsSource = cb;
+                    CTITeams.SelectedIndex = 0;
+                }
+
+                ComboBoxPair cbp = (ComboBoxPair)CTITeams.SelectedItem;
+
+                string _key = cbp._Key;
+                string _value = cbp._Value;
+
+                aMQManager.SendMessageToQueue(GCMessages("getteamusers"), _key + ",true");
+            }
+            catch (Exception e)
+            {
+
+                throw;
+            }
 
             qs = new List<QueueStat>();
             qs = Que.getQueueStat();
@@ -42,60 +86,60 @@ namespace WpfFinesse.WPFTimer
             int totalItem = us.Count();
             int page_ = 1;
             Pager pg = new Pager(totalItem, page_);
-            dgSimple.ItemsSource = us.Skip((pg.CurrentPage - 1) * pg.PageSize).Take(pg.PageSize);
-            if (pg.EndPage > 1)
-            {
-                if (pg.CurrentPage > 1)
-                {
-                    Button First = new Button();
-                    First.Name = "FirstPage";
-                    First.Click += Btn_Click;
-                    First.Content = "<<";
-                    First.Tag = 1;
-                    First.Style = (Style)FindResource("btnPagination");
-                    StackPagination.Children.Add(First);
+            //dgSimple.ItemsSource = us.Skip((pg.CurrentPage - 1) * pg.PageSize).Take(pg.PageSize);
+            //if (pg.EndPage > 1)
+            //{
+            //    if (pg.CurrentPage > 1)
+            //    {
+            //        Button First = new Button();
+            //        First.Name = "FirstPage";
+            //        First.Click += Btn_Click;
+            //        First.Content = "<<";
+            //        First.Tag = 1;
+            //        First.Style = (Style)FindResource("btnPagination");
+            //        StackPagination.Children.Add(First);
 
-                    Button Previous = new Button();
-                    Previous.Click += Btn_Click;
-                    Previous.Content = "<;";
-                    Previous.Tag = pg.CurrentPage - 1;
-                    Previous.Style = (Style)FindResource("btnPagination");
-                    StackPagination.Children.Add(Previous);
-                }
-                for (var page = pg.StartPage; page <= pg.EndPage; page++)
-                {
-                    Button btn = new Button();
-                    btn.Click += Btn_Click;
-                    btn.Content = page;
-                    btn.Tag = page;
-                    btn.Style = (Style)FindResource("btnPagination");
-                    if (page == 1)
-                    {
+            //        Button Previous = new Button();
+            //        Previous.Click += Btn_Click;
+            //        Previous.Content = "<;";
+            //        Previous.Tag = pg.CurrentPage - 1;
+            //        Previous.Style = (Style)FindResource("btnPagination");
+            //        StackPagination.Children.Add(Previous);
+            //    }
+            //    for (var page = pg.StartPage; page <= pg.EndPage; page++)
+            //    {
+            //        Button btn = new Button();
+            //        btn.Click += Btn_Click;
+            //        btn.Content = page;
+            //        btn.Tag = page;
+            //        btn.Style = (Style)FindResource("btnPagination");
+            //        if (page == 1)
+            //        {
 
-                        btn.FontWeight = FontWeights.UltraBold;
-                    }
-                    StackPagination.Children.Add(btn);
+            //            btn.FontWeight = FontWeights.UltraBold;
+            //        }
+            //        StackPagination.Children.Add(btn);
 
-                }
-                if (pg.CurrentPage < pg.TotalPages)
-                {
-                    Button Next = new Button();
-                    Next.Click += Btn_Click;
-                    Next.Content = ">";
-                    Next.Tag = pg.CurrentPage + 1;
-                    Next.Style = (Style)FindResource("btnPagination");
-                    StackPagination.Children.Add(Next);
+            //    }
+            //    if (pg.CurrentPage < pg.TotalPages)
+            //    {
+            //        Button Next = new Button();
+            //        Next.Click += Btn_Click;
+            //        Next.Content = ">";
+            //        Next.Tag = pg.CurrentPage + 1;
+            //        Next.Style = (Style)FindResource("btnPagination");
+            //        StackPagination.Children.Add(Next);
 
-                    Button Last = new Button();
-                    Last.Click += Btn_Click;
-                    Last.Content = ">>";
-                    Last.Tag = pg.TotalPages;
-                    Last.Style = (Style)FindResource("btnPagination");
-                    StackPagination.Children.Add(Last);
-                }
-            }
-            this.StartMockValue();
-            this.StartRefreshDataGrid();
+            //        Button Last = new Button();
+            //        Last.Click += Btn_Click;
+            //        Last.Content = ">>";
+            //        Last.Tag = pg.TotalPages;
+            //        Last.Style = (Style)FindResource("btnPagination");
+            //        StackPagination.Children.Add(Last);
+            //    }
+            //}
+            //this.StartMockValue();
+            //this.StartRefreshDataGrid();
 
 
 
@@ -163,6 +207,280 @@ namespace WpfFinesse.WPFTimer
 
         }
 
+        private string GCMessages(string cmd)
+        {
+            cmd = cmd + "#" + CallEventInfoListing.agentID;
+            return cmd;
+        }
+
+        private string GCMessages(string cmd, string loginId)
+        {
+            cmd = cmd + "#" + loginId;
+            return cmd;
+        }
+
+        private void AMQManager_messageArrived(object sender, MyEventArgs args)
+        {
+            try
+            {
+                if (args != null)
+                {
+                    Dispatcher.Invoke(() =>
+                    {
+                        string[] events = args.eventArgs;
+                        EventType eventName = EventType.NONE;
+                        eventName = GetEnumValue<EventType>(events[1]);
+
+                        switch (eventName)
+                        {
+
+                            case EventType.State:
+                                string agentstate = events[2].ToUpper();
+                                string _AgentRefId = events[0];
+                                string agentExtension = events[9];
+                                string agentLoginId = events[8];
+                                AgentState eAgentState = GetEnumValue<AgentState>(agentstate);
+                                switch (eAgentState)
+                                {
+                                    case AgentState.NOT_READY:
+                                        if (CallEventInfoListing.agentID == events[8])
+                                        {
+                                            //AgentStateReadyNotReady(CtiAgentStates.UNAVAILABLE);
+                                        }
+                                        else
+                                        {
+                                            var CheckAlreadyExist = teamUserList.Where(x => x.LoginId == agentLoginId).FirstOrDefault();
+                                            if (CheckAlreadyExist != null)
+                                            {
+                                                foreach (var item in teamUserList)
+                                                {
+                                                    if (item.LoginId == events[8])
+                                                    {
+                                                        item.CallStatus = eAgentState.ToString();
+                                                        item.Time = 0;
+                                                        item.Extension = agentExtension;
+                                                    }
+                                                }
+                                            }
+                                            else
+                                            {
+                                                UserTab agent = new UserTab();
+                                                
+                                                string agentState = events[2];
+                                                agent.CallStatus = agentState;
+                                                agent.AgentName = events[7];
+                                                agent.LoginId = events[8];
+                                                agent.Extension = events[9];
+                                                
+                                                agent.CallStatusColor = "#1BDA6D";
+                                                agent.Time = 0;
+                                                //if (agentState != "LOGOUT")
+                                                //{
+                                                //    string[] t = events[7].Split(new[] { ':' }, 2);
+
+                                                //    string[] time = t[1].Split();
+                                                //    //DateTime d = new DateTime((int)time[5], time[1], time[2]);
+                                                //    DateTime date = DateTime.Parse(time[3], System.Globalization.CultureInfo.CurrentCulture);
+
+                                                //    DateTime now = DateTime.Now;
+                                                //    int diffInSeconds = (int)(now - date).TotalSeconds;
+                                                //    agent.Time = diffInSeconds;
+                                                //}
+                                                teamUserList.Add(agent);
+
+                                            }
+
+
+                                            //teamUserList.Where(x => x.LoginId == events[8]).FirstOrDefault().CallStatus = eAgentState.ToString();
+                                        }
+                                        break;
+                                    case AgentState.READY:
+                                        if (CallEventInfoListing.agentID == events[8])
+                                        {
+                                            //AgentStateReadyNotReady(CtiAgentStates.AVAILABLE);
+                                        }
+                                        else
+                                        {
+                                            foreach (var item in teamUserList)
+                                            {
+                                                if (item.LoginId == events[8])
+                                                {
+                                                    item.CallStatus = eAgentState.ToString();
+                                                    item.Time = 0;
+                                                    item.Extension = agentExtension;
+                                                }
+                                            }
+                                            //teamUserList.Where(x => x.LoginId == events[8]).FirstOrDefault().CallStatus = eAgentState.ToString();
+                                        }
+
+                                        break;
+                                    case AgentState.RESERVED:
+                                        //CallEventInfoListing.isLoggedIn = true;
+                                        //checkforNotReadyItemsNWrapupReasonLabels();
+                                        //CallInfoData callReservedInfoData = new CallInfoData();
+                                        //callReservedInfoData.CurrentCallState = Enum.GetName(typeof(CallClassProvider.CallState), CallClassProvider.CallState.Accepted);
+                                        //CallStateChangeEvent(this, new CtiCoreEventArgs("CallStateChanged", callReservedInfoData, events[2]));
+                                        break;
+                                    case AgentState.TALKING:
+
+                                        if (CallEventInfoListing.agentID == events[8])
+                                        {
+                                            //CallEventInfoListing.isLoggedIn = true;
+                                            //checkforNotReadyItemsNWrapupReasonLabels();
+                                            //CallInfoData callTalkingInfoData = new CallInfoData();
+                                            //callTalkingInfoData.CurrentCallState = Enum.GetName(typeof(CallClassProvider.CallState), CallClassProvider.CallState.Busy);
+                                            //CallStateChangeEvent(this, new CtiCoreEventArgs("CallStateChanged", callTalkingInfoData, events[2]));
+                                        }
+                                        else
+                                        {
+                                            foreach (var item in teamUserList)
+                                            {
+                                                if (item.LoginId == events[8])
+                                                {
+                                                    item.CallStatus = eAgentState.ToString();
+                                                    item.Time = 0;
+                                                    item.Extension = agentExtension;
+                                                }
+                                            }
+                                            //teamUserList.Where(x => x.LoginId == events[8]).FirstOrDefault().CallStatus = eAgentState.ToString();
+                                        }
+
+                                        break;
+                                    case AgentState.WORK_READY:
+                                        //AgentStateWrapUp(events[2]);
+                                        break;
+                                    case AgentState.WORK:
+                                        //AgentStateWrapUp(events[2]);
+                                        break;
+                                    case AgentState.LOGOUT:
+                                        if (CallEventInfoListing.agentID == events[8])
+                                        {
+                                            //DeactivateConnection();
+                                        }
+                                        else
+                                        {
+                                            foreach (var item in teamUserList)
+                                            {
+                                                if (item.LoginId == events[8])
+                                                {
+                                                    item.CallStatus = eAgentState.ToString();
+                                                    item.Extension = "";
+                                                    item.Time = 0;
+                                                }
+                                            }
+                                            teamUserList = teamUserList.Where(x => x.CallStatus != "LOGOUT").ToList();
+                                            //teamUserList.Where(x => x.LoginId == events[8]).FirstOrDefault().CallStatus = eAgentState.ToString();
+                                        }
+
+                                        break;
+                                    case AgentState.RE_LOGIN:
+                                        //DeactivateConnection();
+                                        break;
+                                    case AgentState.HOLD:
+                                        //CallStateHold(CallEventInfoListing.currentActiveCall);
+                                        break;
+                                }
+                                break;
+                            case EventType.AgentInfo:
+                                CallEventInfoListing.isWraupAllowed = !events[5].ToUpperInvariant().Equals("NOT_ALLOWED");
+
+                                CallEventInfoListing.agentID = events[0];
+                                if (Convert.ToBoolean(events[4]) == true)
+                                {
+                                    CallEventInfoListing.isSupervisor = Convert.ToBoolean(events[4]);
+                                    //string number = events[6].Split(':')[1];
+                                    CallEventInfoListing.totalNumberOfTeams = Convert.ToInt32(events[6].Split(':')[1]);
+                                    CallEventInfoListing.Teams = events[7];
+                                    CallEventInfoListing.agentFullName = events[8];
+
+                                }
+                                break;
+                            case EventType.TeamUsersList:
+                                List<string> list = new List<string>();
+                                for (var i = 2; i < events.Length; i++)
+                                {
+                                    list.Add(events[i]);
+                                }
+                                String[] teams = list.ToArray();
+                                teamUserList.Clear();
+
+                                foreach (var item in teams)
+                                {
+                                    UserTab agent = new UserTab();
+                                    string[] agentinfo = item.Split(',');
+                                    agent.AgentName = agentinfo[0].Split(':')[1] + " " + agentinfo[1].Split(':')[1];
+
+                                    string[] extension = agentinfo[2].Split(':');
+
+                                    if (extension.Length > 1)
+                                    {
+                                        agent.Extension = extension[1];
+                                    }
+                                    agent.LoginId = agentinfo[3].Split(':')[1];
+                                    string agentState = agentinfo[4].Split(':')[1];
+                                    agent.CallStatus = agentState;
+                                    agent.CallStatusColor = "#1BDA6D";
+                                    if (agentState != "LOGOUT")
+                                    {
+                                        string[] t = agentinfo[7].Split(new[] { ':' }, 2);
+
+                                        string[] time = t[1].Split();
+                                        //DateTime d = new DateTime((int)time[5], time[1], time[2]);
+                                        DateTime date = DateTime.Parse(time[3], System.Globalization.CultureInfo.CurrentCulture);
+
+                                        DateTime now = DateTime.Now;
+                                        int diffInSeconds = (int)(now - date).TotalSeconds;
+                                        agent.Time = diffInSeconds;
+                                    }
+                                    teamUserList.Add(agent);
+                                }
+                                teamUserList = teamUserList.Where(x => x.CallStatus != "LOGOUT").ToList();
+                                if (teamUserList.Count > 1)
+                                {
+                                    StackNoData.Visibility = Visibility.Collapsed;
+                                    dgSimple.ItemsSource = teamUserList;
+                                    dgSimple.Items.Refresh();
+                                }
+                                else
+                                {
+
+                                    dgSimple.ItemsSource = teamUserList;
+                                    dgSimple.Items.Refresh();
+                                    StackNoData.Visibility = Visibility.Visible;
+                                    dgSimple.Height = Double.NaN;
+                                }
+                                if (!timerOnce)
+                                {
+
+                                    this.StartMockValue();
+                                    this.StartRefreshDataGrid();
+                                    timerOnce = true;
+                                }
+                                break;
+                        }
+                    });
+                }
+            }
+            catch (Exception e)
+            {
+
+                throw e;
+            }
+        }
+
+        public T GetEnumValue<T>(string value)
+        {
+            T selectedValue = (T)Enum.Parse(typeof(T), "NONE");
+            try
+            {
+                selectedValue = (T)Enum.Parse(typeof(T), value, true);
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return selectedValue;
+        }
 
         private void SetPhoneBookSource(List<UserTab> phoneBookSource)
         {
@@ -211,12 +529,14 @@ namespace WpfFinesse.WPFTimer
             // NOTE: this is a thread to mock the business logic, it change 'Time' value.
             Task.Run(() =>
             {
-                var rando = new Random();
                 while (true)
                 {
-                    foreach (var user in this.us)
+                    foreach (var user in this.teamUserList)
                     {
-                        user.Time = user.Time + 1;
+                        if (user.CallStatus != "LOGOUT")
+                        {
+                            user.Time = user.Time + 1;
+                        }
                     }
                     Thread.Sleep(1000);
                 }
@@ -230,13 +550,17 @@ namespace WpfFinesse.WPFTimer
             {
                 while (true)
                 {
-                    foreach (var user in this.us)
+                    foreach (var user in this.teamUserList)
                     {
-                        // NOTE: update if the time changed.
-                        if (user.DisplayTime != user.Time)
+                        if (user.CallStatus != "LOGOUT")
                         {
-                            user.DisplayTime = user.Time;
+                            if (user.DisplayTime != user.Time)
+                            {
+                                user.DisplayTime = user.Time;
+                            }
                         }
+                        // NOTE: update if the time changed.
+
                     }
 
                     // NOTE: refresh the grid every seconds.
@@ -836,15 +1160,83 @@ namespace WpfFinesse.WPFTimer
                 }
             }
         }
+
+        private void CTITeams_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+            var comboBox = (ComboBox)sender;
+            if (comboBox.IsLoaded)
+            {
+                var cb = (ComboBoxPair)comboBox.SelectedItem;
+                string _key = cb._Key;
+                string _value = cb._Value;
+                aMQManager.SendMessageToQueue(GCMessages("getteamusers"), _key + ",true");
+            }
+        }
+
+        //private void dgSimple_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        //{
+        //    if (dgSimple.IsLoaded)
+        //    {
+        //        UserTab selectedRow = (UserTab)dgSimple.SelectedItem;
+
+        //        aMQManager.SendMessageToQueue(GCMessages("MakeReady", selectedRow.LoginId), "");
+        //        MessageBox.Show("hello");
+        //    }
+        //}
+
+        private void TeamPerformanceMakeReady_Click(object sender, RoutedEventArgs e)
+        {
+            UserTab selectedRow = (UserTab)dgSimple.SelectedItem;
+
+            aMQManager.SendMessageToQueue(GCMessages("MakeReady", selectedRow.LoginId), "");
+        }
+
+        private void TeamPerformanceNotReady_Click(object sender, RoutedEventArgs e)
+        {
+            UserTab selectedRow = (UserTab)dgSimple.SelectedItem;
+            aMQManager.SendMessageToQueue(GCMessages("MakeNotReady", selectedRow.LoginId), "");
+        }
+
+        private void TeamPerformanceSignOut_Click(object sender, RoutedEventArgs e)
+        {
+            UserTab selectedRow = (UserTab)dgSimple.SelectedItem;
+            aMQManager.SendMessageToQueue(GCMessages("logoutwithreason", selectedRow.LoginId), "28");
+        }
+
+        private void TeamPerformanceMonitoring_Click(object sender, RoutedEventArgs e)
+        {
+
+            UserTab selectedRow = (UserTab)dgSimple.SelectedItem;
+            if (selectedRow != null)
+            {
+                aMQManager.SendMessageToQueue(GCMessages("silentmonitor"), selectedRow.Extension);
+            }
+            else
+            {
+                MessageBox.Show("please select row");
+            }
+
+        }
     }
 
     public class UserTab : INotifyPropertyChanged
     {
         public int Id { get; set; }
 
+        public string LoginId { get; set; }
         public string AgentName { get; set; }
 
-        public string Extension { get; set; }
+        public string extension { get; set; }
+        public string Extension
+        {
+            get { return extension; }
+            set
+            {
+                extension = value;
+                this.OnPropertyChange(nameof(this.Extension));
+            }
+        }
         public string Name { get; set; }
 
         public DateTime Birthday { get; set; }
@@ -854,7 +1246,18 @@ namespace WpfFinesse.WPFTimer
         public int ActiveParticipants { get; set; }
         public int HeldParticipants { get; set; }
         public int Duration { get; set; }
-        public string CallStatus { get; set; }
+        private string callStatus;
+        public string CallStatus
+        {
+            get { return callStatus; }
+            set
+            {
+                callStatus = value;
+                this.OnPropertyChange(nameof(this.CallStatus));
+            }
+        }
+
+
         public string QueueName { get; set; }
         public string CallStatusColor { get; set; }
         public bool isRowDetail { get; set; }
@@ -864,6 +1267,7 @@ namespace WpfFinesse.WPFTimer
         public int Time { get; set; }
 
         private int displayTime;
+
 
         // NOTE: this is the 'displayed time' in the DataGrid.
         public int DisplayTime
@@ -888,7 +1292,7 @@ namespace WpfFinesse.WPFTimer
         }
 
 
-        public string DisplayTimeString => $"{(displayTime / 60 / 60).ToString().PadLeft(2, '0')}:{(displayTime / 60 % 60).ToString().PadLeft(2, '0')}:{(displayTime % 60).ToString().PadLeft(2, '0')}";
+        public string DisplayTimeString => CallStatus != "LOGOUT" ? $"{ (displayTime / 60 / 60).ToString().PadLeft(2, '0')}:{(displayTime / 60 % 60).ToString().PadLeft(2, '0')}:{(displayTime % 60).ToString().PadLeft(2, '0')}" : "--";
 
 
         public List<UserTab> GetUsers()
@@ -1245,6 +1649,46 @@ namespace WpfFinesse.WPFTimer
         {
             throw new NotImplementedException();
         }
+    }
+
+
+    public enum EventType
+    {
+        NewInboundCall,
+        InboundCall,
+        ConsultCall,
+        State,
+        Error,
+        DialogStatus,
+        SYSTEM,
+        ReasonCodes,
+        AgentInfo,
+        RECONNECT,
+        NOT_RECHEABLE,
+        NONE,
+        Resumed,
+        Interrupted,
+        DESTINATION,
+        DialogState,
+        OUT_OF_SERVICE,
+        IN_SERVICE,
+        Control,
+        NewOutboundCall,
+        TeamUsersList
+    }
+
+    public enum AgentState
+    {
+        TALKING,
+        HOLD,
+        READY,
+        NOT_READY,
+        WORK,
+        WORK_READY,
+        RESERVED,
+        LOGOUT,
+        RE_LOGIN,
+        NONE
     }
 
 }

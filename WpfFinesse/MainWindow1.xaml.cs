@@ -233,7 +233,7 @@ namespace WpfFinesse
             //comboBoxItem = (ComboBoxItem)cmb.SelectedItem;
             //if (comboBoxItem.Content.ToString() == "Ready")
             //{
-            //    string makeReady = GC_Utility.CreateComand(GC_AllCommand.MakeReady.ToString(), agent.AgentID);
+            //   string makeReady = GC_Utility.CreateComand(GC_AllCommand.MakeReady.ToString(), agent.AgentID);
             //    aMQManager.messageArrived += AMQManager_messageArrived1;
             //    aMQManager.SendMessageToQueue(makeReady, null);
             //}

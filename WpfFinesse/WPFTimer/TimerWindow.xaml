@@ -1885,27 +1885,23 @@
                                             <ColumnDefinition Width="*"></ColumnDefinition>
                                         </Grid.ColumnDefinitions>
                                         <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Center" Orientation="Vertical"  Width="306">
-                                            <ComboBox Height="28.5"  x:Name="cbReasonCodes1" DockPanel.Dock="Right" IsEditable="True" IsReadOnly="True" Text="MEDICARE TEAM"  HorizontalAlignment="Stretch" VerticalAlignment="Center"  BorderBrush="#EEEEEE">
-                                                <ComboBoxItem Content="Team 1"/>
-                                                <ComboBoxItem Content="Team 2"/>
-                                                <ComboBoxItem Content="Team 3"/>
-                                                <ComboBoxItem Content="Team 4"/>
-                                                <ComboBoxItem Content="Team 5"/>
+                                            <ComboBox Height="28.5"  x:Name="CTITeams" SelectionChanged="CTITeams_SelectionChanged"  DockPanel.Dock="Right" IsEditable="True" IsReadOnly="True" Text="MEDICARE TEAM"  HorizontalAlignment="Stretch" VerticalAlignment="Center"  BorderBrush="#EEEEEE">
+                                            
                                             </ComboBox>
                                         </StackPanel>
                                         <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Width="Auto"   Grid.Row="1"    VerticalAlignment="Center">
-                                            <Button Style="{StaticResource btnTeamPerformance}" Width="100" Height="25"  Margin="0 0 0 3" Background="White" BorderBrush="#A7A5A5" BorderThickness="1">
-                                                <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="Stop Monitoring" Padding="10 2 10 2" Foreground="#A7A5A5"></TextBlock>
+                                            <Button Style="{StaticResource btnTeamPerformance}" Width="100" Height="25"  Margin="0 0 0 3" Background="White" BorderBrush="#A7A5A5" BorderThickness="1" Name="TeamPerformanceMonitoring" Click="TeamPerformanceMonitoring_Click">
+                                                <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="Monitoring" Padding="10 2 10 2" Foreground="#A7A5A5"></TextBlock>
                                             </Button>
-                                            <Button Style="{StaticResource btnTeamPerformance}" Width="100" Height="25"  Margin="3 0 0 0" Background="#CB2424" BorderBrush="#CB2424" BorderThickness="1">
+                                            <Button Style="{StaticResource btnTeamPerformance}" Width="100" Height="25"  Margin="3 0 0 0" Background="#CB2424" BorderBrush="#CB2424" BorderThickness="1" Click="TeamPerformanceNotReady_Click"  Name="TeamPerformanceNotReady">
                                                 <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="Not Ready" Padding="10 2 10 2" Foreground="White"></TextBlock>
                                             </Button>
-                                            <Button Style="{StaticResource btnTeamPerformance}" Width="100" Height="25" Margin="3 0 0 0" Background="White" BorderBrush="#7be5bd" BorderThickness="1">
+                                            <Button Style="{StaticResource btnTeamPerformance}" Width="100" Height="25" Margin="3 0 0 0" Background="White" BorderBrush="#7be5bd" BorderThickness="1"  Name="TeamPerformanceMakeReady" Click="TeamPerformanceMakeReady_Click">
                                                 <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="Ready" Padding="10 2 10 2" Foreground="#7be5bd"></TextBlock>
                                             </Button>
                                         </StackPanel>
                                         <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Width="Auto"  Grid.Row="2"    VerticalAlignment="Center">
-                                            <Button Style="{StaticResource btnTeamPerformance}" Width="100" Height="25"  Margin="3 0 0 0" Background="#A7A5A5" BorderThickness="0">
+                                            <Button Style="{StaticResource btnTeamPerformance}" Width="100" Height="25"  Margin="3 0 0 0" Background="#A7A5A5" BorderThickness="0" Name="TeamPerformanceSignOut" Click="TeamPerformanceSignOut_Click">
                                                 <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="SignOut" Padding="10 2 10 2" Foreground="White"></TextBlock>
                                             </Button>
 
@@ -1953,8 +1949,9 @@
 
                                     </Grid>
                                     <StackPanel HorizontalAlignment="Stretch">
-                                        <DataGrid Name="dgSimple" VerticalAlignment="Center" VerticalContentAlignment="Center" CellStyle="{StaticResource Body_Content_DataGrid_Centering}" Height="350" EnableRowVirtualization="False">
+                                        <DataGrid  Name="dgSimple" VerticalAlignment="Center" VerticalContentAlignment="Center" CellStyle="{StaticResource Body_Content_DataGrid_Centering}" Height="350" EnableRowVirtualization="False">
                                             <DataGrid.Columns>
+                                                <DataGridTextColumn Header="Agent Id" Binding="{Binding LoginId}" IsReadOnly="True" Visibility="Collapsed"  />
                                                 <DataGridTextColumn Header="Agent Name" Binding="{Binding AgentName}" IsReadOnly="True"  />
                                                 <DataGridTemplateColumn  SortMemberPath="CallStatus" CanUserSort="True" Header="Status" CellTemplate="{StaticResource StatusTemplate}">
 
@@ -1962,7 +1959,7 @@
                                                 <DataGridTextColumn  Header="Time" Binding="{Binding DisplayTimeString}" IsReadOnly="True">
                                                     <DataGridTextColumn.ElementStyle>
                                                         <Style TargetType="TextBlock">
-                                                            <Setter Property="HorizontalAlignment" Value="Left" />
+                                                            <Setter Property="HorizontalAlignment" Value="Center" />
                                                         </Style>
                                                     </DataGridTextColumn.ElementStyle>
                                                 </DataGridTextColumn>

@@ -213,10 +213,18 @@ namespace WpfFinesse.AMQ
 
         public void UpdateTopic()
         {
-            consumer.Listener -= Consumer_Listener;
-            topic = consumerSession.GetTopic("192.168.1.148");
-            consumer = consumerSession.CreateConsumer(topic);
-            consumer.Listener += Consumer_Listener;
+            try
+            {
+                consumer.Listener -= Consumer_Listener;
+                topic = consumerSession.GetTopic("192.168.1.148");
+                consumer = consumerSession.CreateConsumer(topic);
+                consumer.Listener += Consumer_Listener;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
         }
     }
 
