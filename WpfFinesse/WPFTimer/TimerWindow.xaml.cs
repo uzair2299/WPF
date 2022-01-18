@@ -1,19 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using WpfFinesse.AMQ;
 using WpfFinesse.ControlUtility;
 using WpfFinesse.CustomTab;
@@ -30,7 +26,7 @@ namespace WpfFinesse.WPFTimer
         private List<UserTab> us;
         List<UserTab> teamUserList = new List<UserTab>();
         UserTab user = new UserTab();
-
+        UserTab selectedRow = null;
         AMQManager aMQManager = AMQManager.GetInstance();
         private List<QueueStat> qs;
         QueueStat Que = new QueueStat();
@@ -250,6 +246,7 @@ namespace WpfFinesse.WPFTimer
                                         else
                                         {
                                             var CheckAlreadyExist = teamUserList.Where(x => x.LoginId == agentLoginId).FirstOrDefault();
+
                                             if (CheckAlreadyExist != null)
                                             {
                                                 foreach (var item in teamUserList)
@@ -257,21 +254,34 @@ namespace WpfFinesse.WPFTimer
                                                     if (item.LoginId == events[8])
                                                     {
                                                         item.CallStatus = eAgentState.ToString();
-                                                        item.Time = 0;
+                                                        item.Time = 1;
                                                         item.Extension = agentExtension;
                                                     }
+                                                }
+                                                if (selectedRow == null)
+                                                {
+                                                    TeamPerformanceStackPanel.Visibility = Visibility.Collapsed;
+                                                }
+                                                else if (selectedRow.LoginId == events[8])
+                                                {
+                                                    dgSimple.SelectedItem = CheckAlreadyExist;
+                                                    UpdateTeamPerformanceButtonPanel_NOTREADY();
+                                                }
+                                                else
+                                                {
+
                                                 }
                                             }
                                             else
                                             {
                                                 UserTab agent = new UserTab();
-                                                
+
                                                 string agentState = events[2];
                                                 agent.CallStatus = agentState;
                                                 agent.AgentName = events[7];
                                                 agent.LoginId = events[8];
                                                 agent.Extension = events[9];
-                                                
+
                                                 agent.CallStatusColor = "#1BDA6D";
                                                 agent.Time = 0;
                                                 //if (agentState != "LOGOUT")
@@ -286,8 +296,12 @@ namespace WpfFinesse.WPFTimer
                                                 //    int diffInSeconds = (int)(now - date).TotalSeconds;
                                                 //    agent.Time = diffInSeconds;
                                                 //}
-                                                teamUserList.Add(agent);
 
+
+                                                teamUserList.Add(agent);
+                                                StackNoData.Visibility = Visibility.Collapsed;
+                                                dgSimple.ItemsSource = teamUserList;
+                                                dgSimple.Items.Refresh();
                                             }
 
 
@@ -301,25 +315,57 @@ namespace WpfFinesse.WPFTimer
                                         }
                                         else
                                         {
+                                            UserTab setItem = new UserTab();
                                             foreach (var item in teamUserList)
                                             {
                                                 if (item.LoginId == events[8])
                                                 {
                                                     item.CallStatus = eAgentState.ToString();
-                                                    item.Time = 0;
+                                                    item.Time = 1;
                                                     item.Extension = agentExtension;
+                                                    setItem = item;
                                                 }
                                             }
+                                            if (selectedRow == null)
+                                            {
+                                                TeamPerformanceStackPanel.Visibility = Visibility.Collapsed;
+                                            }
+                                            else if (selectedRow.LoginId == events[8])
+                                            {
+                                                dgSimple.SelectedItem = setItem;
+                                                UpdateTeamPerformanceButtonPanel_READY();
+                                            }
+                                            else
+                                            {
+
+                                            }
+                                            //dgSimple.Items.Refresh();
                                             //teamUserList.Where(x => x.LoginId == events[8]).FirstOrDefault().CallStatus = eAgentState.ToString();
                                         }
 
                                         break;
                                     case AgentState.RESERVED:
-                                        //CallEventInfoListing.isLoggedIn = true;
-                                        //checkforNotReadyItemsNWrapupReasonLabels();
-                                        //CallInfoData callReservedInfoData = new CallInfoData();
-                                        //callReservedInfoData.CurrentCallState = Enum.GetName(typeof(CallClassProvider.CallState), CallClassProvider.CallState.Accepted);
-                                        //CallStateChangeEvent(this, new CtiCoreEventArgs("CallStateChanged", callReservedInfoData, events[2]));
+                                        if (CallEventInfoListing.agentID == events[8])
+                                        {
+                                            //CallEventInfoListing.isLoggedIn = true;
+                                            //checkforNotReadyItemsNWrapupReasonLabels();
+                                            //CallInfoData callReservedInfoData = new CallInfoData();
+                                            //callReservedInfoData.CurrentCallState = Enum.GetName(typeof(CallClassProvider.CallState), CallClassProvider.CallState.Accepted);
+                                            //CallStateChangeEvent(this, new CtiCoreEventArgs("CallStateChanged", callReservedInfoData, events[2]));
+                                        }
+                                        else
+                                        {
+                                            foreach (var item in teamUserList)
+                                            {
+                                                if (item.LoginId == events[8])
+                                                {
+                                                    item.CallStatus = eAgentState.ToString();
+                                                    item.Time = 1;
+                                                    item.Extension = agentExtension;
+                                                }
+                                            }
+                                        }
+
                                         break;
                                     case AgentState.TALKING:
 
@@ -333,12 +379,14 @@ namespace WpfFinesse.WPFTimer
                                         }
                                         else
                                         {
+                                            btnTeamPerformanceMonitoring.IsEnabled = true;
+
                                             foreach (var item in teamUserList)
                                             {
                                                 if (item.LoginId == events[8])
                                                 {
                                                     item.CallStatus = eAgentState.ToString();
-                                                    item.Time = 0;
+                                                    item.Time = 1;
                                                     item.Extension = agentExtension;
                                                 }
                                             }
@@ -347,15 +395,9 @@ namespace WpfFinesse.WPFTimer
 
                                         break;
                                     case AgentState.WORK_READY:
-                                        //AgentStateWrapUp(events[2]);
-                                        break;
-                                    case AgentState.WORK:
-                                        //AgentStateWrapUp(events[2]);
-                                        break;
-                                    case AgentState.LOGOUT:
                                         if (CallEventInfoListing.agentID == events[8])
                                         {
-                                            //DeactivateConnection();
+                                            //AgentStateWrapUp(events[2]);
                                         }
                                         else
                                         {
@@ -364,12 +406,78 @@ namespace WpfFinesse.WPFTimer
                                                 if (item.LoginId == events[8])
                                                 {
                                                     item.CallStatus = eAgentState.ToString();
-                                                    item.Extension = "";
-                                                    item.Time = 0;
+                                                    item.Time = 1;
+                                                    item.Extension = agentExtension;
                                                 }
                                             }
-                                            teamUserList = teamUserList.Where(x => x.CallStatus != "LOGOUT").ToList();
                                             //teamUserList.Where(x => x.LoginId == events[8]).FirstOrDefault().CallStatus = eAgentState.ToString();
+                                        }
+
+
+
+                                        break;
+                                    case AgentState.WORK:
+                                        if (CallEventInfoListing.agentID == events[8])
+                                        {
+                                            //AgentStateWrapUp(events[2]);
+                                        }
+                                        else
+                                        {
+                                            foreach (var item in teamUserList)
+                                            {
+                                                if (item.LoginId == events[8])
+                                                {
+                                                    item.CallStatus = eAgentState.ToString();
+                                                    item.Time = 1;
+                                                    item.Extension = agentExtension;
+                                                }
+                                            }
+                                            //teamUserList.Where(x => x.LoginId == events[8]).FirstOrDefault().CallStatus = eAgentState.ToString();
+                                        }
+
+
+                                        break;
+                                    case AgentState.LOGOUT:
+                                        if (CallEventInfoListing.agentID == events[8])
+                                        {
+                                            //DeactivateConnection();
+                                        }
+                                        else
+                                        {
+                                            try
+                                            {
+                                                foreach (var item in teamUserList)
+                                                {
+                                                    if (item.LoginId == events[8])
+                                                    {
+                                                        item.CallStatus = eAgentState.ToString();
+                                                        item.Extension = "";
+                                                        item.Time = 1;
+                                                    }
+                                                }
+                                                teamUserList = teamUserList.Where(x => x.CallStatus != "LOGOUT").ToList();
+                                                //teamUserList.Where(x => x.LoginId == events[8]).FirstOrDefault().CallStatus = eAgentState.ToString();
+                                                if (teamUserList.Count > 0)
+                                                {
+                                                    StackNoData.Visibility = Visibility.Collapsed;
+                                                    dgSimple.ItemsSource = teamUserList;
+                                                    dgSimple.Items.Refresh();
+                                                }
+                                                else
+                                                {
+                                                    dgSimple.Height = Double.NaN;
+                                                    dgSimple.ItemsSource = teamUserList;
+                                                    dgSimple.Items.Refresh();
+                                                    Dispatcher.Invoke(() => StackNoData.Visibility = Visibility.Visible);
+                                                }
+                                            }
+                                            catch (Exception ex)
+                                            {
+
+                                                throw ex;
+                                            }
+
+
                                         }
 
                                         break;
@@ -377,16 +485,34 @@ namespace WpfFinesse.WPFTimer
                                         //DeactivateConnection();
                                         break;
                                     case AgentState.HOLD:
-                                        //CallStateHold(CallEventInfoListing.currentActiveCall);
+                                        if (CallEventInfoListing.agentID == events[8])
+                                        {
+                                            //CallStateHold(CallEventInfoListing.currentActiveCall);
+                                        }
+                                        else
+                                        {
+                                            foreach (var item in teamUserList)
+                                            {
+                                                if (item.LoginId == events[8])
+                                                {
+                                                    item.CallStatus = eAgentState.ToString();
+                                                    item.Time = 1;
+                                                    item.Extension = agentExtension;
+                                                }
+                                            }
+                                            //teamUserList.Where(x => x.LoginId == events[8]).FirstOrDefault().CallStatus = eAgentState.ToString();
+                                        }
+
                                         break;
                                 }
                                 break;
                             case EventType.AgentInfo:
                                 CallEventInfoListing.isWraupAllowed = !events[5].ToUpperInvariant().Equals("NOT_ALLOWED");
 
-                                CallEventInfoListing.agentID = events[0];
+
                                 if (Convert.ToBoolean(events[4]) == true)
                                 {
+                                    CallEventInfoListing.agentID = events[0];
                                     CallEventInfoListing.isSupervisor = Convert.ToBoolean(events[4]);
                                     //string number = events[6].Split(':')[1];
                                     CallEventInfoListing.totalNumberOfTeams = Convert.ToInt32(events[6].Split(':')[1]);
@@ -422,28 +548,44 @@ namespace WpfFinesse.WPFTimer
                                     agent.CallStatusColor = "#1BDA6D";
                                     if (agentState != "LOGOUT")
                                     {
-                                        string[] t = agentinfo[7].Split(new[] { ':' }, 2);
+                                        try
+                                        {
 
-                                        string[] time = t[1].Split();
-                                        //DateTime d = new DateTime((int)time[5], time[1], time[2]);
-                                        DateTime date = DateTime.Parse(time[3], System.Globalization.CultureInfo.CurrentCulture);
+                                            string[] t = agentinfo[7].Split(new[] { ':' }, 2);
 
-                                        DateTime now = DateTime.Now;
-                                        int diffInSeconds = (int)(now - date).TotalSeconds;
-                                        agent.Time = diffInSeconds;
+                                            //string[] time = t[1].Split();
+                                            //DateTime d = new DateTime((int)time[5], time[1], time[2]);
+                                            DateTime date = DateTime.Parse(t[1], System.Globalization.CultureInfo.CurrentCulture);
+
+                                            DateTime now = DateTime.Now;
+                                            int diffInSeconds = (int)(now - date).TotalSeconds;
+                                            agent.Time = diffInSeconds;
+                                        }
+                                        catch (Exception ex)
+                                        {
+
+                                            throw ex;
+                                        }
                                     }
                                     teamUserList.Add(agent);
                                 }
-                                teamUserList = teamUserList.Where(x => x.CallStatus != "LOGOUT").ToList();
-                                if (teamUserList.Count > 1)
+                               // teamUserList = teamUserList.Where(x => x.CallStatus != "LOGOUT").ToList();
+                                if (teamUserList.Count > 0)
                                 {
                                     StackNoData.Visibility = Visibility.Collapsed;
                                     dgSimple.ItemsSource = teamUserList;
                                     dgSimple.Items.Refresh();
+                                    if (teamUserList.Count >= 10)
+                                    {
+                                        dgSimple.Height = 350;
+                                    }
+                                    else
+                                    {
+                                        dgSimple.Height = Double.NaN;
+                                    }
                                 }
                                 else
                                 {
-
                                     dgSimple.ItemsSource = teamUserList;
                                     dgSimple.Items.Refresh();
                                     StackNoData.Visibility = Visibility.Visible;
@@ -457,6 +599,335 @@ namespace WpfFinesse.WPFTimer
                                     timerOnce = true;
                                 }
                                 break;
+
+                            case EventType.NewInboundCall:
+                                string dialogID = events[4].Split(':')[1];
+
+                                CallEventInfo objCallEventInfo1 = CallEventInfoListing.lstCallEventInfo.Where(r => r.MyCallInfoData.CallId == dialogID).FirstOrDefault();
+                                CallEventInfoListing.isOutBoundCall = false;
+                                CallEventInfoListing.callAction = string.Empty;
+                                CallEventInfoListing.participants = null;
+
+
+                                // only process NewInboundcall when no call with same Dialog ID exists in the system
+                                if (objCallEventInfo1 == null)
+                                {
+                                    CallEventInfoListing.activityDialogID = dialogID;
+                                    CallInfoData callInfoData = new CallInfoData();
+                                    callInfoData.Ani = events[2];
+                                    callInfoData.CallId = dialogID;
+                                    callInfoData.Dnis = events[2];
+                                    callInfoData.CallReceived = DateTime.Now;
+
+                                    //callInfoData.CurrentCallState = Enum.GetName(typeof(CallClassProvider.CallState), CallClassProvider.CallState.Ringing);
+
+                                    callInfoData.CallType = CallType.InboundCall.ToString();
+
+                                    objCallEventInfo1 = new CallEventInfo();
+                                    objCallEventInfo1.Duration = 0;
+                                    //objCallEventInfo.AgentID = _AgentRefId;
+                                    objCallEventInfo1.MyCallInfoData = callInfoData;
+                                    objCallEventInfo1.callVariables = events[3].Split('|').ToList();
+                                    CallEventInfoListing.lstCallEventInfo.Add(objCallEventInfo1);
+
+                                    CallEventInfoListing.previousDialogID = CallEventInfoListing.getValueOfGivenVariable(objCallEventInfo1.callVariables, "associatedDialogId");
+                                    //call back number
+                                    if (string.IsNullOrEmpty(CallEventInfoListing.previousDialogID))
+                                    {
+                                        CallEventInfoListing.callBackNumber = events[2];
+                                    }
+                                    //----------
+                                    CallEventInfoListing.currentActiveCall = dialogID;
+                                }
+                                else
+                                {
+                                    objCallEventInfo1.callVariables = events[3].Split('|').ToList();
+                                    objCallEventInfo1.MyCallInfoData.CallType = CallType.InboundCall.ToString();
+                                    if (string.IsNullOrEmpty(CallEventInfoListing.previousDialogID))
+                                    {
+                                        CallEventInfoListing.callBackNumber = events[2];
+                                    }
+                                }
+
+                                break;
+
+
+                            case EventType.InboundCall:
+                                string callstate = string.Empty;
+                                string dialogIDInboundCall = string.Empty;
+
+                                if (events.Length >= 4)
+                                {
+                                    string[] dialogInboundCall = events[3].Split(':').ToArray();
+
+                                    if (dialogInboundCall.Length > 1)
+                                    {
+                                        dialogIDInboundCall = dialogInboundCall[1];
+                                    }
+                                }
+                                VendorCallState callStateEvent = GetEnumValue<VendorCallState>(events[2]);
+                                #region inbound call states
+
+                                switch (callStateEvent)
+                                {
+                                    case VendorCallState.INITIATED:
+                                        //MakeOutboundCall(events, dialogIDInboundCall, CallType.OutboundCall.ToString());
+                                        break;
+                                    case VendorCallState.INITIATING:
+                                        // MakeOutboundCall(events, dialogIDInboundCall, CallType.OutboundCall.ToString());
+                                        break;
+                                    case VendorCallState.ACTIVE:
+                                        string callType = events[7].Split(':')[1];
+                                        if (callType == CallType.SM.ToString() && !string.IsNullOrEmpty(dialogIDInboundCall))
+                                        {
+                                            try
+                                            {
+                                                CallEventInfoListing.isOutBoundCall = false;
+                                                CallEventInfoListing.callAction = string.Empty;
+                                                CallEventInfoListing.participants = null;
+
+
+
+
+                                                CallInfoData callMonitorInfoData = new CallInfoData();
+                                                callMonitorInfoData.CallId = dialogIDInboundCall;
+                                                callMonitorInfoData.Ani = events[4];
+                                                callMonitorInfoData.Dnis = events[4];
+                                                List<string> callVariable = events[5].Split('|').ToList();
+                                                callMonitorInfoData.CallReceived = DateTime.Now;
+                                                callMonitorInfoData.CallType = callType;
+
+                                                txtMonitoringCallingNumber.Text = events[4];
+
+
+                                                CallEventInfo monitorcall = new CallEventInfo();
+                                                monitorcall.MyCallInfoData = callMonitorInfoData;
+                                                monitorcall.callVariables = events[5].Split('|').ToList();
+                                                CallEventInfoListing.lstCallEventInfo.Clear();
+                                                ; CallEventInfoListing.lstCallEventInfo.Add(monitorcall);
+                                                btnTeamPerformanceMonitoring.Visibility = Visibility.Collapsed;
+                                                btnTeamPerformanceEndMonitoring.Visibility = Visibility.Visible;
+                                                //monitorcall.MyCallInfoData.CurrentCallState = "Connected";
+
+                                            }
+                                            catch (Exception ex)
+                                            {
+
+                                                throw ex;
+                                            }
+                                        }
+                                        else if (callType == CallType.InboundCall.ToString() && !string.IsNullOrEmpty(dialogIDInboundCall))
+                                        {
+                                            CallEventInfo call = CallEventInfoListing.lstCallEventInfo.Where(obj => obj.MyCallInfoData.CallId == dialogIDInboundCall).FirstOrDefault();
+                                            //callstate = Enum.GetName(typeof(CallClassProvider.CallState), CallClassProvider.CallState.Connected);
+                                            if (call != null)
+                                            {
+                                                // this is normal call, which already exist in system in ringing state
+                                                //log.Debug("EventType.InboundCall InboundCall#Active normal call, which already exist in system");
+                                                call.MyCallInfoData.CurrentCallState = "Connected";
+                                                call.callVariables = events[5].Split('|').ToList();
+
+                                                // capture the conference events
+                                                if (CallEventInfoListing.lstCallEventInfo.Count == 1 && events.Length >= 10)
+                                                {
+                                                    string[] participatnsinConfCall = events[9].Split(':').ToArray();
+
+                                                    if (participatnsinConfCall.Length > 1)
+                                                    {
+
+                                                        CallEventInfoListing.participants = null;
+                                                        CallEventInfoListing.participants = new List<string>();
+
+                                                        CallEventInfoListing.participants = participatnsinConfCall[1].Split('|').ToList();
+                                                    }
+
+                                                }
+
+
+                                                if (CallEventInfoListing.lstCallEventInfo.Count == 1 &&
+                                                    (call.MyCallInfoData.CallType == CallType.ConsultCall.ToString() || string.IsNullOrEmpty(call.MyCallInfoData.CallType)))
+                                                {
+                                                    call.MyCallInfoData.CallType = CallType.InboundCall.ToString();
+                                                }
+
+                                                if (isCallStartTimeEmpty(events, call.istimeDifferenceCalculated))
+                                                {
+                                                    call.callStartTime = events[6];
+                                                    call.timeDifference = CallEventInfoListing.timeDifference(call.callStartTime);
+                                                    call.istimeDifferenceCalculated = true;
+                                                }
+                                                else
+                                                {
+                                                    call.callStartTime = string.Empty;
+                                                }
+
+                                                if (call.callstopwatch == null)
+                                                {
+                                                    call.callstopwatch = new Stopwatch();
+                                                }
+                                                if (!call.callstopwatch.IsRunning)
+                                                {
+                                                    call.callstopwatch.Start();
+                                                }
+                                                //------------------------------------------------------------------
+                                                CallEventInfoListing.currentActiveCall = dialogIDInboundCall;
+                                                // CallStateChangeEvent(this, new CtiCoreEventArgs("CallStateChanged", call.MyCallInfoData, events[2]));
+                                            }
+                                            else // no call exist with this dialog
+                                            {
+                                                //Neither consult nor inbound call exist with the current DialogID
+                                                // there can be 3 cases:
+                                                //1 conference call
+                                                //2 consultative transfer
+                                                //3 customer has dropped the call while consult was in progress.
+                                                //log.Debug("EventType.InboundCall InboundCall#Active call doesnot already exist in system");
+                                                CallInfoData callInfoData = new CallInfoData();
+                                                callInfoData.Ani = events[4];
+                                                callInfoData.CallId = dialogIDInboundCall;
+                                                CallEventInfoListing.activityDialogID = dialogIDInboundCall;
+                                                callInfoData.Dnis = events[4];
+                                                callInfoData.CallReceived = DateTime.Now;
+                                                callInfoData.CurrentCallState = callstate;
+                                                // callInfoData.CallType = CallType.InboundCall.ToString();
+                                                callInfoData.CallType = CallType.OutboundCall.ToString(); // change for the 
+                                                CallEventInfo objCallEventInfo = new CallEventInfo();
+                                                objCallEventInfo.Duration = 0;
+                                                //uzair
+                                                //objCallEventInfo.AgentID = _AgentRefId;
+
+                                                objCallEventInfo.MyCallInfoData = callInfoData;
+                                                objCallEventInfo.callVariables = events[5].Split('|').ToList();
+                                                //------------date time -----------------------------------
+                                                if (isCallStartTimeEmpty(events, objCallEventInfo.istimeDifferenceCalculated))
+                                                {
+                                                    objCallEventInfo.callStartTime = events[6];
+                                                    objCallEventInfo.timeDifference = CallEventInfoListing.timeDifference(objCallEventInfo.callStartTime);
+                                                    objCallEventInfo.istimeDifferenceCalculated = true;
+                                                }
+                                                else
+                                                {
+                                                    objCallEventInfo.callStartTime = string.Empty;
+                                                }
+
+                                                if (objCallEventInfo.callstopwatch == null)
+                                                {
+                                                    objCallEventInfo.callstopwatch = new Stopwatch();
+                                                }
+                                                if (!objCallEventInfo.callstopwatch.IsRunning)
+                                                {
+                                                    objCallEventInfo.callstopwatch.Start();
+                                                }
+                                                //--------------------------------------------------------------
+                                                CallEventInfoListing.lstCallEventInfo.Add(objCallEventInfo);
+                                                CallEventInfoListing.currentActiveCall = callInfoData.CallId;
+                                                // CallStateChangeEvent(this, new CtiCoreEventArgs("CallStateChanged", callInfoData, events[4]));
+                                                // In order to resolve the issue that customer drops the call while consult was in ringing / held state. GetDialogState is sent.
+                                                CtiCommands.GetCurrentDialogState();
+                                            }
+                                        }
+
+
+
+                                        break;
+                                    case VendorCallState.FAILED:
+
+                                        string error = string.IsNullOrEmpty(events[4]) ? "Call Failed" : events[4];
+                                        //SystemStateUnKnown(error);
+
+                                        //if call fails, user will be unable to do anything.
+                                        //therefore, we add a call, so customer can end the call
+                                        //otherwise, call will be dropped by itself after around 15 sec (as defined on CUCM)
+                                        //MakeOutboundCall(events, events[3].Split(':')?[1], CallType.InboundCall.ToString());
+                                        break;
+                                    case VendorCallState.DROP:
+                                    case VendorCallState.DROPPED:
+                                        //CallStateDrop(dialogIDInboundCall);
+                                        btnTeamPerformanceMonitoring.Visibility = Visibility.Visible;
+                                        btnTeamPerformanceEndMonitoring.Visibility = Visibility.Collapsed;
+                                        break;
+
+                                    case VendorCallState.HELD:
+                                        CallEventInfo heldcall = CallEventInfoListing.lstCallEventInfo.Where(obj => obj.MyCallInfoData.CallId == dialogIDInboundCall).FirstOrDefault();
+                                        if (heldcall != null)
+                                        {
+                                            // this is normal call, which already exist in system in ringing state
+                                            //  log.Debug("EventType.InboundCall InboundCall#HELD updateCallVariables");
+                                            heldcall.callVariables = events[5].Split('|').ToList();
+
+                                            //-----------------------------
+                                            string callVariable4 = CallEventInfoListing.getValueOfGivenVariable(heldcall.callVariables, "callVariable4");
+                                            string callVariable5 = CallEventInfoListing.getValueOfGivenVariable(heldcall.callVariables, "callVariable5");
+
+                                            //log.Info("CTICONNECTOR callVariable4=" + callVariable4 + " ,Context.SessionID=callVariable5= " + callVariable5 + ",CallEventInfoListing.callActionRequested:" + CallEventInfoListing.callActionRequested);
+
+
+                                            if (CallEventInfoListing.lstCallEventInfo.Count == 2 && CallEventInfoListing.callActionRequested.Equals("TRANSFER") && callVariable4.Equals("TRANSFER"))
+                                            {
+                                                CallEventInfoListing.callActionRequested = string.Empty;
+                                                string transfercmd = string.Concat(heldcall.MyCallInfoData.Ani + ",", heldcall.MyCallInfoData.CallId);
+                                                //  log.Debug("transfercmdCTI: " + transfercmd);
+                                                //no  wrapup after call transfer so no nned to save the dialog ID 
+                                                //CallEventInfoListing.transferCallDialogID = InboundCall.MyCallInfoData.CallId;
+                                                CallEventInfoListing.isTransferCall = true;
+                                                CallEventInfoListing.callAction = "TRANSFER";
+                                                //AMQManager.GetInstance().SendMessage(GCMessages("TransferCall"), transfercmd);
+
+                                                //var CurrentCall = CallEventInfoListing.lstCallEventInfo.Where(obj => obj.MyCallInfoData.CallId == CallEventInfoListing.currentActiveCall).FirstOrDefault();
+                                                //if (CurrentCall != null && CurrentCall.MyCallInfoData != null)
+                                                //{
+                                                //    log.Debug("consultingAgentExtension :" + CurrentCall.MyCallInfoData.Ani);
+                                                //    CallEventInfoListing.consultingAgentExtension = CurrentCall.MyCallInfoData.Ani;
+                                                //}
+                                                //else
+                                                //{
+                                                //    log.Debug("CurrentCall: " + transfercmd);
+                                                //}
+                                            }
+                                            else if (CallEventInfoListing.lstCallEventInfo.Count == 2 && CallEventInfoListing.callActionRequested.Equals("CONFERENCE") && callVariable4.Equals("CONFERENCE"))
+                                            {
+                                                CallEventInfoListing.callActionRequested = string.Empty;
+                                                var ConferenceCall = CallEventInfoListing.lstCallEventInfo.Where(obj => obj.MyCallInfoData.CallId != CallEventInfoListing.currentActiveCall).FirstOrDefault();
+                                                //var ConferenceCall = CallEventInfoListing.lstCallEventInfo.Where(obj => obj.MyCallInfoData.CallId == CallEventInfoListing.activityDialogID ).FirstOrDefault();
+                                                //log.Debug("ConferenceCall.MyCallInfoData?.CallIdctiConnector :" + ConferenceCall?.MyCallInfoData?.CallId + "callActionRequested:" + CallEventInfoListing.callActionRequested + " currentActiveCall" + CallEventInfoListing.currentActiveCall);
+                                                if (ConferenceCall != null && ConferenceCall.MyCallInfoData != null)
+                                                {
+                                                    //var CurrentCall = CallEventInfoListing.lstCallEventInfo.Where(obj => obj.MyCallInfoData.CallId == CallEventInfoListing.currentActiveCall).FirstOrDefault();
+                                                    //if (CurrentCall != null && CurrentCall.MyCallInfoData != null)
+                                                    //{
+                                                    //    log.Debug("Current call Ani :" + CurrentCall.MyCallInfoData.Ani + ",consultingAgentExtension="+ CallEventInfoListing.consultingAgentExtension);
+                                                    //   // CallEventInfoListing.consultingAgentExtension = CurrentCall.MyCallInfoData.Ani;
+                                                    //}
+
+                                                    //CallEventInfoListing.callActionRequested = "CONFERENCE";
+                                                    CallEventInfoListing.isConference = true;
+                                                    //  string conferencecmd = string.Concat(tbDial1.Text + ",", ConferenceCall.MyCallInfoData.CallId);
+                                                    string conferencecmd = string.Concat(CallEventInfoListing.consultingAgentExtension + ",", ConferenceCall.MyCallInfoData.CallId);
+                                                    //  log.Debug("conferencecmd :" + conferencecmd);
+                                                    CallEventInfoListing.callAction = "CONFERENCE";
+                                                    AMQManager.GetInstance().SendMessageToQueue(GCMessages("ConferenceCall"), conferencecmd);
+
+                                                }
+                                                else
+                                                {
+                                                    int callno = 1;
+                                                    foreach (var item in CallEventInfoListing.lstCallEventInfo)
+                                                    {
+                                                        if (item != null && item.MyCallInfoData != null)
+                                                        {
+                                                        }
+                                                        else
+                                                        {
+                                                        }
+                                                        callno++;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        break;
+                                }
+                                #endregion inboundcall states
+                                break;
+
                         }
                     });
                 }
@@ -1174,16 +1645,78 @@ namespace WpfFinesse.WPFTimer
             }
         }
 
-        //private void dgSimple_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        //{
-        //    if (dgSimple.IsLoaded)
-        //    {
-        //        UserTab selectedRow = (UserTab)dgSimple.SelectedItem;
+        private void dgSimple_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (dgSimple.IsLoaded)
+            {
+                selectedRow = (UserTab)dgSimple.SelectedItem;
 
-        //        aMQManager.SendMessageToQueue(GCMessages("MakeReady", selectedRow.LoginId), "");
-        //        MessageBox.Show("hello");
-        //    }
-        //}
+                if (selectedRow != null)
+                {
+                    TeamPerformanceStackPanel.Visibility = Visibility.Visible;
+                    if (selectedRow.CallStatus == "NOT_READY")
+                    {
+                        UpdateTeamPerformanceButtonPanel_NOTREADY();
+                    }
+                    else if (selectedRow.CallStatus == "READY")
+                    {
+                        UpdateTeamPerformanceButtonPanel_READY();
+
+                    }
+                    else if (selectedRow.CallStatus == "LOGOUT")
+                    {
+                        UpdateTeamPerformanceButtonPanel_LOGOUT();
+                    }
+                    else if (selectedRow.CallStatus == "TALKING")
+                    {
+                        UpdateTeamPerformanceButtonPanel_TALKING();
+                    }
+                }
+            }
+        }
+
+        private void UpdateTeamPerformanceButtonPanel_NOTREADY()
+        {
+            btnTeamPerformanceMonitoring.IsEnabled = false;
+            btnTeamPerformanceEndMonitoring.IsEnabled = false;
+            btnTeamPerformanceNotReady.IsEnabled = false;
+            btnTeamPerformanceMakeReady.IsEnabled = true;
+            btnTeamPerformanceSignOut.IsEnabled = true;
+            btnTeamPerformanceHold.IsEnabled = false;
+            btnTeamPerformanceHeld.IsEnabled = false;
+        }
+
+        private void UpdateTeamPerformanceButtonPanel_READY()
+        {
+            btnTeamPerformanceMonitoring.IsEnabled = false;
+            btnTeamPerformanceEndMonitoring.IsEnabled = false;
+            btnTeamPerformanceNotReady.IsEnabled = true;
+            btnTeamPerformanceMakeReady.IsEnabled = false;
+            btnTeamPerformanceSignOut.IsEnabled = true;
+            btnTeamPerformanceHold.IsEnabled = false;
+            btnTeamPerformanceHeld.IsEnabled = false;
+        }
+        private void UpdateTeamPerformanceButtonPanel_LOGOUT()
+        {
+            btnTeamPerformanceMonitoring.IsEnabled = false;
+            btnTeamPerformanceEndMonitoring.IsEnabled = false;
+            btnTeamPerformanceNotReady.IsEnabled = false;
+            btnTeamPerformanceMakeReady.IsEnabled = false;
+            btnTeamPerformanceSignOut.IsEnabled = false;
+            btnTeamPerformanceHold.IsEnabled = false;
+            btnTeamPerformanceHeld.IsEnabled = false;
+        }
+
+        private void UpdateTeamPerformanceButtonPanel_TALKING()
+        {
+            btnTeamPerformanceMonitoring.IsEnabled = true;
+            btnTeamPerformanceEndMonitoring.IsEnabled = false;
+            btnTeamPerformanceNotReady.IsEnabled = false;
+            btnTeamPerformanceMakeReady.IsEnabled = false;
+            btnTeamPerformanceSignOut.IsEnabled = true;
+            btnTeamPerformanceHold.IsEnabled = false;
+            btnTeamPerformanceHeld.IsEnabled = false;
+        }
 
         private void TeamPerformanceMakeReady_Click(object sender, RoutedEventArgs e)
         {
@@ -1201,7 +1734,7 @@ namespace WpfFinesse.WPFTimer
         private void TeamPerformanceSignOut_Click(object sender, RoutedEventArgs e)
         {
             UserTab selectedRow = (UserTab)dgSimple.SelectedItem;
-            aMQManager.SendMessageToQueue(GCMessages("logoutwithreason", selectedRow.LoginId), "28");
+            aMQManager.SendMessageToQueue(GCMessages("logout", selectedRow.LoginId), "");
         }
 
         private void TeamPerformanceMonitoring_Click(object sender, RoutedEventArgs e)
@@ -1217,6 +1750,47 @@ namespace WpfFinesse.WPFTimer
                 MessageBox.Show("please select row");
             }
 
+        }
+
+        private bool isCallStartTimeEmpty(string[] events, bool istimeDifferenceCalculated)
+        {//7th token of call is start datetime from finesse.Agreeed format is '2018-01-10 14:11:44'
+            if (events.Length > 6 && !string.IsNullOrEmpty(events[6]) && istimeDifferenceCalculated == false)
+            {
+                string[] datetimetoken = events[6].Split(' ').ToArray();
+                if (datetimetoken.Length > 1)
+                {
+                    string[] datetoken = datetimetoken[0].Split('-').ToArray();
+                    if (datetoken.Length == 3)
+                    {
+                        string[] timetoken = datetimetoken[1].Split(':').ToArray();
+                        if (timetoken.Length == 3)
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+
+
+
+        private void TeamPerformanceHold_Click(object sender, RoutedEventArgs e)
+        {
+            string dialogId = CallEventInfoListing.lstCallEventInfo.ElementAt(0).MyCallInfoData.CallId;
+            aMQManager.SendMessageToQueue(GCMessages("HoldCall"), dialogId);
+        }
+
+        private void TeamPerformanceEndMonitoring_Click(object sender, RoutedEventArgs e)
+        {
+            string dialogId = CallEventInfoListing.lstCallEventInfo.ElementAt(0).MyCallInfoData.CallId;
+            aMQManager.SendMessageToQueue(GCMessages("endsilentmonitor"), dialogId);
+        }
+
+        private void TeamPerformanceHeld_Click(object sender, RoutedEventArgs e)
+        {
+            string dialogId = CallEventInfoListing.lstCallEventInfo.ElementAt(0).MyCallInfoData.CallId;
+            aMQManager.SendMessageToQueue(GCMessages("RetrieveCall"), dialogId);
         }
     }
 
@@ -1690,5 +2264,27 @@ namespace WpfFinesse.WPFTimer
         RE_LOGIN,
         NONE
     }
+
+    public enum CallType
+    {
+        ConsultCall,
+        InboundCall,
+        OutboundCall,
+        SM
+    }
+    public enum VendorCallState
+    {
+        NONE,
+        INITIATING,
+        INITIATED,
+        ALERTING,
+        ACTIVE,
+        DROP,
+        FAILED,
+        HELD,
+        NotFound,
+        DROPPED
+    }
+
 
 }

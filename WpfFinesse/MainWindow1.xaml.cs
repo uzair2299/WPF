@@ -97,13 +97,13 @@ namespace WpfFinesse
                         btntransfercall.Visibility = Visibility.Collapsed;
                         btnConsultcall.Visibility = Visibility.Collapsed;
                         txtCallingNumber.Text = args.eventArgs[2];
-                        CallInfoData.DialogId = dialogID[1];
+                        CallInfoData1.DialogId = dialogID[1];
                     }
                     else if (args.eventArgs[1] == "InboundCall")
                     {
                         if (GC_Commands.Inboundcall_current_state.ACTIVE.ToString() == args.eventArgs[2])
                         {
-                            CallInfoData.CallStatus = args.eventArgs[2];
+                            CallInfoData1.CallStatus = args.eventArgs[2];
                             btnCallPick.Visibility = Visibility.Collapsed;
                             btnCallEnd.Visibility = Visibility.Visible;
                             btnHoldcall.Visibility = Visibility.Visible;
@@ -153,7 +153,7 @@ namespace WpfFinesse
                         ConsultCallBar.Visibility = Visibility.Visible;
                         //txtConsultCallingNumber.Text = args.eventArgs[4];
                         btnConsultCallEnd.Visibility = Visibility.Visible;
-                        CallInfoData.ConsultDialogId = args.eventArgs[3].Split(':')[1];
+                        CallInfoData1.ConsultDialogId = args.eventArgs[3].Split(':')[1];
                         if (args.eventArgs[2] == "INITIATING")
                         {
                             txtConsultCallingNumber.Text = "INITIATING " + args.eventArgs[4];
@@ -247,12 +247,12 @@ namespace WpfFinesse
             {
                 string command = GC_Utility.CreateComand(GC_AllCommand.ReleaseCall.ToString(), agent.AgentID);
                 aMQManager.messageArrived += AMQManager_messageArrived1;
-                aMQManager.SendMessageToQueue(command, CallInfoData.DialogId);
+                aMQManager.SendMessageToQueue(command, CallInfoData1.DialogId);
             }
             else if (name == "btnConsultCallEnd")
             {
                 string command = GC_Utility.CreateComand(GC_AllCommand.ReleaseCall.ToString(), agent.AgentID);
-                aMQManager.SendMessageToQueue(command, CallInfoData.ConsultDialogId);
+                aMQManager.SendMessageToQueue(command, CallInfoData1.ConsultDialogId);
             }
         }
 
@@ -260,20 +260,20 @@ namespace WpfFinesse
         {
             string extension = txtDailNumber.Text;
             string command = GC_Utility.CreateComand(GC_AllCommand.Transfer_sst.ToString(), agent.AgentID);
-            aMQManager.SendMessageToQueue(command, extension + "," + CallInfoData.DialogId);
+            aMQManager.SendMessageToQueue(command, extension + "," + CallInfoData1.DialogId);
 
         }
 
         private void btnHoldcall_Click(object sender, RoutedEventArgs e)
         {
             string command = GC_Utility.CreateComand(GC_AllCommand.HoldCall.ToString(), agent.AgentID);
-            aMQManager.SendMessageToQueue(command, CallInfoData.DialogId);
+            aMQManager.SendMessageToQueue(command, CallInfoData1.DialogId);
         }
 
         private void btnResumecall_Click(object sender, RoutedEventArgs e)
         {
             string command = GC_Utility.CreateComand(GC_AllCommand.RetrieveCall.ToString(), agent.AgentID);
-            bool result = aMQManager.SendMessageToQueue(command, CallInfoData.DialogId);
+            bool result = aMQManager.SendMessageToQueue(command, CallInfoData1.DialogId);
             if (result)
             {
                 ActiveHoldCall = true;
@@ -284,7 +284,7 @@ namespace WpfFinesse
         {
             string extension = txtDailNumber.Text;
             string command = GC_Utility.CreateComand(GC_AllCommand.ConsultCall.ToString(), agent.AgentID);
-            aMQManager.SendMessageToQueue(command, extension + "," + CallInfoData.DialogId);
+            aMQManager.SendMessageToQueue(command, extension + "," + CallInfoData1.DialogId);
         }
 
         private void btnCallPick_Click(object sender, RoutedEventArgs e)
@@ -294,7 +294,7 @@ namespace WpfFinesse
             if (name == "btnCallPick")
             {
                 string command = GC_Utility.CreateComand(GC_AllCommand.AnswerCall.ToString(), agent.AgentID);
-                aMQManager.SendMessageToQueue(command, CallInfoData.DialogId);
+                aMQManager.SendMessageToQueue(command, CallInfoData1.DialogId);
             }
             else if (name == "btnConsultCallPick")
             {

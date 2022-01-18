@@ -1,11 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WpfFinesse.AMQ;
 
 namespace WpfFinesse.Models
 {
+    public  class CallInfoData
+    {
+        //public CallInfoData();
+
+        public SortedDictionary<string, string> AdditionalParameters { get; set; }
+        public string Ani { get; set; }
+  //      public CtiCallActionOptions CallControlOptions { get; set; }
+        public string CallerName { get; set; }
+        public string CallId { get; set; }
+        public DateTime CallReceived { get; set; }
+        public string CallType { get; set; }
+        public string CtiCallState { get; }
+        public string CurrentCallState { get; set; }
+        public string Dnis { get; set; }
+        public Guid GetCtiCallRefId { get; }
+        public string IPAddress { get; set; }
+        public object NewCallEventObject { get; set; }
+
+//        public void SetCtiCallStateData(string ctiReferenceCallState);
+    }
 
     public class CallEventInfo
     {
@@ -15,14 +37,14 @@ namespace WpfFinesse.Models
             this.istimeDifferenceCalculated = false;
         }
         public string AgentID { get; set; }
-        //public CallInfoData MyCallInfoData { get; set; }
+        public CallInfoData MyCallInfoData { get; set; }
         public List<string> callVariables { get; set; }
         public int Duration { get; set; }
         public TimeSpan timeDifference { get; set; }
         public string callStartTime { get; set; }
-        //public Stopwatch callstopwatch { get; set; }
-        //public Stopwatch holdcallstopwatch { get; set; }
-        //public Stopwatch Wrapupcallstopwatch { get; set; }
+        public Stopwatch callstopwatch { get; set; }
+        public Stopwatch holdcallstopwatch { get; set; }
+        public Stopwatch Wrapupcallstopwatch { get; set; }
         public bool istimeDifferenceCalculated { get; set; }
         public Dictionary<string, string> callvariablesNameValue { get; set; }
 
@@ -42,6 +64,8 @@ namespace WpfFinesse.Models
         public static string currentActiveCall;
 
         public static string agentID;
+
+
 
         public static string agentPassword;
 
@@ -259,6 +283,46 @@ namespace WpfFinesse.Models
                 }
             }
             return value;
+        }
+    }
+
+
+    public class CtiCommands
+    {
+       // private static ILog log = LogManager.GetLogger("CtiCommands");
+        public static void GetCurrentDialogState()
+        {
+            if (!string.IsNullOrEmpty(CallEventInfoListing.currentActiveCall))
+            {
+                AMQManager.GetInstance().SendMessageToQueue("GetDialogState#" + CallEventInfoListing.agentID, CallEventInfoListing.currentActiveCall);
+                //log.Debug("sent message: GetDialogState#" + CallEventInfoListing.agentID + "," + CallEventInfoListing.currentActiveCall);
+            }
+            else
+            {
+            }
+        }
+        public static void GetAgentState()
+        {
+            AMQManager.GetInstance().SendMessageToQueue("GetState#" + CallEventInfoListing.agentID, "");
+
+            //log.Debug("CtiCommands-Command send to GC : GetState#" + CallEventInfoListing.agentID);
+        }
+
+        public static void GetDialogState(string callId)
+        {
+            if (!string.IsNullOrEmpty(callId))
+            {
+                AMQManager.GetInstance().SendMessageToQueue("GetDialogState#" + CallEventInfoListing.agentID, callId);
+                //log.Debug("CtiCommands-Command send to GC : GetDialogState#" + CallEventInfoListing.agentID + "," + callId);
+            }
+            else
+            {
+            }
+        }
+        public static void ForceLogout()
+        {
+            AMQManager.GetInstance().SendMessageToQueue("force_logout#" + CallEventInfoListing.agentID, "");
+            //log.Debug("CtiCommands-Command send to GC : force_logout#" + CallEventInfoListing.agentID);
         }
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WpfFinesse.Models
 {
-    public static class CallInfoData
+    public static class CallInfoData1
     {
         public static string DialogId { get; set; }
         public static string ConsultDialogId { get; set; }

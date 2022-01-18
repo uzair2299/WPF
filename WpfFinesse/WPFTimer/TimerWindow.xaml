@@ -34,6 +34,7 @@
         <Color x:Key="BorderColor">#C8C6C6</Color>
         <Color x:Key="ForegroundPhonebookColor">#c7c2c2</Color>
         <Color x:Key="ForegroundPhonebookContactColor">#938c8c</Color>
+        <Color x:Key="TeamPerformanceBtnBorderColor">#A7A5A5</Color>
         <Color x:Key="HoverColor"></Color>
         <Color x:Key="PressedColor"></Color>
         <SolidColorBrush x:Key="StandardBrush" Color="{StaticResource StandardColor}" />
@@ -51,9 +52,10 @@
         <SolidColorBrush x:Key="BorderColorBrush" Color="{StaticResource BorderColor}"></SolidColorBrush>
         <SolidColorBrush x:Key="ForegroundPhonebookColorBrush" Color="{StaticResource ForegroundPhonebookColor}"></SolidColorBrush>
         <SolidColorBrush x:Key="ForegroundPhonebookContactColorBrush" Color="{StaticResource ForegroundPhonebookContactColor}"></SolidColorBrush>
+        <SolidColorBrush x:Key="DisabledBackgroundBrush" Color="{StaticResource AlternativeGridRowColor}"></SolidColorBrush>
+        <SolidColorBrush x:Key="DisabledBtnBorderColorBrush" Color="{StaticResource TeamPerformanceBtnBorderColor}"></SolidColorBrush>
 
         <!--End Colors-->
-
 
 
 
@@ -910,14 +912,19 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}"  CornerRadius="2">
-                            <ContentPresenter ContentSource="Content"/>
+                        <Border Name="btnTeamPerformanceborder" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}"  CornerRadius="2">
+                            <ContentPresenter Name="ContentPresenter" ContentSource="Content"/>
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
                                 <Setter Property="Opacity" Value=".8"></Setter>
                                 <Setter Property="FontWeight" Value="DemiBold"></Setter>
                             </Trigger>
+                            <!--<Trigger Property="IsEnabled" Value="false">
+                                <Setter TargetName="btnTeamPerformanceborder" Property="Background" Value="{StaticResource DisabledBackgroundBrush}" />
+                                <Setter TargetName="btnTeamPerformanceborder" Property="BorderBrush" Value="{StaticResource DisabledBtnBorderColorBrush}" />
+                                --><!--<Setter Property="TextBlock.Foreground" TargetName="ContentPresenter" Value="Red"/>--><!--
+                            </Trigger>-->
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
@@ -1875,11 +1882,11 @@
                                     <Grid Background="#F7F7F7">
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="40"></RowDefinition>
-                                            <RowDefinition Height="30"></RowDefinition>
-                                            <RowDefinition Height="30"></RowDefinition>
+                                            <RowDefinition Height="*"></RowDefinition>
+                                            <RowDefinition Height="*"></RowDefinition>
+                                            <RowDefinition Height="*"></RowDefinition>
                                             <RowDefinition Height="*"></RowDefinition>
 
-                                            <RowDefinition Height="*"></RowDefinition>
                                         </Grid.RowDefinitions>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="*"></ColumnDefinition>
@@ -1889,31 +1896,155 @@
                                             
                                             </ComboBox>
                                         </StackPanel>
-                                        <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Width="Auto"   Grid.Row="1"    VerticalAlignment="Center">
-                                            <Button Style="{StaticResource btnTeamPerformance}" Width="100" Height="25"  Margin="0 0 0 3" Background="White" BorderBrush="#A7A5A5" BorderThickness="1" Name="TeamPerformanceMonitoring" Click="TeamPerformanceMonitoring_Click">
-                                                <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="Monitoring" Padding="10 2 10 2" Foreground="#A7A5A5"></TextBlock>
-                                            </Button>
-                                            <Button Style="{StaticResource btnTeamPerformance}" Width="100" Height="25"  Margin="3 0 0 0" Background="#CB2424" BorderBrush="#CB2424" BorderThickness="1" Click="TeamPerformanceNotReady_Click"  Name="TeamPerformanceNotReady">
-                                                <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="Not Ready" Padding="10 2 10 2" Foreground="White"></TextBlock>
-                                            </Button>
-                                            <Button Style="{StaticResource btnTeamPerformance}" Width="100" Height="25" Margin="3 0 0 0" Background="White" BorderBrush="#7be5bd" BorderThickness="1"  Name="TeamPerformanceMakeReady" Click="TeamPerformanceMakeReady_Click">
-                                                <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="Ready" Padding="10 2 10 2" Foreground="#7be5bd"></TextBlock>
-                                            </Button>
-                                        </StackPanel>
-                                        <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Width="Auto"  Grid.Row="2"    VerticalAlignment="Center">
-                                            <Button Style="{StaticResource btnTeamPerformance}" Width="100" Height="25"  Margin="3 0 0 0" Background="#A7A5A5" BorderThickness="0" Name="TeamPerformanceSignOut" Click="TeamPerformanceSignOut_Click">
-                                                <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="SignOut" Padding="10 2 10 2" Foreground="White"></TextBlock>
-                                            </Button>
 
-                                            <!--<Rectangle VerticalAlignment="Stretch" Width="2" Margin="3 0 0 0" Stroke="#DEDEDE" Fill="#DEDEDE"/>-->
+                                        <StackPanel Visibility="Visible" Name="TeamPerformanceStackPanel" Grid.Row="1" Margin="0 0 0 5">
+                                            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Width="Auto" VerticalAlignment="Center">
+                                                <Button Visibility="Visible" Style="{StaticResource btnTeamPerformance}" Width="100" Height="25"  Margin="0 0 0 3" Background="White" BorderBrush="#A7A5A5" BorderThickness="1" Name="btnTeamPerformanceMonitoring" Click="TeamPerformanceMonitoring_Click" IsEnabled="False">
+                                                    <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="Monitoring" Padding="10 2 10 2" Foreground="#A7A5A5"></TextBlock>
+                                                </Button>
 
-                                            <Button Style="{StaticResource btnTeamPerformance}" Width="100" Height="25" Margin="3 0 0 0" Background="Black" BorderThickness="0">
-                                                <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="Bergeln" Padding="10 2 10 2" Foreground="White"></TextBlock>
-                                            </Button>
-                                            <Button Style="{StaticResource btnTeamPerformance}" Width="100" Height="25"  Margin="3 0 5 0" Background="White" BorderBrush="#A7A5A5" BorderThickness="1">
-                                                <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="Drop Participant" Padding="10 2 10 2" Foreground="#A7A5A5"></TextBlock>
-                                            </Button>
+
+                                                <Button Visibility="Collapsed" Style="{StaticResource btnTeamPerformance}" Width="100" Height="25"  Margin="0 0 0 3" Background="White" BorderBrush="#A7A5A5" BorderThickness="1" Name="btnTeamPerformanceEndMonitoring" Click="TeamPerformanceEndMonitoring_Click">
+                                                    <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="End Monitoring" Padding="10 2 10 2" Foreground="#A7A5A5"></TextBlock>
+                                                </Button>
+
+                                                <Button Style="{StaticResource btnTeamPerformance}" Width="100" Height="25"  Margin="3 0 0 3" Background="#CB2424" BorderBrush="#CB2424" BorderThickness="1" Click="TeamPerformanceNotReady_Click"  Name="btnTeamPerformanceNotReady" IsEnabled="False">
+                                                    <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="Not Ready" Padding="10 2 10 2" Foreground="White"></TextBlock>
+                                                </Button>
+                                                <Button Style="{StaticResource btnTeamPerformance}" Width="100" Height="25" Margin="3 0 0 3" Background="White" BorderBrush="#7be5bd" BorderThickness="1"  Name="btnTeamPerformanceMakeReady" Click="TeamPerformanceMakeReady_Click" IsEnabled="False">
+                                                    <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="Ready" Padding="10 2 10 2" Foreground="#7be5bd"></TextBlock>
+                                                </Button>
+                                            </StackPanel>
+                                            
+                                            <StackPanel  HorizontalAlignment="Center" Orientation="Horizontal" Width="Auto" VerticalAlignment="Center">
+                                                <Button Visibility="Visible" Style="{StaticResource btnTeamPerformance}" Width="100" Height="25"  Margin="0 -3 0 0" Background="White" BorderBrush="#A7A5A5" BorderThickness="1" Click="TeamPerformanceHold_Click"  Name="btnTeamPerformanceHold" IsEnabled="False">
+                                                    <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="Hold" Padding="10 2 10 2" Foreground="#A7A5A5" ></TextBlock>
+                                                </Button>
+
+                                                <Button Visibility="Collapsed" Style="{StaticResource btnTeamPerformance}" Width="100" Height="25"  Margin="0 -3 0 0" Background="White" BorderBrush="#A7A5A5" BorderThickness="1" Click="TeamPerformanceHeld_Click"  Name="btnTeamPerformanceHeld" IsEnabled="False">
+                                                    <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="Held" Padding="10 2 10 2" Foreground="#A7A5A5" ></TextBlock>
+                                                </Button>
+                                                
+                                                
+                                                <Button Style="{StaticResource btnTeamPerformance}" Width="100" Height="25"  Margin="3 0 0 3" Background="#A7A5A5" BorderThickness="0" Name="btnTeamPerformanceSignOut" Click="TeamPerformanceSignOut_Click" IsEnabled="False">
+                                                    <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="SignOut" Padding="10 2 10 2" Foreground="White"></TextBlock>
+                                                </Button>
+
+                                                <!--<Rectangle VerticalAlignment="Stretch" Width="2" Margin="3 0 0 0" Stroke="#DEDEDE" Fill="#DEDEDE"/>-->
+
+                                                <Button Visibility="Collapsed" Style="{StaticResource btnTeamPerformance}" Width="100" Height="25" Margin="3 0 0 3" Background="Black" BorderThickness="0" Name="btnTeamPerformanceBergeln" IsEnabled="False">
+                                                    <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="Bergeln" Padding="10 2 10 2" Foreground="White"></TextBlock>
+                                                </Button>
+ 
+                                            </StackPanel>
+                                            
+                                            <StackPanel  HorizontalAlignment="Center" Orientation="Horizontal" Width="Auto" VerticalAlignment="Center" Margin="0 0 0 3">
+                                                <Button Visibility="Collapsed" Style="{StaticResource btnTeamPerformance}" Width="100" Height="25"  Margin="0 0 1.5 0" Background="White" BorderBrush="#A7A5A5" BorderThickness="1" Click="TeamPerformanceHold_Click"  Name="btnTeamPerformanceParticipants" IsEnabled="False">
+                                                    <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="Participants" Padding="10 2 10 2" Foreground="#A7A5A5" ></TextBlock>
+                                                </Button>
+                                                <Button Visibility="Collapsed" Style="{StaticResource btnTeamPerformance}" Width="100" Height="25"  Margin="1.5 0 0 0" Background="White" BorderBrush="#A7A5A5" BorderThickness="1" Click="TeamPerformanceHeld_Click"  Name="btnTeamPerformanceDrop" IsEnabled="False">
+                                                    <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="Drop" Padding="10 2 10 2" Foreground="#A7A5A5" ></TextBlock>
+                                                </Button>
+                                            </StackPanel>
                                         </StackPanel>
+                                       
+
+
+
+
+
+
+                                        <Border Width="306" Grid.Row="2" BorderBrush="#C8C6C6" BorderThickness="1" Background="#EEEEEE" Margin="5 0 5 0" Name="CallPanel"  Visibility="Visible">
+                                            <StackPanel>
+                                                <Grid x:Name="toolbox">
+                                                    <Grid.RowDefinitions>
+                                                        <RowDefinition Height="40"></RowDefinition>
+                                                        <RowDefinition Height="*"></RowDefinition>
+                                                    </Grid.RowDefinitions>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition></ColumnDefinition>
+                                                        <ColumnDefinition></ColumnDefinition>
+                                                        <ColumnDefinition></ColumnDefinition>
+                                                    </Grid.ColumnDefinitions>
+                                                    <StackPanel Grid.Row="0" Grid.Column="0" Margin="7 3 10 0" >
+                                                        <TextBlock x:Name="txtCallTiming" Foreground="#9D9D9D" Text="" FontSize="14"></TextBlock>
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <Image Source="/Resources/3050.png" Height="12" Width="12" Margin="0 0 3 0"/>
+                                                            <TextBlock FontWeight="Bold" FontFamily="Tahoma"  x:Name="txtMonitoringCallingNumber" Text=""></TextBlock>
+                                                        </StackPanel>
+
+                                                    </StackPanel>
+                                                    <StackPanel Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Vertical" Margin="0 5 0 0">
+                                                        <Button  x:Name="btnCallVaribles" Style="{StaticResource callbtn}" Width="115" Height="20" VerticalAlignment="Center" HorizontalAlignment="Center" Background="#EEEEEE">
+                                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                                <TextBlock FontFamily="Tahoma"  x:Name="txtlbl" Text="Call Variables" VerticalAlignment="Center" Margin="3 0 6 0" FontSize="12"></TextBlock>
+                                                                <Path x:Name="arrow" VerticalAlignment="Center"  HorizontalAlignment="Right" Stroke="#9D9D9D" StrokeThickness="2" Fill="#9D9D9D" Data="M 0 0 L 4 4 L 8 0 Z" Margin="0 1 8 0"/>
+                                                            </StackPanel>
+                                                        </Button>
+                                                    </StackPanel>
+
+                                                    <StackPanel Grid.Row="0" Grid.Column="3"  Margin="0 0 10 0" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                                        <Button   Style="{StaticResource callvariable}" x:Name="btnCallPick" Padding="7" Margin="0 0 2 0" Background="#34BE82" Foreground="White" FontWeight="UltraBold" BorderBrush="Transparent" Width="25" Height="25" Visibility="Collapsed">
+                                                            <Image Source="/Resources/call-answer-1.png" />
+                                                        </Button>
+                                                        <Button   Style="{StaticResource callvariable}" x:Name="btnHoldcall"  Padding="7" Margin="2 0 2 0" Background="#B91646" Foreground="White" FontWeight="UltraBold" Width="25" Height="25" Visibility="Collapsed">
+                                                            <Image Source="/Resources/call-hold.png" />
+                                                        </Button>
+                                                        <Button   Style="{StaticResource callvariable}" x:Name="btnResumecall"  Padding="7" Margin="2 0 2 0" Background="#B91646" Foreground="White" FontWeight="UltraBold" Width="25" Height="25" Visibility="Collapsed">
+                                                            <Image Source="/Resources/call-resume.png" />
+                                                        </Button>
+
+                                                        <Button   Style="{StaticResource callvariable}" x:Name="btnConsultcall"  Padding="7" Margin="2 0 2 0" Background="#B91646" Foreground="White" FontWeight="UltraBold" Width="25" Height="25" Visibility="Collapsed">
+                                                            <Image Source="/Resources/call-consult.png" />
+                                                        </Button>
+
+                                                        <Button  Style="{StaticResource callvariable}" x:Name="btntransfercall"  Padding="7" Margin="2 0 2 0" Background="#B91646" Foreground="White" FontWeight="UltraBold" Width="25" Height="25" Visibility="Collapsed">
+                                                            <Image Source="/Resources/call-conference.png" />
+                                                        </Button>
+                                                        <Button  Style="{StaticResource callvariable}" x:Name="btnCallEnd"  Padding="7" Margin="2 0 2 0" Background="#B91646" Foreground="White" FontWeight="UltraBold"  Width="25" Height="25" Visibility="Collapsed">
+                                                            <Image Source="/Resources/call-end.png" />
+                                                        </Button>
+
+                                                    </StackPanel>
+                                                    <Border Padding="15 12 15 12" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Background="#e5e3e3" Margin="7 7 7 20" BorderBrush="#9D9D9D" BorderThickness="1" x:Name="CallVariablePanel" Visibility="Collapsed">
+                                                        <Grid x:Name="tempgrid">
+                                                            <Grid.RowDefinitions>
+                                                                <RowDefinition Height="*"></RowDefinition>
+                                                            </Grid.RowDefinitions>
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition></ColumnDefinition>
+                                                                <ColumnDefinition></ColumnDefinition>
+                                                            </Grid.ColumnDefinitions>
+                                                            <StackPanel Grid.Row="0" Grid.Column="0">
+                                                                <TextBlock FontSize="14" FontWeight="DemiBold" Foreground="#6f6c6c" Text="Call Variable 1" Margin="0 0 0 7"></TextBlock>
+                                                                <TextBlock FontSize="14" FontWeight="DemiBold" Foreground="#6f6c6c" Text="Call Variable 2" Margin="0 0 0 7"></TextBlock>
+                                                                <TextBlock FontSize="14" FontWeight="DemiBold" Foreground="#6f6c6c" Text="Call Variable 3" Margin="0 0 0 7"></TextBlock>
+                                                                <TextBlock FontSize="14" FontWeight="DemiBold" Foreground="#6f6c6c" Text="Call Variable 4" Margin="0 0 0 7"></TextBlock>
+                                                                <TextBlock FontSize="14" FontWeight="DemiBold" Foreground="#6f6c6c" Text="Call Variable 5" Margin="0 0 0 7"></TextBlock>
+                                                            </StackPanel>
+                                                            <StackPanel Grid.Row="0" Grid.Column="1" HorizontalAlignment="Right">
+                                                                <TextBlock FontSize="14" FontWeight="DemiBold" Foreground="#6f6c6c" Text="Call Variable 6" Margin="0 0 0 7"></TextBlock>
+                                                                <TextBlock FontSize="14" FontWeight="DemiBold" Foreground="#6f6c6c" Text="Call Variable 7" Margin="0 0 0 7"></TextBlock>
+                                                                <TextBlock FontSize="14" FontWeight="DemiBold" Foreground="#6f6c6c" Text="Call Variable 8" Margin="0 0 0 7"></TextBlock>
+                                                                <TextBlock FontSize="14" FontWeight="DemiBold" Foreground="#6f6c6c" Text="Call Variable 9" Margin="0 0 0 7"></TextBlock>
+                                                                <TextBlock FontSize="14" FontWeight="DemiBold" Foreground="#6f6c6c" Text="Call Variable 10" Margin="0 0 0 7"></TextBlock>
+                                                            </StackPanel>
+                                                        </Grid>
+                                                    </Border>
+                                                </Grid>
+                                            </StackPanel>
+                                        </Border>
+
+
+
+
+
+
+
+
+
+
+
 
                                         <StackPanel Grid.Row="3" HorizontalAlignment="Stretch" Orientation="Vertical"  Width="306">
                                             <!--<TextBox BorderThickness="0" Style="{StaticResource WaterMarkTeamPerformanceSearch}" x:Name="SearchTermTextBox"></TextBox>-->
@@ -1949,7 +2080,7 @@
 
                                     </Grid>
                                     <StackPanel HorizontalAlignment="Stretch">
-                                        <DataGrid  Name="dgSimple" VerticalAlignment="Center" VerticalContentAlignment="Center" CellStyle="{StaticResource Body_Content_DataGrid_Centering}" Height="350" EnableRowVirtualization="False">
+                                        <DataGrid SelectionChanged="dgSimple_SelectionChanged" Name="dgSimple" VerticalAlignment="Center" VerticalContentAlignment="Center" CellStyle="{StaticResource Body_Content_DataGrid_Centering}" Height="350" EnableRowVirtualization="False">
                                             <DataGrid.Columns>
                                                 <DataGridTextColumn Header="Agent Id" Binding="{Binding LoginId}" IsReadOnly="True" Visibility="Collapsed"  />
                                                 <DataGridTextColumn Header="Agent Name" Binding="{Binding AgentName}" IsReadOnly="True"  />
@@ -2016,7 +2147,9 @@
                                             </DataGrid.RowDetailsTemplate>
                                         </DataGrid>
                                         <StackPanel Visibility="Collapsed"  Name="StackNoData" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0 3 5 0">
-                                            <TextBlock Text="No Data Found" FontSize="15" FontWeight="DemiBold" Foreground="{StaticResource BackgroundBrush}" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
+                                            <Border  BorderThickness="0 0 0 2" BorderBrush="{StaticResource BackgroundBrush}">
+                                                <TextBlock Text="No Data Found" FontSize="15" FontWeight="DemiBold" Foreground="{StaticResource BackgroundBrush}" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
+                                            </Border>
                                         </StackPanel>
                                         <StackPanel Name="StackPagination" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0 3 5 0">
                                         </StackPanel>

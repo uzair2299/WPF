@@ -53,7 +53,7 @@ namespace WpfFinesse
                         string[] dialogID = args.eventArgs[4].Split(':');
                        // CallPanel.Visibility = Visibility.Visible;
                         txtCallingNumber.Text = "Calling... " + args.eventArgs[2];
-                        CallInfoData.DialogId = dialogID[1];
+                        CallInfoData1.DialogId = dialogID[1];
                     }
                     if (args.eventArgs[1] == "InboundCall")
                     {
@@ -96,13 +96,13 @@ namespace WpfFinesse
         private void btnCallDrop_Click(object sender, RoutedEventArgs e)
         {
             string command = GC_Utility.CreateComand(GC_AllCommand.ReleaseCall.ToString(), agent.AgentID);
-            aMQManager.SendMessageToQueue(command, CallInfoData.DialogId);
+            aMQManager.SendMessageToQueue(command, CallInfoData1.DialogId);
         }
 
         private void btnCallPick_Click(object sender, RoutedEventArgs e)
         {
             string command = GC_Utility.CreateComand(GC_AllCommand.AnswerCall.ToString(), agent.AgentID);
-            aMQManager.SendMessageToQueue(command, CallInfoData.DialogId);
+            aMQManager.SendMessageToQueue(command, CallInfoData1.DialogId);
         }
 
 
