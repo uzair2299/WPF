@@ -1911,9 +1911,11 @@
                                                 <Button Style="{StaticResource btnTeamPerformance}" Width="100" Height="25"  Margin="3 0 0 3" Background="#CB2424" BorderBrush="#CB2424" BorderThickness="1" Click="TeamPerformanceNotReady_Click"  Name="btnTeamPerformanceNotReady" IsEnabled="False">
                                                     <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="Not Ready" Padding="10 2 10 2" Foreground="White"></TextBlock>
                                                 </Button>
+                                                
                                                 <Button Style="{StaticResource btnTeamPerformance}" Width="100" Height="25" Margin="3 0 0 3" Background="White" BorderBrush="#7be5bd" BorderThickness="1"  Name="btnTeamPerformanceMakeReady" Click="TeamPerformanceMakeReady_Click" IsEnabled="False">
                                                     <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="Ready" Padding="10 2 10 2" Foreground="#7be5bd"></TextBlock>
                                                 </Button>
+                                                
                                             </StackPanel>
                                             
                                             <StackPanel  HorizontalAlignment="Center" Orientation="Horizontal" Width="Auto" VerticalAlignment="Center">
@@ -1922,7 +1924,7 @@
                                                 </Button>
 
                                                 <Button Visibility="Collapsed" Style="{StaticResource btnTeamPerformance}" Width="100" Height="25"  Margin="0 -3 0 0" Background="White" BorderBrush="#A7A5A5" BorderThickness="1" Click="TeamPerformanceHeld_Click"  Name="btnTeamPerformanceHeld" IsEnabled="False">
-                                                    <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="Held" Padding="10 2 10 2" Foreground="#A7A5A5" ></TextBlock>
+                                                    <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="Retrieve" Padding="10 2 10 2" Foreground="#A7A5A5" ></TextBlock>
                                                 </Button>
                                                 
                                                 
@@ -1954,7 +1956,7 @@
 
 
 
-                                        <Border Width="306" Grid.Row="2" BorderBrush="#C8C6C6" BorderThickness="1" Background="#EEEEEE" Margin="5 0 5 0" Name="CallPanel"  Visibility="Visible">
+                                        <Border Width="306" Grid.Row="2" BorderBrush="#C8C6C6" BorderThickness="1" Background="#EEEEEE" Margin="5 0 5 0" Name="CallPanel"  Visibility="Collapsed">
                                             <StackPanel>
                                                 <Grid x:Name="toolbox">
                                                     <Grid.RowDefinitions>
@@ -2061,7 +2063,7 @@
                                                 </TextBox>
                                             </Grid>
                                         </StackPanel>
-                                        <StackPanel Grid.Row="4" HorizontalAlignment="Stretch" Orientation="Vertical"  Width="306">
+                                        <StackPanel  Visibility="Collapsed" Grid.Row="4" HorizontalAlignment="Stretch" Orientation="Vertical"  Width="306">
                                             <Grid>
                                                 <TextBox   VerticalAlignment="Center" HorizontalAlignment="Stretch" x:Name="TxtUserInput" Margin="0 5 0 5" Padding="4 0 0 0" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" KeyUp="SearchTermTextBox_KeyDown">
                                                     <TextBox.Resources>

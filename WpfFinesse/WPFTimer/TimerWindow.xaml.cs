@@ -379,8 +379,7 @@ namespace WpfFinesse.WPFTimer
                                         }
                                         else
                                         {
-                                            btnTeamPerformanceMonitoring.IsEnabled = true;
-
+                                            UserTab setItem = new UserTab();
                                             foreach (var item in teamUserList)
                                             {
                                                 if (item.LoginId == events[8])
@@ -388,7 +387,21 @@ namespace WpfFinesse.WPFTimer
                                                     item.CallStatus = eAgentState.ToString();
                                                     item.Time = 1;
                                                     item.Extension = agentExtension;
+                                                    setItem = item;
                                                 }
+                                            }
+                                            if (selectedRow == null)
+                                            {
+                                                TeamPerformanceStackPanel.Visibility = Visibility.Collapsed;
+                                            }
+                                            else if (selectedRow.LoginId == events[8])
+                                            {
+                                                dgSimple.SelectedItem = setItem;
+                                                UpdateTeamPerformanceButtonPanel_TALKING();
+                                            }
+                                            else
+                                            {
+
                                             }
                                             //teamUserList.Where(x => x.LoginId == events[8]).FirstOrDefault().CallStatus = eAgentState.ToString();
                                         }
@@ -569,9 +582,10 @@ namespace WpfFinesse.WPFTimer
                                     }
                                     teamUserList.Add(agent);
                                 }
-                               // teamUserList = teamUserList.Where(x => x.CallStatus != "LOGOUT").ToList();
+                                teamUserList = teamUserList.Where(x => x.CallStatus != "LOGOUT").ToList();
                                 if (teamUserList.Count > 0)
                                 {
+                                    TeamPerformanceStackPanel.Visibility = Visibility.Collapsed;
                                     StackNoData.Visibility = Visibility.Collapsed;
                                     dgSimple.ItemsSource = teamUserList;
                                     dgSimple.Items.Refresh();
@@ -590,6 +604,8 @@ namespace WpfFinesse.WPFTimer
                                     dgSimple.Items.Refresh();
                                     StackNoData.Visibility = Visibility.Visible;
                                     dgSimple.Height = Double.NaN;
+                                    Dispatcher.Invoke(() => TeamPerformanceStackPanel.Visibility = Visibility.Collapsed);
+
                                 }
                                 if (!timerOnce)
                                 {
@@ -654,6 +670,7 @@ namespace WpfFinesse.WPFTimer
 
                             case EventType.InboundCall:
                                 string callstate = string.Empty;
+                                string callType = string.Empty;
                                 string dialogIDInboundCall = string.Empty;
 
                                 if (events.Length >= 4)
@@ -677,7 +694,7 @@ namespace WpfFinesse.WPFTimer
                                         // MakeOutboundCall(events, dialogIDInboundCall, CallType.OutboundCall.ToString());
                                         break;
                                     case VendorCallState.ACTIVE:
-                                        string callType = events[7].Split(':')[1];
+                                        callType = events[7].Split(':')[1];
                                         if (callType == CallType.SM.ToString() && !string.IsNullOrEmpty(dialogIDInboundCall))
                                         {
                                             try
@@ -704,9 +721,9 @@ namespace WpfFinesse.WPFTimer
                                                 monitorcall.MyCallInfoData = callMonitorInfoData;
                                                 monitorcall.callVariables = events[5].Split('|').ToList();
                                                 CallEventInfoListing.lstCallEventInfo.Clear();
-                                                ; CallEventInfoListing.lstCallEventInfo.Add(monitorcall);
-                                                btnTeamPerformanceMonitoring.Visibility = Visibility.Collapsed;
-                                                btnTeamPerformanceEndMonitoring.Visibility = Visibility.Visible;
+                                                CallEventInfoListing.lstCallEventInfo.Add(monitorcall);
+                                                UpdateTeamPerformanceButtonPanel_MONITORINGACTIVE();
+
                                                 //monitorcall.MyCallInfoData.CurrentCallState = "Connected";
 
                                             }
@@ -842,89 +859,102 @@ namespace WpfFinesse.WPFTimer
                                     case VendorCallState.DROP:
                                     case VendorCallState.DROPPED:
                                         //CallStateDrop(dialogIDInboundCall);
-                                        btnTeamPerformanceMonitoring.Visibility = Visibility.Visible;
-                                        btnTeamPerformanceEndMonitoring.Visibility = Visibility.Collapsed;
+                                        UpdateTeamPerformanceButtonPanel_TALKING();
                                         break;
 
                                     case VendorCallState.HELD:
-                                        CallEventInfo heldcall = CallEventInfoListing.lstCallEventInfo.Where(obj => obj.MyCallInfoData.CallId == dialogIDInboundCall).FirstOrDefault();
-                                        if (heldcall != null)
+                                        callType = events[7].Split(':')[1];
+                                        if (callType == CallType.SM.ToString() && !string.IsNullOrEmpty(dialogIDInboundCall))
                                         {
-                                            // this is normal call, which already exist in system in ringing state
-                                            //  log.Debug("EventType.InboundCall InboundCall#HELD updateCallVariables");
-                                            heldcall.callVariables = events[5].Split('|').ToList();
-
-                                            //-----------------------------
-                                            string callVariable4 = CallEventInfoListing.getValueOfGivenVariable(heldcall.callVariables, "callVariable4");
-                                            string callVariable5 = CallEventInfoListing.getValueOfGivenVariable(heldcall.callVariables, "callVariable5");
-
-                                            //log.Info("CTICONNECTOR callVariable4=" + callVariable4 + " ,Context.SessionID=callVariable5= " + callVariable5 + ",CallEventInfoListing.callActionRequested:" + CallEventInfoListing.callActionRequested);
-
-
-                                            if (CallEventInfoListing.lstCallEventInfo.Count == 2 && CallEventInfoListing.callActionRequested.Equals("TRANSFER") && callVariable4.Equals("TRANSFER"))
+                                            UpdateTeamPerformanceButtonPanel_MONITORINGRETRIEVE();
+                                        }
+                                        else
+                                        {
+                                            CallEventInfo heldcall = CallEventInfoListing.lstCallEventInfo.Where(obj => obj.MyCallInfoData.CallId == dialogIDInboundCall).FirstOrDefault();
+                                            if (heldcall != null)
                                             {
-                                                CallEventInfoListing.callActionRequested = string.Empty;
-                                                string transfercmd = string.Concat(heldcall.MyCallInfoData.Ani + ",", heldcall.MyCallInfoData.CallId);
-                                                //  log.Debug("transfercmdCTI: " + transfercmd);
-                                                //no  wrapup after call transfer so no nned to save the dialog ID 
-                                                //CallEventInfoListing.transferCallDialogID = InboundCall.MyCallInfoData.CallId;
-                                                CallEventInfoListing.isTransferCall = true;
-                                                CallEventInfoListing.callAction = "TRANSFER";
-                                                //AMQManager.GetInstance().SendMessage(GCMessages("TransferCall"), transfercmd);
+                                                // this is normal call, which already exist in system in ringing state
+                                                //  log.Debug("EventType.InboundCall InboundCall#HELD updateCallVariables");
+                                                heldcall.callVariables = events[5].Split('|').ToList();
 
-                                                //var CurrentCall = CallEventInfoListing.lstCallEventInfo.Where(obj => obj.MyCallInfoData.CallId == CallEventInfoListing.currentActiveCall).FirstOrDefault();
-                                                //if (CurrentCall != null && CurrentCall.MyCallInfoData != null)
-                                                //{
-                                                //    log.Debug("consultingAgentExtension :" + CurrentCall.MyCallInfoData.Ani);
-                                                //    CallEventInfoListing.consultingAgentExtension = CurrentCall.MyCallInfoData.Ani;
-                                                //}
-                                                //else
-                                                //{
-                                                //    log.Debug("CurrentCall: " + transfercmd);
-                                                //}
-                                            }
-                                            else if (CallEventInfoListing.lstCallEventInfo.Count == 2 && CallEventInfoListing.callActionRequested.Equals("CONFERENCE") && callVariable4.Equals("CONFERENCE"))
-                                            {
-                                                CallEventInfoListing.callActionRequested = string.Empty;
-                                                var ConferenceCall = CallEventInfoListing.lstCallEventInfo.Where(obj => obj.MyCallInfoData.CallId != CallEventInfoListing.currentActiveCall).FirstOrDefault();
-                                                //var ConferenceCall = CallEventInfoListing.lstCallEventInfo.Where(obj => obj.MyCallInfoData.CallId == CallEventInfoListing.activityDialogID ).FirstOrDefault();
-                                                //log.Debug("ConferenceCall.MyCallInfoData?.CallIdctiConnector :" + ConferenceCall?.MyCallInfoData?.CallId + "callActionRequested:" + CallEventInfoListing.callActionRequested + " currentActiveCall" + CallEventInfoListing.currentActiveCall);
-                                                if (ConferenceCall != null && ConferenceCall.MyCallInfoData != null)
+                                                //-----------------------------
+                                                string callVariable4 = CallEventInfoListing.getValueOfGivenVariable(heldcall.callVariables, "callVariable4");
+                                                string callVariable5 = CallEventInfoListing.getValueOfGivenVariable(heldcall.callVariables, "callVariable5");
+
+                                                //log.Info("CTICONNECTOR callVariable4=" + callVariable4 + " ,Context.SessionID=callVariable5= " + callVariable5 + ",CallEventInfoListing.callActionRequested:" + CallEventInfoListing.callActionRequested);
+
+
+                                                if (CallEventInfoListing.lstCallEventInfo.Count == 2 && CallEventInfoListing.callActionRequested.Equals("TRANSFER") && callVariable4.Equals("TRANSFER"))
                                                 {
+                                                    CallEventInfoListing.callActionRequested = string.Empty;
+                                                    string transfercmd = string.Concat(heldcall.MyCallInfoData.Ani + ",", heldcall.MyCallInfoData.CallId);
+                                                    //  log.Debug("transfercmdCTI: " + transfercmd);
+                                                    //no  wrapup after call transfer so no nned to save the dialog ID 
+                                                    //CallEventInfoListing.transferCallDialogID = InboundCall.MyCallInfoData.CallId;
+                                                    CallEventInfoListing.isTransferCall = true;
+                                                    CallEventInfoListing.callAction = "TRANSFER";
+                                                    //AMQManager.GetInstance().SendMessage(GCMessages("TransferCall"), transfercmd);
+
                                                     //var CurrentCall = CallEventInfoListing.lstCallEventInfo.Where(obj => obj.MyCallInfoData.CallId == CallEventInfoListing.currentActiveCall).FirstOrDefault();
                                                     //if (CurrentCall != null && CurrentCall.MyCallInfoData != null)
                                                     //{
-                                                    //    log.Debug("Current call Ani :" + CurrentCall.MyCallInfoData.Ani + ",consultingAgentExtension="+ CallEventInfoListing.consultingAgentExtension);
-                                                    //   // CallEventInfoListing.consultingAgentExtension = CurrentCall.MyCallInfoData.Ani;
+                                                    //    log.Debug("consultingAgentExtension :" + CurrentCall.MyCallInfoData.Ani);
+                                                    //    CallEventInfoListing.consultingAgentExtension = CurrentCall.MyCallInfoData.Ani;
                                                     //}
-
-                                                    //CallEventInfoListing.callActionRequested = "CONFERENCE";
-                                                    CallEventInfoListing.isConference = true;
-                                                    //  string conferencecmd = string.Concat(tbDial1.Text + ",", ConferenceCall.MyCallInfoData.CallId);
-                                                    string conferencecmd = string.Concat(CallEventInfoListing.consultingAgentExtension + ",", ConferenceCall.MyCallInfoData.CallId);
-                                                    //  log.Debug("conferencecmd :" + conferencecmd);
-                                                    CallEventInfoListing.callAction = "CONFERENCE";
-                                                    AMQManager.GetInstance().SendMessageToQueue(GCMessages("ConferenceCall"), conferencecmd);
-
+                                                    //else
+                                                    //{
+                                                    //    log.Debug("CurrentCall: " + transfercmd);
+                                                    //}
                                                 }
-                                                else
+                                                else if (CallEventInfoListing.lstCallEventInfo.Count == 2 && CallEventInfoListing.callActionRequested.Equals("CONFERENCE") && callVariable4.Equals("CONFERENCE"))
                                                 {
-                                                    int callno = 1;
-                                                    foreach (var item in CallEventInfoListing.lstCallEventInfo)
+                                                    CallEventInfoListing.callActionRequested = string.Empty;
+                                                    var ConferenceCall = CallEventInfoListing.lstCallEventInfo.Where(obj => obj.MyCallInfoData.CallId != CallEventInfoListing.currentActiveCall).FirstOrDefault();
+                                                    //var ConferenceCall = CallEventInfoListing.lstCallEventInfo.Where(obj => obj.MyCallInfoData.CallId == CallEventInfoListing.activityDialogID ).FirstOrDefault();
+                                                    //log.Debug("ConferenceCall.MyCallInfoData?.CallIdctiConnector :" + ConferenceCall?.MyCallInfoData?.CallId + "callActionRequested:" + CallEventInfoListing.callActionRequested + " currentActiveCall" + CallEventInfoListing.currentActiveCall);
+                                                    if (ConferenceCall != null && ConferenceCall.MyCallInfoData != null)
                                                     {
-                                                        if (item != null && item.MyCallInfoData != null)
+                                                        //var CurrentCall = CallEventInfoListing.lstCallEventInfo.Where(obj => obj.MyCallInfoData.CallId == CallEventInfoListing.currentActiveCall).FirstOrDefault();
+                                                        //if (CurrentCall != null && CurrentCall.MyCallInfoData != null)
+                                                        //{
+                                                        //    log.Debug("Current call Ani :" + CurrentCall.MyCallInfoData.Ani + ",consultingAgentExtension="+ CallEventInfoListing.consultingAgentExtension);
+                                                        //   // CallEventInfoListing.consultingAgentExtension = CurrentCall.MyCallInfoData.Ani;
+                                                        //}
+
+                                                        //CallEventInfoListing.callActionRequested = "CONFERENCE";
+                                                        CallEventInfoListing.isConference = true;
+                                                        //  string conferencecmd = string.Concat(tbDial1.Text + ",", ConferenceCall.MyCallInfoData.CallId);
+                                                        string conferencecmd = string.Concat(CallEventInfoListing.consultingAgentExtension + ",", ConferenceCall.MyCallInfoData.CallId);
+                                                        //  log.Debug("conferencecmd :" + conferencecmd);
+                                                        CallEventInfoListing.callAction = "CONFERENCE";
+                                                        AMQManager.GetInstance().SendMessageToQueue(GCMessages("ConferenceCall"), conferencecmd);
+
+                                                    }
+                                                    else
+                                                    {
+                                                        int callno = 1;
+                                                        foreach (var item in CallEventInfoListing.lstCallEventInfo)
                                                         {
+                                                            if (item != null && item.MyCallInfoData != null)
+                                                            {
+                                                            }
+                                                            else
+                                                            {
+                                                            }
+                                                            callno++;
                                                         }
-                                                        else
-                                                        {
-                                                        }
-                                                        callno++;
                                                     }
                                                 }
                                             }
                                         }
                                         break;
                                 }
+
+
+
+
+
+
                                 #endregion inboundcall states
                                 break;
 
@@ -1684,6 +1714,23 @@ namespace WpfFinesse.WPFTimer
             btnTeamPerformanceSignOut.IsEnabled = true;
             btnTeamPerformanceHold.IsEnabled = false;
             btnTeamPerformanceHeld.IsEnabled = false;
+            btnTeamPerformanceBergeln.IsEnabled = false;
+            btnTeamPerformanceParticipants.IsEnabled = false;
+            btnTeamPerformanceDrop.IsEnabled = false;
+
+            btnTeamPerformanceMonitoring.Visibility = Visibility.Visible;
+            btnTeamPerformanceEndMonitoring.Visibility = Visibility.Collapsed;
+            btnTeamPerformanceNotReady.Visibility = Visibility.Visible;
+            btnTeamPerformanceMakeReady.Visibility = Visibility.Visible;
+            btnTeamPerformanceSignOut.Visibility = Visibility.Visible;
+            btnTeamPerformanceHold.Visibility = Visibility.Collapsed;
+            btnTeamPerformanceHeld.Visibility = Visibility.Collapsed;
+            btnTeamPerformanceBergeln.Visibility = Visibility.Collapsed;
+            btnTeamPerformanceParticipants.Visibility = Visibility.Collapsed;
+            btnTeamPerformanceDrop.Visibility = Visibility.Collapsed;
+
+
+
         }
 
         private void UpdateTeamPerformanceButtonPanel_READY()
@@ -1695,6 +1742,21 @@ namespace WpfFinesse.WPFTimer
             btnTeamPerformanceSignOut.IsEnabled = true;
             btnTeamPerformanceHold.IsEnabled = false;
             btnTeamPerformanceHeld.IsEnabled = false;
+            btnTeamPerformanceBergeln.IsEnabled = false;
+            btnTeamPerformanceParticipants.IsEnabled = false;
+            btnTeamPerformanceDrop.IsEnabled = false;
+
+            btnTeamPerformanceMonitoring.Visibility = Visibility.Visible;
+            btnTeamPerformanceEndMonitoring.Visibility = Visibility.Collapsed;
+            btnTeamPerformanceNotReady.Visibility = Visibility.Visible;
+            btnTeamPerformanceMakeReady.Visibility = Visibility.Visible;
+            btnTeamPerformanceSignOut.Visibility = Visibility.Visible;
+            btnTeamPerformanceHold.Visibility = Visibility.Collapsed;
+            btnTeamPerformanceHeld.Visibility = Visibility.Collapsed;
+            btnTeamPerformanceBergeln.Visibility = Visibility.Collapsed;
+            btnTeamPerformanceParticipants.Visibility = Visibility.Collapsed;
+            btnTeamPerformanceDrop.Visibility = Visibility.Collapsed;
+
         }
         private void UpdateTeamPerformanceButtonPanel_LOGOUT()
         {
@@ -1705,6 +1767,22 @@ namespace WpfFinesse.WPFTimer
             btnTeamPerformanceSignOut.IsEnabled = false;
             btnTeamPerformanceHold.IsEnabled = false;
             btnTeamPerformanceHeld.IsEnabled = false;
+            btnTeamPerformanceBergeln.IsEnabled = false;
+            btnTeamPerformanceParticipants.IsEnabled = false;
+            btnTeamPerformanceDrop.IsEnabled = false;
+
+
+            btnTeamPerformanceMonitoring.Visibility = Visibility.Visible;
+            btnTeamPerformanceEndMonitoring.Visibility = Visibility.Collapsed;
+            btnTeamPerformanceNotReady.Visibility = Visibility.Visible;
+            btnTeamPerformanceMakeReady.Visibility = Visibility.Visible;
+            btnTeamPerformanceSignOut.Visibility = Visibility.Visible;
+            btnTeamPerformanceHold.Visibility = Visibility.Collapsed;
+            btnTeamPerformanceHeld.Visibility = Visibility.Collapsed;
+            btnTeamPerformanceBergeln.Visibility = Visibility.Collapsed;
+            btnTeamPerformanceParticipants.Visibility = Visibility.Collapsed;
+            btnTeamPerformanceDrop.Visibility = Visibility.Collapsed;
+
         }
 
         private void UpdateTeamPerformanceButtonPanel_TALKING()
@@ -1716,6 +1794,71 @@ namespace WpfFinesse.WPFTimer
             btnTeamPerformanceSignOut.IsEnabled = true;
             btnTeamPerformanceHold.IsEnabled = false;
             btnTeamPerformanceHeld.IsEnabled = false;
+            btnTeamPerformanceBergeln.IsEnabled = false;
+            btnTeamPerformanceParticipants.IsEnabled = false;
+            btnTeamPerformanceDrop.IsEnabled = false;
+
+            btnTeamPerformanceMonitoring.Visibility = Visibility.Visible;
+            btnTeamPerformanceEndMonitoring.Visibility = Visibility.Collapsed;
+            btnTeamPerformanceNotReady.Visibility = Visibility.Visible;
+            btnTeamPerformanceMakeReady.Visibility = Visibility.Visible;
+            btnTeamPerformanceSignOut.Visibility = Visibility.Visible;
+            btnTeamPerformanceHold.Visibility = Visibility.Collapsed;
+            btnTeamPerformanceHeld.Visibility = Visibility.Collapsed;
+            btnTeamPerformanceBergeln.Visibility = Visibility.Collapsed;
+            btnTeamPerformanceParticipants.Visibility = Visibility.Collapsed;
+            btnTeamPerformanceDrop.Visibility = Visibility.Collapsed;
+        }
+
+        private void UpdateTeamPerformanceButtonPanel_MONITORINGACTIVE()
+        {
+            btnTeamPerformanceMonitoring.IsEnabled = false;
+            btnTeamPerformanceEndMonitoring.IsEnabled = true;
+            btnTeamPerformanceNotReady.IsEnabled = false;
+            btnTeamPerformanceMakeReady.IsEnabled = false;
+            btnTeamPerformanceSignOut.IsEnabled = true;
+            btnTeamPerformanceHold.IsEnabled = true;
+            btnTeamPerformanceHeld.IsEnabled = false;
+            btnTeamPerformanceBergeln.IsEnabled = true;
+            btnTeamPerformanceParticipants.IsEnabled = false;
+            btnTeamPerformanceDrop.IsEnabled = false;
+
+            btnTeamPerformanceMonitoring.Visibility = Visibility.Collapsed;
+            btnTeamPerformanceEndMonitoring.Visibility = Visibility.Visible;
+            btnTeamPerformanceNotReady.Visibility = Visibility.Visible;
+            btnTeamPerformanceMakeReady.Visibility = Visibility.Visible;
+            btnTeamPerformanceSignOut.Visibility = Visibility.Visible;
+            btnTeamPerformanceHold.Visibility = Visibility.Visible;
+            btnTeamPerformanceHeld.Visibility = Visibility.Collapsed;
+            btnTeamPerformanceBergeln.Visibility = Visibility.Visible;
+            btnTeamPerformanceParticipants.Visibility = Visibility.Collapsed;
+            btnTeamPerformanceDrop.Visibility = Visibility.Collapsed;
+        }
+
+
+        private void UpdateTeamPerformanceButtonPanel_MONITORINGRETRIEVE()
+        {
+            btnTeamPerformanceMonitoring.IsEnabled = false;
+            btnTeamPerformanceEndMonitoring.IsEnabled = true;
+            btnTeamPerformanceNotReady.IsEnabled = false;
+            btnTeamPerformanceMakeReady.IsEnabled = false;
+            btnTeamPerformanceSignOut.IsEnabled = true;
+            btnTeamPerformanceHold.IsEnabled = false;
+            btnTeamPerformanceHeld.IsEnabled = true;
+            btnTeamPerformanceBergeln.IsEnabled = false;
+            btnTeamPerformanceParticipants.IsEnabled = false;
+            btnTeamPerformanceDrop.IsEnabled = false;
+
+            btnTeamPerformanceMonitoring.Visibility = Visibility.Collapsed;
+            btnTeamPerformanceEndMonitoring.Visibility = Visibility.Visible;
+            btnTeamPerformanceNotReady.Visibility = Visibility.Visible;
+            btnTeamPerformanceMakeReady.Visibility = Visibility.Visible;
+            btnTeamPerformanceSignOut.Visibility = Visibility.Visible;
+            btnTeamPerformanceHold.Visibility = Visibility.Collapsed;
+            btnTeamPerformanceHeld.Visibility = Visibility.Visible;
+            btnTeamPerformanceBergeln.Visibility = Visibility.Collapsed;
+            btnTeamPerformanceParticipants.Visibility = Visibility.Collapsed;
+            btnTeamPerformanceDrop.Visibility = Visibility.Collapsed;
         }
 
         private void TeamPerformanceMakeReady_Click(object sender, RoutedEventArgs e)
