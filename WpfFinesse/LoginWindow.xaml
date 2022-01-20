@@ -9,12 +9,12 @@
     <Border Background="#ADC2A9" Margin="20" CornerRadius="20">
         <StackPanel Margin="20" x:Name="sp_TextBoxes">
             <StackPanel>
-                <TextBlock x:Name="HelloCommandStatus" Foreground="#9D9D9D" Text="" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="10" Margin="7 2 0 0" FontWeight="Bold" Visibility="Hidden"></TextBlock>
+                <TextBlock  x:Name="HelloCommandStatus" Foreground="#9D9D9D" Text="" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="10" Margin="7 2 0 0" FontWeight="Bold" Visibility="Hidden"></TextBlock>
             </StackPanel>
             
             <Label Content="Login" Foreground="Gray" FontSize="25" HorizontalAlignment="Center"></Label>
             <Separator></Separator>
-            <Label Content="Agent ID" Foreground="Gray" Margin="0 0 0 2"></Label>
+            <Label MouseLeftButtonDown="Label_MouseLeftButtonDown" Content="Agent ID" Foreground="Gray" Margin="0 0 0 2"></Label>
             <TextBox Name="txtAgentID" Foreground="Gray" FontSize="15" Padding="2" Text="565656"></TextBox>
             
             <Label Content="Agent Password" Foreground="Gray" Margin="0 0 0 2"></Label>

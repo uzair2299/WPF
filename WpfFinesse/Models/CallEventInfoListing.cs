@@ -60,6 +60,7 @@ namespace WpfFinesse.Models
 
         public static int totalNumberOfTeams;
         public static bool isSupervisor;
+        public static string TeamAgentLoginID;
 
         public static string currentActiveCall;
 

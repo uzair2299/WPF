@@ -1919,7 +1919,7 @@
                                             </StackPanel>
                                             
                                             <StackPanel  HorizontalAlignment="Center" Orientation="Horizontal" Width="Auto" VerticalAlignment="Center">
-                                                <Button Visibility="Visible" Style="{StaticResource btnTeamPerformance}" Width="100" Height="25"  Margin="0 -3 0 0" Background="White" BorderBrush="#A7A5A5" BorderThickness="1" Click="TeamPerformanceHold_Click"  Name="btnTeamPerformanceHold" IsEnabled="False">
+                                                <Button Visibility="Collapsed" Style="{StaticResource btnTeamPerformance}" Width="100" Height="25"  Margin="0 -3 0 0" Background="White" BorderBrush="#A7A5A5" BorderThickness="1" Click="TeamPerformanceHold_Click"  Name="btnTeamPerformanceHold" IsEnabled="False">
                                                     <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="Hold" Padding="10 2 10 2" Foreground="#A7A5A5" ></TextBlock>
                                                 </Button>
 
@@ -1928,25 +1928,68 @@
                                                 </Button>
                                                 
                                                 
-                                                <Button Style="{StaticResource btnTeamPerformance}" Width="100" Height="25"  Margin="3 0 0 3" Background="#A7A5A5" BorderThickness="0" Name="btnTeamPerformanceSignOut" Click="TeamPerformanceSignOut_Click" IsEnabled="False">
+                                                <Button Visibility="Collapsed" Style="{StaticResource btnTeamPerformance}" Width="100" Height="25"  Margin="3 0 0 3" Background="#A7A5A5" BorderThickness="0" Name="btnTeamPerformanceSignOut" Click="TeamPerformanceSignOut_Click" IsEnabled="False">
                                                     <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="SignOut" Padding="10 2 10 2" Foreground="White"></TextBlock>
                                                 </Button>
 
                                                 <!--<Rectangle VerticalAlignment="Stretch" Width="2" Margin="3 0 0 0" Stroke="#DEDEDE" Fill="#DEDEDE"/>-->
 
-                                                <Button Visibility="Collapsed" Style="{StaticResource btnTeamPerformance}" Width="100" Height="25" Margin="3 0 0 3" Background="Black" BorderThickness="0" Name="btnTeamPerformanceBergeln" IsEnabled="False">
+                                                <Button Visibility="Collapsed" Style="{StaticResource btnTeamPerformance}" Width="100" Height="25" Margin="3 0 0 3" Background="Black" BorderThickness="0" Name="btnTeamPerformanceBergeln" Click="btnTeamPerformanceBergeln_Click" IsEnabled="False">
                                                     <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="Bergeln" Padding="10 2 10 2" Foreground="White"></TextBlock>
                                                 </Button>
- 
+
+
+
+
+                                                <Button Visibility="Collapsed" Name="btnTeamPerformanceParticipants" Style="{StaticResource btnTeamPerformance}" Width="100" Height="25" VerticalAlignment="Center" HorizontalAlignment="Center"  Margin="3 0 0 0" Background="White" BorderBrush="#A7A5A5" BorderThickness="1" MouseEnter="btnParticipants_MouseEnter" MouseLeave="btnParticipants_MouseLeave">
+
+                                                    <!--<Button.ToolTip>
+                                                        <ToolTip ToolTipService.ShowDuration="5000"  HorizontalOffset="5" VerticalOffset="5" Placement="Bottom"  BorderBrush="Transparent" Margin="0 10 0 0" Background="Transparent">
+                                                            <StackPanel Width="100" Background="White">
+                                                                <Polygon Points="5,0 10,10, 0,10" Stroke="White" Fill="White" Grid.Row="0" HorizontalAlignment="Center" Margin="0,-8,0,8" Panel.ZIndex="1000" StrokeThickness="2" StrokeDashArray="1 0"   />
+                                                                <Border x:Name="border1" HorizontalAlignment="Center" VerticalAlignment="Top" BorderBrush="Black">
+                                                                    <TextBlock Text="22252" Padding="0 0 0 8" Name="tooltipParticipants"></TextBlock>
+                                                                </Border>
+                                                            </StackPanel>
+                                                        </ToolTip>
+                                                    </Button.ToolTip>-->
+                                                    <TextBlock Name="txtParticipants" VerticalAlignment="Center" HorizontalAlignment="Center" Text="Participants" Padding="10 2 10 2" Foreground="#A7A5A5" ></TextBlock>
+                                                </Button>
+                                                <Popup StaysOpen="False" AllowsTransparency="True" x:Name="ParticipantPopUp"  PlacementTarget="{Binding ElementName=btnTeamPerformanceParticipants}" Placement="Bottom"  Width="100" VerticalOffset="0" Panel.ZIndex="1000" Cursor="Hand" >
+                                                    <StackPanel Width="100">
+                                                        <!--<Polygon Points="5,0 10,10, 0,10" Stroke="White" Fill="White" Grid.Row="0" HorizontalAlignment="Center" Margin="0,-8,0,8" Panel.ZIndex="1000" StrokeThickness="2" StrokeDashArray="1 0"   />-->
+                                                        <Border  Background="White" HorizontalAlignment="Center" VerticalAlignment="Center" BorderBrush="#A7A5A5" BorderThickness="1 0 1 1" Width="100" CornerRadius="1">
+                                                            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Cursor="Hand" Text="22252"  Name="tooltipParticipants"></TextBlock>
+                                                        </Border>
+                                                    </StackPanel>
+                                                </Popup>
                                             </StackPanel>
                                             
                                             <StackPanel  HorizontalAlignment="Center" Orientation="Horizontal" Width="Auto" VerticalAlignment="Center" Margin="0 0 0 3">
-                                                <Button Visibility="Collapsed" Style="{StaticResource btnTeamPerformance}" Width="100" Height="25"  Margin="0 0 1.5 0" Background="White" BorderBrush="#A7A5A5" BorderThickness="1" Click="TeamPerformanceHold_Click"  Name="btnTeamPerformanceParticipants" IsEnabled="False">
+                                                <!--<Button Visibility="Collapsed" Style="{StaticResource btnTeamPerformance}" Width="100" Height="25"  Margin="0 0 1.5 0" Background="White" BorderBrush="#A7A5A5" BorderThickness="1" Click="TeamPerformanceHold_Click"  Name="btnTeamPerformanceParticipants" IsEnabled="False">
                                                     <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="Participants" Padding="10 2 10 2" Foreground="#A7A5A5" ></TextBlock>
-                                                </Button>
-                                                <Button Visibility="Collapsed" Style="{StaticResource btnTeamPerformance}" Width="100" Height="25"  Margin="1.5 0 0 0" Background="White" BorderBrush="#A7A5A5" BorderThickness="1" Click="TeamPerformanceHeld_Click"  Name="btnTeamPerformanceDrop" IsEnabled="False">
+                                                </Button>-->
+
+
+
+
+                                                <!--<ComboBox Height="25" Width="100"  x:Name="btnTeamPerformanceDrop"   DockPanel.Dock="Right" IsEditable="True" IsReadOnly="True" Text="Drop"  HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Center"  BorderBrush="#EEEEEE">
+                                                    <ComboBoxItem> item1</ComboBoxItem>
+                                                </ComboBox>-->
+
+                                                <Button  Visibility="Collapsed" Style="{StaticResource btnTeamPerformance}" Width="100" Height="25"  Margin="1.5 0 0 0" Background="White" BorderBrush="#A7A5A5" BorderThickness="1"  Name="btnTeamPerformanceDrop" IsEnabled="True" Click="btnTeamPerformanceDrop_Click">
                                                     <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="Drop" Padding="10 2 10 2" Foreground="#A7A5A5" ></TextBlock>
                                                 </Button>
+                                                <Popup StaysOpen="False" AllowsTransparency="True" x:Name="popup"  PlacementTarget="{Binding ElementName=btnTeamPerformanceDrop}" Placement="Bottom"  Width="100" VerticalOffset="0" Panel.ZIndex="1000" Cursor="Hand" >
+                                                    <Border x:Name="border21" Background="White" HorizontalAlignment="Center" VerticalAlignment="Center" BorderBrush="#A7A5A5" BorderThickness="1 0 1 1" Width="100" CornerRadius="1">
+
+                                                        <StackPanel Width="100" Name="TeamPerformanceDropStackPanel">
+                                                            <!--<Polygon Points="5,0 10,10, 0,10" Stroke="White" Fill="White" Grid.Row="0" HorizontalAlignment="Center" Margin="0,-8,0,8" Panel.ZIndex="1000" StrokeThickness="2" StrokeDashArray="1 0"   />-->
+                                                            <TextBlock Text="22252" HorizontalAlignment="Center" VerticalAlignment="Center" Cursor="Hand"></TextBlock>
+                                                            <TextBlock Text="22252" HorizontalAlignment="Center" VerticalAlignment="Center" Cursor="Hand"></TextBlock>
+                                                        </StackPanel>
+                                                    </Border>
+                                                </Popup>
                                             </StackPanel>
                                         </StackPanel>
                                        

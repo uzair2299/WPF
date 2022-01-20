@@ -232,5 +232,10 @@ namespace WpfFinesse
             }
             return selectedValue;
         }
+
+        private void Label_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            MessageBox.Show("hello");
+        }
     }
 }

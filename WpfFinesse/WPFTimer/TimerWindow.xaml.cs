@@ -38,8 +38,12 @@ namespace WpfFinesse.WPFTimer
             aMQManager.messageArrived += AMQManager_messageArrived;
             aMQManager.UpdateTopic();
             InitializeComponent();
+
+            tooltipParticipants.Text = "4541\n12536";
+
             try
             {
+
                 List<ComboBoxPair> cb = new List<ComboBoxPair>();
                 string[] teams = CallEventInfoListing.Teams.Split('|');
 
@@ -619,14 +623,14 @@ namespace WpfFinesse.WPFTimer
                             case EventType.NewInboundCall:
                                 string dialogID = events[4].Split(':')[1];
 
-                                CallEventInfo objCallEventInfo1 = CallEventInfoListing.lstCallEventInfo.Where(r => r.MyCallInfoData.CallId == dialogID).FirstOrDefault();
+                                CallEventInfo objCallEventInfo = CallEventInfoListing.lstCallEventInfo.Where(r => r.MyCallInfoData.CallId == dialogID).FirstOrDefault();
                                 CallEventInfoListing.isOutBoundCall = false;
                                 CallEventInfoListing.callAction = string.Empty;
                                 CallEventInfoListing.participants = null;
 
 
                                 // only process NewInboundcall when no call with same Dialog ID exists in the system
-                                if (objCallEventInfo1 == null)
+                                if (objCallEventInfo == null)
                                 {
                                     CallEventInfoListing.activityDialogID = dialogID;
                                     CallInfoData callInfoData = new CallInfoData();
@@ -639,14 +643,14 @@ namespace WpfFinesse.WPFTimer
 
                                     callInfoData.CallType = CallType.InboundCall.ToString();
 
-                                    objCallEventInfo1 = new CallEventInfo();
-                                    objCallEventInfo1.Duration = 0;
+                                    objCallEventInfo = new CallEventInfo();
+                                    objCallEventInfo.Duration = 0;
                                     //objCallEventInfo.AgentID = _AgentRefId;
-                                    objCallEventInfo1.MyCallInfoData = callInfoData;
-                                    objCallEventInfo1.callVariables = events[3].Split('|').ToList();
-                                    CallEventInfoListing.lstCallEventInfo.Add(objCallEventInfo1);
+                                    objCallEventInfo.MyCallInfoData = callInfoData;
+                                    objCallEventInfo.callVariables = events[3].Split('|').ToList();
+                                    CallEventInfoListing.lstCallEventInfo.Add(objCallEventInfo);
 
-                                    CallEventInfoListing.previousDialogID = CallEventInfoListing.getValueOfGivenVariable(objCallEventInfo1.callVariables, "associatedDialogId");
+                                    CallEventInfoListing.previousDialogID = CallEventInfoListing.getValueOfGivenVariable(objCallEventInfo.callVariables, "associatedDialogId");
                                     //call back number
                                     if (string.IsNullOrEmpty(CallEventInfoListing.previousDialogID))
                                     {
@@ -657,8 +661,8 @@ namespace WpfFinesse.WPFTimer
                                 }
                                 else
                                 {
-                                    objCallEventInfo1.callVariables = events[3].Split('|').ToList();
-                                    objCallEventInfo1.MyCallInfoData.CallType = CallType.InboundCall.ToString();
+                                    objCallEventInfo.callVariables = events[3].Split('|').ToList();
+                                    objCallEventInfo.MyCallInfoData.CallType = CallType.InboundCall.ToString();
                                     if (string.IsNullOrEmpty(CallEventInfoListing.previousDialogID))
                                     {
                                         CallEventInfoListing.callBackNumber = events[2];
@@ -694,57 +698,25 @@ namespace WpfFinesse.WPFTimer
                                         // MakeOutboundCall(events, dialogIDInboundCall, CallType.OutboundCall.ToString());
                                         break;
                                     case VendorCallState.ACTIVE:
-                                        callType = events[7].Split(':')[1];
-                                        if (callType == CallType.SM.ToString() && !string.IsNullOrEmpty(dialogIDInboundCall))
-                                        {
-                                            try
-                                            {
-                                                CallEventInfoListing.isOutBoundCall = false;
-                                                CallEventInfoListing.callAction = string.Empty;
-                                                CallEventInfoListing.participants = null;
 
 
 
 
-                                                CallInfoData callMonitorInfoData = new CallInfoData();
-                                                callMonitorInfoData.CallId = dialogIDInboundCall;
-                                                callMonitorInfoData.Ani = events[4];
-                                                callMonitorInfoData.Dnis = events[4];
-                                                List<string> callVariable = events[5].Split('|').ToList();
-                                                callMonitorInfoData.CallReceived = DateTime.Now;
-                                                callMonitorInfoData.CallType = callType;
 
-                                                txtMonitoringCallingNumber.Text = events[4];
-
-
-                                                CallEventInfo monitorcall = new CallEventInfo();
-                                                monitorcall.MyCallInfoData = callMonitorInfoData;
-                                                monitorcall.callVariables = events[5].Split('|').ToList();
-                                                CallEventInfoListing.lstCallEventInfo.Clear();
-                                                CallEventInfoListing.lstCallEventInfo.Add(monitorcall);
-                                                UpdateTeamPerformanceButtonPanel_MONITORINGACTIVE();
-
-                                                //monitorcall.MyCallInfoData.CurrentCallState = "Connected";
-
-                                            }
-                                            catch (Exception ex)
-                                            {
-
-                                                throw ex;
-                                            }
-                                        }
-                                        else if (callType == CallType.InboundCall.ToString() && !string.IsNullOrEmpty(dialogIDInboundCall))
+                                        if (!string.IsNullOrEmpty(dialogIDInboundCall))
                                         {
                                             CallEventInfo call = CallEventInfoListing.lstCallEventInfo.Where(obj => obj.MyCallInfoData.CallId == dialogIDInboundCall).FirstOrDefault();
                                             //callstate = Enum.GetName(typeof(CallClassProvider.CallState), CallClassProvider.CallState.Connected);
+                                            //log.Debug("uzair: callstate" + callstate);
+
                                             if (call != null)
                                             {
-                                                // this is normal call, which already exist in system in ringing state
-                                                //log.Debug("EventType.InboundCall InboundCall#Active normal call, which already exist in system");
-                                                call.MyCallInfoData.CurrentCallState = "Connected";
+                                                call.MyCallInfoData.CurrentCallState = callstate;
                                                 call.callVariables = events[5].Split('|').ToList();
 
                                                 // capture the conference events
+
+
                                                 if (CallEventInfoListing.lstCallEventInfo.Count == 1 && events.Length >= 10)
                                                 {
                                                     string[] participatnsinConfCall = events[9].Split(':').ToArray();
@@ -754,10 +726,65 @@ namespace WpfFinesse.WPFTimer
 
                                                         CallEventInfoListing.participants = null;
                                                         CallEventInfoListing.participants = new List<string>();
-
                                                         CallEventInfoListing.participants = participatnsinConfCall[1].Split('|').ToList();
-                                                    }
+                                                        string participants = string.Empty;
+                                                        bool isBargeIn = false;
+                                                        int participantsCounter = 0;
+                                                        foreach (var item in CallEventInfoListing.participants)
+                                                        {
+                                                            var innerItem = item.Split(',');
+                                                            try
+                                                            {
+                                                                if (innerItem.Length > 3)
+                                                                {
+                                                                    if(innerItem[3]== "SUPERVISOR_BARGE_IN")
+                                                                    {
+                                                                        isBargeIn = true;
+                                                                    }
+                                                                }
 
+                                                                if (innerItem[2] != "NULL")
+                                                                {
+                                                                    participants = innerItem[0] + "\n" + participants;
+                                                                    participantsCounter++;
+
+                                                                }
+                                                            }
+                                                            catch (Exception ex)
+                                                            {
+
+                                                                throw ex;
+                                                            }
+
+                                                        }
+
+                                                        if (isBargeIn)
+                                                        {
+                                                            txtParticipants.Text = participantsCounter + " Participants";
+                                                            participants = participants.Trim('\r', '\n');
+                                                            tooltipParticipants.Text = participants;
+                                                            string[] participantsArray = participants.Split('\n');
+
+                                                            TeamPerformanceDropStackPanel.Children.Clear();
+                                                            foreach (var item in participantsArray)
+                                                            {
+                                                                TextBlock tb = new TextBlock();
+                                                                tb.Text = item;
+                                                                tb.Tag = events[3];
+                                                                tb.MouseLeftButtonDown += DropParticipants;
+                                                                tb.Cursor = Cursors.Hand;
+                                                                tb.HorizontalAlignment = HorizontalAlignment.Center;
+                                                                tb.VerticalAlignment = VerticalAlignment.Center;
+
+                                                                if ("42054" != item)
+                                                                {
+                                                                    TeamPerformanceDropStackPanel.Children.Add(tb);
+                                                                }
+                                                            }
+                                                            UpdateTeamPerformanceButtonPanel_BARGEIN();
+                                                        }
+
+                                                    }
                                                 }
 
 
@@ -788,7 +815,13 @@ namespace WpfFinesse.WPFTimer
                                                 }
                                                 //------------------------------------------------------------------
                                                 CallEventInfoListing.currentActiveCall = dialogIDInboundCall;
-                                                // CallStateChangeEvent(this, new CtiCoreEventArgs("CallStateChanged", call.MyCallInfoData, events[2]));
+                                                callType = events[7].Split(':')[1];
+                                                if (callType == "SM" && CallEventInfoListing.isSupervisor)
+                                                {
+                                                    UpdateTeamPerformanceButtonPanel_MONITORINGACTIVE();
+                                                }
+
+                                                //       CallStateChangeEvent(this, new CtiCoreEventArgs("CallStateChanged", call.MyCallInfoData, events[2]));
                                             }
                                             else // no call exist with this dialog
                                             {
@@ -797,7 +830,6 @@ namespace WpfFinesse.WPFTimer
                                                 //1 conference call
                                                 //2 consultative transfer
                                                 //3 customer has dropped the call while consult was in progress.
-                                                //log.Debug("EventType.InboundCall InboundCall#Active call doesnot already exist in system");
                                                 CallInfoData callInfoData = new CallInfoData();
                                                 callInfoData.Ani = events[4];
                                                 callInfoData.CallId = dialogIDInboundCall;
@@ -805,13 +837,21 @@ namespace WpfFinesse.WPFTimer
                                                 callInfoData.Dnis = events[4];
                                                 callInfoData.CallReceived = DateTime.Now;
                                                 callInfoData.CurrentCallState = callstate;
-                                                // callInfoData.CallType = CallType.InboundCall.ToString();
-                                                callInfoData.CallType = CallType.OutboundCall.ToString(); // change for the 
-                                                CallEventInfo objCallEventInfo = new CallEventInfo();
-                                                objCallEventInfo.Duration = 0;
-                                                //uzair
-                                                //objCallEventInfo.AgentID = _AgentRefId;
+                                                callType = events[7].Split(':')[1];
+                                                if (callType == CallType.SM.ToString())
+                                                {
+                                                    callInfoData.CallType = CallType.SM.ToString(); // change for the 
+                                                }
+                                                else
+                                                {
+                                                    // cqallInfoData.CallType = CallType.InboundCall.ToString();
+                                                    callInfoData.CallType = CallType.OutboundCall.ToString(); // change for the 
 
+                                                }
+
+                                                objCallEventInfo = new CallEventInfo();
+                                                objCallEventInfo.Duration = 0;
+                                                //objCallEventInfo.AgentID = _AgentRefId;
                                                 objCallEventInfo.MyCallInfoData = callInfoData;
                                                 objCallEventInfo.callVariables = events[5].Split('|').ToList();
                                                 //------------date time -----------------------------------
@@ -839,11 +879,13 @@ namespace WpfFinesse.WPFTimer
                                                 CallEventInfoListing.currentActiveCall = callInfoData.CallId;
                                                 // CallStateChangeEvent(this, new CtiCoreEventArgs("CallStateChanged", callInfoData, events[4]));
                                                 // In order to resolve the issue that customer drops the call while consult was in ringing / held state. GetDialogState is sent.
-                                                CtiCommands.GetCurrentDialogState();
+                                                // CtiCommands.GetCurrentDialogState();
+                                                if (callType == "SM" && CallEventInfoListing.isSupervisor)
+                                                {
+                                                    UpdateTeamPerformanceButtonPanel_MONITORINGACTIVE();
+                                                }
                                             }
                                         }
-
-
 
                                         break;
                                     case VendorCallState.FAILED:
@@ -859,6 +901,8 @@ namespace WpfFinesse.WPFTimer
                                     case VendorCallState.DROP:
                                     case VendorCallState.DROPPED:
                                         //CallStateDrop(dialogIDInboundCall);
+                                        var item1 = CallEventInfoListing.lstCallEventInfo.Where(obj => obj.MyCallInfoData.CallId == dialogIDInboundCall).FirstOrDefault();
+                                        CallEventInfoListing.lstCallEventInfo.Remove(item1);
                                         UpdateTeamPerformanceButtonPanel_TALKING();
                                         break;
 
@@ -967,6 +1011,31 @@ namespace WpfFinesse.WPFTimer
 
                 throw e;
             }
+        }
+
+
+        private void DropParticipants(object sender, RoutedEventArgs e)
+        {
+
+            try
+            {
+                TextBlock tb = (TextBlock)sender;
+                string dialogId = tb.Tag.ToString().Split(':')[1];
+                string extension = "42054";
+
+                MessageBox.Show(dialogId + " - " + extension);
+
+                string cmd = "dropparticipant#" + CallEventInfoListing.agentID;
+
+                aMQManager.SendMessageToQueue(GCMessages("dropparticipant"), extension + "," + dialogId);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
+
         }
 
         public T GetEnumValue<T>(string value)
@@ -1610,43 +1679,6 @@ namespace WpfFinesse.WPFTimer
 
 
 
-
-
-
-
-            //if (e.Key == Key.Return)
-            //{
-            //    dgSimple.ItemsSource = u.Where(x => x.FirrstName.Contains(SearchTermTextBox.Text));
-            //}
-            //else if (e.Key == Key.Back)
-            //{
-            //    dgSimple.ItemsSource = u.Where(x => x.FirrstName.Contains(SearchTermTextBox.Text));
-            //}
-
-
-
-            //if (Keyboard.IsKeyDown(Key.Return)) //Also "Key.Delete" is available.
-            //{
-            //    string searchtext = SearchTermTextBox.Text.ToLower();
-            //    if (string.IsNullOrEmpty(searchtext))
-            //    {
-            //        dgSimple.ItemsSource = u;
-            //    }
-            //    else
-            //    {
-            //        dgSimple.ItemsSource = u.Where(x => x.AgentName.ToLower().Contains(searchtext));
-            //    }
-
-            //}
-
-
-
-            //else if (Keyboard.IsKeyDown(Key.Back)) //Also "Key.Delete" is available.
-            //{
-            //    dgSimple.ItemsSource = u.Where(x => x.FirrstName.Contains(SearchTermTextBox.Text));
-            //}
-
-
         }
 
         private void btnChangeTimer_Click(object sender, RoutedEventArgs e)
@@ -1861,6 +1893,33 @@ namespace WpfFinesse.WPFTimer
             btnTeamPerformanceDrop.Visibility = Visibility.Collapsed;
         }
 
+
+        private void UpdateTeamPerformanceButtonPanel_BARGEIN()
+        {
+            btnTeamPerformanceMonitoring.IsEnabled = false;
+            btnTeamPerformanceEndMonitoring.IsEnabled = true;
+            btnTeamPerformanceNotReady.IsEnabled = false;
+            btnTeamPerformanceMakeReady.IsEnabled = false;
+            btnTeamPerformanceSignOut.IsEnabled = true;
+            btnTeamPerformanceHold.IsEnabled = false;
+            btnTeamPerformanceHeld.IsEnabled = true;
+            btnTeamPerformanceBergeln.IsEnabled = false;
+            btnTeamPerformanceParticipants.IsEnabled = true;
+            btnTeamPerformanceDrop.IsEnabled = true;
+
+            btnTeamPerformanceMonitoring.Visibility = Visibility.Collapsed;
+            btnTeamPerformanceEndMonitoring.Visibility = Visibility.Visible;
+            btnTeamPerformanceNotReady.Visibility = Visibility.Visible;
+            btnTeamPerformanceMakeReady.Visibility = Visibility.Visible;
+            btnTeamPerformanceSignOut.Visibility = Visibility.Visible;
+            btnTeamPerformanceHold.Visibility = Visibility.Visible;
+            btnTeamPerformanceHeld.Visibility = Visibility.Collapsed;
+            btnTeamPerformanceBergeln.Visibility = Visibility.Collapsed;
+            btnTeamPerformanceParticipants.Visibility = Visibility.Visible;
+            btnTeamPerformanceDrop.Visibility = Visibility.Visible;
+        }
+
+
         private void TeamPerformanceMakeReady_Click(object sender, RoutedEventArgs e)
         {
             UserTab selectedRow = (UserTab)dgSimple.SelectedItem;
@@ -1886,6 +1945,7 @@ namespace WpfFinesse.WPFTimer
             UserTab selectedRow = (UserTab)dgSimple.SelectedItem;
             if (selectedRow != null)
             {
+                CallEventInfoListing.TeamAgentLoginID = selectedRow.LoginId;
                 aMQManager.SendMessageToQueue(GCMessages("silentmonitor"), selectedRow.Extension);
             }
             else
@@ -1935,6 +1995,41 @@ namespace WpfFinesse.WPFTimer
             string dialogId = CallEventInfoListing.lstCallEventInfo.ElementAt(0).MyCallInfoData.CallId;
             aMQManager.SendMessageToQueue(GCMessages("RetrieveCall"), dialogId);
         }
+
+        private void btnTeamPerformanceBergeln_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                string dialogId = CallEventInfoListing.lstCallEventInfo.ElementAt(0).MyCallInfoData.CallId;
+                string command = "bargein#" + CallEventInfoListing.agentID;
+                string body =   "42054," + dialogId;
+                aMQManager.SendMessageToQueue(command, body);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        private void btnTeamPerformanceDrop_Click(object sender, RoutedEventArgs e)
+        {
+            popup.IsOpen = true;
+        }
+
+        private void btnParticipants_MouseEnter(object sender, MouseEventArgs e)
+        {
+            ParticipantPopUp.IsOpen = true;
+        }
+
+        private void btnParticipants_MouseLeave(object sender, MouseEventArgs e)
+        {
+            ParticipantPopUp.IsOpen = false;
+        }
+
+
+
+
     }
 
     public class UserTab : INotifyPropertyChanged
