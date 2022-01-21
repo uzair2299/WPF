@@ -42,7 +42,7 @@ namespace WpfFinesse
 
                 throw ex;
             }
-         }
+        }
         private void btnLogin_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -64,7 +64,7 @@ namespace WpfFinesse
                 //aMQManager.messageArrived += AMQManager_messageArrived;
                 aMQManager.UpdateTopic();
 
-                ResetControls();
+                //ResetControls();
             }
             catch (Exception ex)
             {
@@ -98,6 +98,7 @@ namespace WpfFinesse
                                     CallEventInfoListing.totalNumberOfTeams = Convert.ToInt32(events[6].Split(':')[1]);
                                     CallEventInfoListing.Teams = events[7];
                                     CallEventInfoListing.agentFullName = events[8];
+                                    CallEventInfoListing.agentExtension = txtAgentExtension.Text;
                                     this.Close();
                                     if (!isopen)
                                     {
@@ -110,6 +111,37 @@ namespace WpfFinesse
 
                                 }
                                 break;
+
+
+                            case EventType.State:
+                                string agentstate = events[2].ToUpper();
+                                string _AgentRefId = events[0];
+                                AgentState eAgentState = GetEnumValue<AgentState>(agentstate);
+
+                                switch (eAgentState)
+                                {
+                                    case AgentState.NOT_READY:
+                                        CallEventInfoListing.agentExtension = events[9];
+                                        break;
+                                    case AgentState.READY:
+                                        break;
+                                    case AgentState.RESERVED:
+                                        break;
+                                    case AgentState.TALKING:
+                                        break;
+                                    case AgentState.WORK_READY:
+                                        break;
+                                    case AgentState.WORK:
+                                        break;
+                                    case AgentState.LOGOUT:
+                                        break;
+                                    case AgentState.RE_LOGIN:
+                                        break;
+                                    case AgentState.HOLD:
+                                        break;
+                                }
+                                break;
+
                         }
 
 

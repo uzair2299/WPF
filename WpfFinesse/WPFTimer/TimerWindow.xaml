@@ -1634,7 +1634,7 @@
                                     <Grid  Margin="0 5 0 0">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="140"/>
+                                            <ColumnDefinition Width="*"/>
                                         </Grid.ColumnDefinitions>
                                         <Grid.RowDefinitions>
                                             <RowDefinition />
@@ -1663,12 +1663,12 @@
 
                                         </StackPanel>
                                         <StackPanel Grid.Column="1" Grid.Row="0"  Margin="10 0 0 0">
-                                            <ComboBox  Height="28"  x:Name="cbReasonCoes1"  IsEditable="True" IsReadOnly="True" Text="Phone Book"  HorizontalAlignment="Stretch" VerticalAlignment="Center">
-                                                <ComboBoxItem Content="Item 1"/>
+                                            <ComboBox SelectionChanged="cbPhonebookTeam_SelectionChanged"  Height="28"  x:Name="cbPhonebookTeam"  IsEditable="True" IsReadOnly="True" Text="Phone Book"  HorizontalAlignment="Stretch" VerticalAlignment="Center">
+                                                <!--<ComboBoxItem Content="Item 1"/>
                                                 <ComboBoxItem Content="Item 2"/>
                                                 <ComboBoxItem Content="Item 3"/>
                                                 <ComboBoxItem Content="Item 4"/>
-                                                <ComboBoxItem Content="Item 5"/>
+                                                <ComboBoxItem Content="Item 5"/>-->
                                             </ComboBox>
                                         </StackPanel>
 
@@ -1886,6 +1886,7 @@
                                             <RowDefinition Height="*"></RowDefinition>
                                             <RowDefinition Height="*"></RowDefinition>
                                             <RowDefinition Height="*"></RowDefinition>
+                                            <RowDefinition Height="*"></RowDefinition>
 
                                         </Grid.RowDefinitions>
                                         <Grid.ColumnDefinitions>
@@ -1897,7 +1898,7 @@
                                             </ComboBox>
                                         </StackPanel>
 
-                                        <StackPanel Visibility="Visible" Name="TeamPerformanceStackPanel" Grid.Row="1" Margin="0 0 0 5">
+                                        <StackPanel Visibility="Visible" Name="TeamPerformanceStackPanel" Grid.Row="1" Margin="0 0 0 3">
                                             <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Width="Auto" VerticalAlignment="Center">
                                                 <Button Visibility="Visible" Style="{StaticResource btnTeamPerformance}" Width="100" Height="25"  Margin="0 0 0 3" Background="White" BorderBrush="#A7A5A5" BorderThickness="1" Name="btnTeamPerformanceMonitoring" Click="TeamPerformanceMonitoring_Click" IsEnabled="False">
                                                     <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="Monitoring" Padding="10 2 10 2" Foreground="#A7A5A5"></TextBlock>
@@ -2095,7 +2096,7 @@
                                             <!--<TextBox BorderThickness="0" Style="{StaticResource WaterMarkTeamPerformanceSearch}" x:Name="SearchTermTextBox"></TextBox>-->
 
                                             <Grid>
-                                                <TextBox   VerticalAlignment="Center" HorizontalAlignment="Stretch" x:Name="SearchTermTextBox" Margin="0 5 0 5" Padding="4 0 0 0" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" KeyUp="SearchTermTextBox_KeyDown">
+                                                <TextBox   VerticalAlignment="Center" HorizontalAlignment="Stretch" x:Name="SearchTermTextBox"  Padding="4 0 0 0" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" KeyUp="SearchTermTextBox_KeyDown">
                                                     <TextBox.Resources>
                                                         <Style TargetType="{x:Type Border}">
                                                             <Setter Property="CornerRadius" Value="5"/>
@@ -2122,6 +2123,12 @@
                                                 <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="Change Time" Padding="10 2 10 2" Foreground="#A7A5A5"></TextBlock>
                                             </Button>
                                         </StackPanel>
+
+                                        <StackPanel  Name="errorpanel" Visibility="Visible" Grid.Row="5" HorizontalAlignment="Stretch" Orientation="Vertical"  Width="306">
+                                            <TextBlock Name="txtnotification" Foreground="red" FontWeight="DemiBold" Text=""></TextBlock>
+                                        </StackPanel>
+
+
 
                                     </Grid>
                                     <StackPanel HorizontalAlignment="Stretch">

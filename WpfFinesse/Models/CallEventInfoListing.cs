@@ -8,6 +8,16 @@ using WpfFinesse.AMQ;
 
 namespace WpfFinesse.Models
 {
+    public class PhoneBook
+    {
+        public string id { get; set; }
+        public string phoneNubmer { get; set; }
+        public string lastName { get; set; }
+        public string firstName { get; set; }
+        public string fullName { get; set;}
+        public string description { get; set; }
+    } 
+
     public  class CallInfoData
     {
         //public CallInfoData();

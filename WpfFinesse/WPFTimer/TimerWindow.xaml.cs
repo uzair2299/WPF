@@ -14,6 +14,7 @@ using WpfFinesse.AMQ;
 using WpfFinesse.ControlUtility;
 using WpfFinesse.CustomTab;
 using WpfFinesse.Models;
+using System.Timers;
 
 namespace WpfFinesse.WPFTimer
 {
@@ -25,6 +26,8 @@ namespace WpfFinesse.WPFTimer
         private bool timerOnce = false;
         private List<UserTab> us;
         List<UserTab> teamUserList = new List<UserTab>();
+        List<ComboBoxPair> cbPhonebook = new List<ComboBoxPair>();
+
         UserTab user = new UserTab();
         UserTab selectedRow = null;
         AMQManager aMQManager = AMQManager.GetInstance();
@@ -39,7 +42,6 @@ namespace WpfFinesse.WPFTimer
             aMQManager.UpdateTopic();
             InitializeComponent();
 
-            tooltipParticipants.Text = "4541\n12536";
 
             try
             {
@@ -70,6 +72,10 @@ namespace WpfFinesse.WPFTimer
                 string _value = cbp._Value;
 
                 aMQManager.SendMessageToQueue(GCMessages("getteamusers"), _key + ",true");
+                aMQManager.SendMessageToQueue(GCMessages("GetPhonebooks"), "");
+                aMQManager.SendMessageToQueue(GCMessages("GetTeamPhonebooks"), "1");
+                //aMQManager.SendMessageToQueue(GCMessages("GetPhonebookContacts"), "7");
+
             }
             catch (Exception e)
             {
@@ -149,7 +155,7 @@ namespace WpfFinesse.WPFTimer
 
 
             List<UserTab> phoneBookSource = us.Skip((pg.CurrentPage - 1) * pg.PageSize).Take(pg.PageSize).ToList();
-            SetPhoneBookSource(phoneBookSource);
+            //SetPhoneBookSource(phoneBookSource);
 
 
             if (pg.EndPage > 1)
@@ -233,6 +239,135 @@ namespace WpfFinesse.WPFTimer
 
                         switch (eventName)
                         {
+                            case EventType.Phonebooks:
+                                if (events.Length > 2)
+                                {
+                                    for (int i = 2; i < events.Length; i++)
+                                    {
+
+                                        string[] item = events[i].Split(',');
+                                        string phonebookName = item[0].Split(':')[1];
+                                        string phonebookType = item[1].Split(':')[1];
+                                        string phonebookId = item[2].Split(':')[1];
+                                        var checkAlreadyExist = cbPhonebook.Where(x => x._Key == phonebookId && x._Value == phonebookName && x._Type == phonebookType).FirstOrDefault();
+                                        if (checkAlreadyExist == null)
+                                        {
+                                            if (phonebookType == "GLOBAL")
+                                            {
+                                                string value = phonebookName;
+                                                string type = phonebookType;
+                                                string key = phonebookId;
+                                                ComboBoxPair cbp = new ComboBoxPair(key, value, type);
+                                                cbPhonebook.Add(cbp);
+                                            }
+                                        }
+                                    }
+                                }
+                                break;
+                            case EventType.TeamPhoneBooks:
+                                if (events.Length > 2)
+                                {
+                                    for (int i = 2; i < events.Length; i++)
+                                    {
+
+                                        string[] item = events[i].Split(',');
+                                        string phonebookName = item[0].Split(':')[1];
+                                        string phonebookType = item[1].Split(':')[1];
+                                        string phonebookId = item[2].Split(':')[1];
+                                        var checkAlreadyExist = cbPhonebook.Where(x => x._Key == phonebookId && x._Value == phonebookName && x._Type == phonebookType).FirstOrDefault();
+                                        if (checkAlreadyExist == null)
+                                        {
+                                            if (phonebookType == "TEAM")
+                                            {
+                                                string value = phonebookName;
+                                                string type = phonebookType;
+                                                string key = phonebookId;
+                                                ComboBoxPair cbp = new ComboBoxPair(key, value, type);
+                                                cbPhonebook.Add(cbp);
+                                            }
+                                        }
+                                    }
+                                    cbPhonebookTeam.DisplayMemberPath = "_Value";
+                                    cbPhonebookTeam.SelectedValuePath = "_Key";
+                                    cbPhonebookTeam.ItemsSource = cbPhonebook.OrderBy(x => x._Value);
+                                    cbPhonebookTeam.SelectedIndex = 0;
+
+                                    var cbItem = (ComboBoxPair)cbPhonebookTeam.SelectedItem;
+                                    aMQManager.SendMessageToQueue(GCMessages("GetPhonebookContacts"), cbItem._Key);
+
+
+                                }
+                                break;
+                            case EventType.PhonebookContacts:
+
+                                List<PhoneBook> pb = new List<PhoneBook>();
+                                if (events.Length > 2)
+                                {
+                                    for (int i = 2; i < events.Length; i++)
+                                    {
+                                        var contact = events[i].Split(',');
+                                        string des = contact[0].Split(':')[1];
+                                        string fulName = contact[1].Split(':')[1] + " " + contact[2].Split(':')[1];
+                                        string phoneNumber = contact[3].Split(':')[1];
+                                        string id = contact[4].Split(':')[1];
+
+                                        PhoneBook _phoneNumber = new PhoneBook()
+                                        {
+                                            id = id,
+                                            fullName = fulName,
+                                            phoneNubmer = phoneNumber,
+                                            description = des
+                                        };
+                                        pb.Add(_phoneNumber);
+                                    }
+
+                                    PhoneBookStackPanel.Children.Clear();
+                                    foreach (var item in pb)
+                                    {
+                                        StackPanel mainPhoneBookStackPanel = new StackPanel();
+                                        Expander expender = DynamicControlUtility.GetExpenderPhoneBook(item.fullName);
+                                        Border b = DynamicControlUtility.GetBorderPhoneBook("#C8C6C6", 5, 5, 5, 1);
+
+                                        StackPanel phoneNoStackPanel = new StackPanel();
+                                        TextBlock tb = DynamicControlUtility.GetTextBlockPhoneBook("Phone No");
+
+                                        TextBox txt = DynamicControlUtility.GetTextBoxPhoneBook(item.phoneNubmer);
+                                        phoneNoStackPanel.Children.Add(tb);
+                                        phoneNoStackPanel.Children.Add(txt);
+                                        b.Child = phoneNoStackPanel;
+
+
+                                        //notes penal
+                                        Border b1 = DynamicControlUtility.GetBorderPhoneBook("#C8C6C6", 5, 5, 5, 1);
+
+                                        StackPanel notesStackPanel = new StackPanel();
+                                        TextBlock tb1 = DynamicControlUtility.GetTextBlockPhoneBook("Notes");
+
+                                        TextBox txt1 = DynamicControlUtility.GetTextBoxPhoneBook(item.description);
+                                        notesStackPanel.Children.Add(tb1);
+                                        notesStackPanel.Children.Add(txt1);
+                                        b1.Child = notesStackPanel;
+
+                                        //apend phone nd notes into main stackpanel
+                                        mainPhoneBookStackPanel.Children.Add(b);
+                                        mainPhoneBookStackPanel.Children.Add(b1);
+
+                                        //set expendercontent
+                                        expender.Content = mainPhoneBookStackPanel;
+
+                                        //set expender into ui stackpanel
+                                        PhoneBookStackPanel.Children.Add(expender);
+
+                                    }
+
+                                    foreach (var item in pb)
+                                    {
+
+                                    }
+
+                                }
+
+                                break;
 
                             case EventType.State:
                                 string agentstate = events[2].ToUpper();
@@ -737,7 +872,7 @@ namespace WpfFinesse.WPFTimer
                                                             {
                                                                 if (innerItem.Length > 3)
                                                                 {
-                                                                    if(innerItem[3]== "SUPERVISOR_BARGE_IN")
+                                                                    if (innerItem[3] == "SUPERVISOR_BARGE_IN")
                                                                     {
                                                                         isBargeIn = true;
                                                                     }
@@ -776,7 +911,7 @@ namespace WpfFinesse.WPFTimer
                                                                 tb.HorizontalAlignment = HorizontalAlignment.Center;
                                                                 tb.VerticalAlignment = VerticalAlignment.Center;
 
-                                                                if ("42054" != item)
+                                                                if (CallEventInfoListing.agentExtension != item)
                                                                 {
                                                                     TeamPerformanceDropStackPanel.Children.Add(tb);
                                                                 }
@@ -1001,7 +1136,9 @@ namespace WpfFinesse.WPFTimer
 
                                 #endregion inboundcall states
                                 break;
-
+                            case EventType.Control:
+                                ShowDropMessagwe(events[3]);
+                                break;
                         }
                     });
                 }
@@ -1021,12 +1158,9 @@ namespace WpfFinesse.WPFTimer
             {
                 TextBlock tb = (TextBlock)sender;
                 string dialogId = tb.Tag.ToString().Split(':')[1];
-                string extension = "42054";
-
+                string extension = tb.Text;
                 MessageBox.Show(dialogId + " - " + extension);
-
                 string cmd = "dropparticipant#" + CallEventInfoListing.agentID;
-
                 aMQManager.SendMessageToQueue(GCMessages("dropparticipant"), extension + "," + dialogId);
             }
             catch (Exception ex)
@@ -1320,7 +1454,7 @@ namespace WpfFinesse.WPFTimer
 
                 PhoneBookScrollViewerSetHeight(setHeight, page_, pg.EndPage);
                 List<UserTab> phoneBookSource = us.Skip((pg.CurrentPage - 1) * pg.PageSize).Take(pg.PageSize).ToList();
-                SetPhoneBookSource(phoneBookSource);
+                //SetPhoneBookSource(phoneBookSource);
                 if (pg.EndPage > 1)
                 {
                     if (pg.CurrentPage > 1)
@@ -1388,7 +1522,7 @@ namespace WpfFinesse.WPFTimer
 
                 PhoneBookScrollViewerSetHeight(setHeight, page_, pg.EndPage);
                 List<UserTab> phoneBookSource = us.Skip((pg.CurrentPage - 1) * pg.PageSize).Take(pg.PageSize).ToList();
-                SetPhoneBookSource(phoneBookSource);
+                //SetPhoneBookSource(phoneBookSource);
                 if (pg.EndPage > 1)
                 {
                     if (pg.CurrentPage > 1)
@@ -1530,7 +1664,7 @@ namespace WpfFinesse.WPFTimer
 
             Pager pg = new Pager(totalItem, 1);
             List<UserTab> phoneBookSource = us.Skip((pg.CurrentPage - 1) * pg.PageSize).Take(pg.PageSize).ToList();
-            SetPhoneBookSource(phoneBookSource);
+            //SetPhoneBookSource(phoneBookSource);
 
             if (pg.EndPage > 1)
             {
@@ -2002,7 +2136,7 @@ namespace WpfFinesse.WPFTimer
             {
                 string dialogId = CallEventInfoListing.lstCallEventInfo.ElementAt(0).MyCallInfoData.CallId;
                 string command = "bargein#" + CallEventInfoListing.agentID;
-                string body =   "42054," + dialogId;
+                string body = "42054," + dialogId;
                 aMQManager.SendMessageToQueue(command, body);
             }
             catch (Exception ex)
@@ -2027,9 +2161,49 @@ namespace WpfFinesse.WPFTimer
             ParticipantPopUp.IsOpen = false;
         }
 
+        private void ShowDropMessagwe(string message)
+        {
+
+            txtnotification.Dispatcher.Invoke(new Action(() => txtnotification.Text = message));
+            errorpanel.Dispatcher.Invoke(new Action(() => errorpanel.Visibility = Visibility.Visible));
 
 
+            System.Timers.Timer timer = new System.Timers.Timer();
+            timer.Interval = 5000;
+            timer.Elapsed += (s, en) =>
+            {
+                errorpanel.Dispatcher.Invoke(new Action(() => errorpanel.Visibility = Visibility.Hidden));
+                timer.Stop(); // Stop the timer(otherwise keeps on calling)
+            };
+            timer.Start();
+        }
 
+        private void cbPhonebookTeam_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            try
+            {
+                var comboBox = (ComboBox)sender;
+                if (comboBox.IsLoaded)
+                {
+                    var cbItem = (ComboBoxPair)comboBox.SelectedItem;
+                    if (cbItem != null)
+                    {
+                        aMQManager.SendMessageToQueue(GCMessages("GetPhonebookContacts"), cbItem._Key);
+                    }
+                    else
+                    {
+                        MessageBox.Show("select phonebook");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
+
+        }
     }
 
     public class UserTab : INotifyPropertyChanged
@@ -2486,7 +2660,10 @@ namespace WpfFinesse.WPFTimer
         IN_SERVICE,
         Control,
         NewOutboundCall,
-        TeamUsersList
+        TeamUsersList,
+        Phonebooks,
+        TeamPhoneBooks,
+        PhonebookContacts
     }
 
     public enum AgentState
@@ -2526,3 +2703,12 @@ namespace WpfFinesse.WPFTimer
 
 
 }
+
+
+//1st command GetPhonebooks > Phonebooks > this will contain phonebook name,type (global, nd user defines all) we will get only global phone id will be used only and name.
+
+
+//2nd GetTeamPhonebooks
+
+
+
