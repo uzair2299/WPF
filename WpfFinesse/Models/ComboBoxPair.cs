@@ -24,5 +24,9 @@ namespace WpfFinesse.Models
             _Value = _value;
             _Type = _type;
         }
+        public override string ToString()
+        {
+            return _Value;
+        }
     }
 }

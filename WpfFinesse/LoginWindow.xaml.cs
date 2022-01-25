@@ -97,7 +97,8 @@ namespace WpfFinesse
                                     //string number = events[6].Split(':')[1];
                                     CallEventInfoListing.totalNumberOfTeams = Convert.ToInt32(events[6].Split(':')[1]);
                                     CallEventInfoListing.Teams = events[7];
-                                    CallEventInfoListing.agentFullName = events[8];
+                                    CallEventInfoListing.PhonebookTeamId = events[8];
+                                    CallEventInfoListing.agentFullName = events[9];
                                     CallEventInfoListing.agentExtension = txtAgentExtension.Text;
                                     this.Close();
                                     if (!isopen)

@@ -56,7 +56,11 @@
         <SolidColorBrush x:Key="DisabledBtnBorderColorBrush" Color="{StaticResource TeamPerformanceBtnBorderColor}"></SolidColorBrush>
 
         <!--End Colors-->
-
+        <DataTemplate x:Key="myTaskTemplate">
+            <StackPanel>
+                <TextBlock Width="100" Text="{Binding Path= _Value}"  TextWrapping="Wrap"/>
+            </StackPanel>
+        </DataTemplate>
 
 
         <!--start expender-->
@@ -249,7 +253,7 @@
             <Setter Property="Background" Value="Transparent"></Setter>
             <Setter Property="Cursor" Value="Hand"></Setter>
             <Setter Property="Foreground" Value="Red"></Setter>
-       
+
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate>
@@ -420,7 +424,8 @@
                                 <Setter Property="BorderBrush" Value="Transparent" TargetName="Border"/>
                             </Trigger>
                             <Trigger Property="IsMouseOver" Value="true">
-                                <Setter Property="Background" Value="#bfbfbf" TargetName="Border"/>                            </Trigger>
+                                <Setter Property="Background" Value="#bfbfbf" TargetName="Border"/>
+                            </Trigger>
                             <Trigger Property="IsPressed" Value="true">
                                 <Setter Property="Background" Value="#bfbfbf" TargetName="Border"/>
                             </Trigger>
@@ -923,7 +928,9 @@
                             <!--<Trigger Property="IsEnabled" Value="false">
                                 <Setter TargetName="btnTeamPerformanceborder" Property="Background" Value="{StaticResource DisabledBackgroundBrush}" />
                                 <Setter TargetName="btnTeamPerformanceborder" Property="BorderBrush" Value="{StaticResource DisabledBtnBorderColorBrush}" />
-                                --><!--<Setter Property="TextBlock.Foreground" TargetName="ContentPresenter" Value="Red"/>--><!--
+                                -->
+                            <!--<Setter Property="TextBlock.Foreground" TargetName="ContentPresenter" Value="Red"/>-->
+                            <!--
                             </Trigger>-->
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -1022,12 +1029,13 @@
                             VerticalAlignment="Center"
                             HorizontalAlignment="Left" />
                             <TextBox x:Name="PART_EditableTextBox"
+                                    
                             Style="{x:Null}" 
                             Template="{StaticResource ComboBoxTextBoxTeam}" 
                             HorizontalAlignment="Left" 
                             VerticalAlignment="Center" 
                             Margin="3,3,23,3"
-                            Focusable="True" 
+                            Focusable="False" 
                             Background="White"
                             Visibility="Hidden"
                                      Foreground="{StaticResource ForegroundPhonebookColorBrush}"
@@ -1110,7 +1118,8 @@
                                 CornerRadius="3"
                               SnapsToDevicePixels="true">
                             <DockPanel>
-                                <ContentPresenter />
+
+                                <ContentPresenter  />
                                 <Path  Data="M 0,100  Q 35,140  54,190 Q 100,45  168,0 S 90,40  50,150 Q 40,136 0,100 Z "
                                Fill="{StaticResource GridSortingArrowActiveColorBrush}" 
                                Stretch="Fill"
@@ -1554,7 +1563,7 @@
         </UniformGrid>
         <TabControl BorderThickness="0">
             <TabControl.Resources>
-                
+
                 <Style TargetType="TabControl">
                     <Setter Property="Template">
                         <Setter.Value>
@@ -1663,8 +1672,8 @@
 
                                         </StackPanel>
                                         <StackPanel Grid.Column="1" Grid.Row="0"  Margin="10 0 0 0">
-                                            <ComboBox SelectionChanged="cbPhonebookTeam_SelectionChanged"  Height="28"  x:Name="cbPhonebookTeam"  IsEditable="True" IsReadOnly="True" Text="Phone Book"  HorizontalAlignment="Stretch" VerticalAlignment="Center">
-                                                <!--<ComboBoxItem Content="Item 1"/>
+                                            <ComboBox ItemTemplate = "{StaticResource myTaskTemplate}" SelectionChanged="cbPhonebookTeam_SelectionChanged"  Height="28"  x:Name="cbPhonebookTeam"  IsEditable="True" IsReadOnly="True" Text="Phone Book"  HorizontalAlignment="Stretch" VerticalAlignment="Center">
+                                                 <!--<ComboBoxItem Content="Item 1"/>
                                                 <ComboBoxItem Content="Item 2"/>
                                                 <ComboBoxItem Content="Item 3"/>
                                                 <ComboBoxItem Content="Item 4"/>
@@ -1685,11 +1694,11 @@
                                         </StackPanel>
                                     </ScrollViewer>
                                     <StackPanel Visibility="Collapsed"  Name="PhoneBookNoDataStack" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0 3 5 0">
-                                        <TextBlock Text="No Data Found" FontSize="15" FontWeight="DemiBold" Foreground="{StaticResource BackgroundBrush}" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
+                                        <TextBlock Text="No Contact Found" FontSize="15" FontWeight="DemiBold" Foreground="{StaticResource BackgroundBrush}" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
                                     </StackPanel>
 
                                     <StackPanel Name="PhoneBookPagination" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0 3 0 0">
-                                       
+
                                     </StackPanel>
                                 </StackPanel>
                             </StackPanel>
@@ -1894,7 +1903,7 @@
                                         </Grid.ColumnDefinitions>
                                         <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Center" Orientation="Vertical"  Width="306">
                                             <ComboBox Height="28.5"  x:Name="CTITeams" SelectionChanged="CTITeams_SelectionChanged"  DockPanel.Dock="Right" IsEditable="True" IsReadOnly="True" Text="MEDICARE TEAM"  HorizontalAlignment="Stretch" VerticalAlignment="Center"  BorderBrush="#EEEEEE">
-                                            
+
                                             </ComboBox>
                                         </StackPanel>
 
@@ -1912,13 +1921,13 @@
                                                 <Button Style="{StaticResource btnTeamPerformance}" Width="100" Height="25"  Margin="3 0 0 3" Background="#CB2424" BorderBrush="#CB2424" BorderThickness="1" Click="TeamPerformanceNotReady_Click"  Name="btnTeamPerformanceNotReady" IsEnabled="False">
                                                     <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="Not Ready" Padding="10 2 10 2" Foreground="White"></TextBlock>
                                                 </Button>
-                                                
+
                                                 <Button Style="{StaticResource btnTeamPerformance}" Width="100" Height="25" Margin="3 0 0 3" Background="White" BorderBrush="#7be5bd" BorderThickness="1"  Name="btnTeamPerformanceMakeReady" Click="TeamPerformanceMakeReady_Click" IsEnabled="False">
                                                     <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="Ready" Padding="10 2 10 2" Foreground="#7be5bd"></TextBlock>
                                                 </Button>
-                                                
+
                                             </StackPanel>
-                                            
+
                                             <StackPanel  HorizontalAlignment="Center" Orientation="Horizontal" Width="Auto" VerticalAlignment="Center">
                                                 <Button Visibility="Collapsed" Style="{StaticResource btnTeamPerformance}" Width="100" Height="25"  Margin="0 -3 0 0" Background="White" BorderBrush="#A7A5A5" BorderThickness="1" Click="TeamPerformanceHold_Click"  Name="btnTeamPerformanceHold" IsEnabled="False">
                                                     <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="Hold" Padding="10 2 10 2" Foreground="#A7A5A5" ></TextBlock>
@@ -1927,8 +1936,8 @@
                                                 <Button Visibility="Collapsed" Style="{StaticResource btnTeamPerformance}" Width="100" Height="25"  Margin="0 -3 0 0" Background="White" BorderBrush="#A7A5A5" BorderThickness="1" Click="TeamPerformanceHeld_Click"  Name="btnTeamPerformanceHeld" IsEnabled="False">
                                                     <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="Retrieve" Padding="10 2 10 2" Foreground="#A7A5A5" ></TextBlock>
                                                 </Button>
-                                                
-                                                
+
+
                                                 <Button Visibility="Collapsed" Style="{StaticResource btnTeamPerformance}" Width="100" Height="25"  Margin="3 0 0 3" Background="#A7A5A5" BorderThickness="0" Name="btnTeamPerformanceSignOut" Click="TeamPerformanceSignOut_Click" IsEnabled="False">
                                                     <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="SignOut" Padding="10 2 10 2" Foreground="White"></TextBlock>
                                                 </Button>
@@ -1965,7 +1974,7 @@
                                                     </StackPanel>
                                                 </Popup>
                                             </StackPanel>
-                                            
+
                                             <StackPanel  HorizontalAlignment="Center" Orientation="Horizontal" Width="Auto" VerticalAlignment="Center" Margin="0 0 0 3">
                                                 <!--<Button Visibility="Collapsed" Style="{StaticResource btnTeamPerformance}" Width="100" Height="25"  Margin="0 0 1.5 0" Background="White" BorderBrush="#A7A5A5" BorderThickness="1" Click="TeamPerformanceHold_Click"  Name="btnTeamPerformanceParticipants" IsEnabled="False">
                                                     <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="Participants" Padding="10 2 10 2" Foreground="#A7A5A5" ></TextBlock>
@@ -1993,7 +2002,7 @@
                                                 </Popup>
                                             </StackPanel>
                                         </StackPanel>
-                                       
+
 
 
 

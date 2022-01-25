@@ -67,7 +67,7 @@ namespace WpfFinesse.Models
     {
         public static List<CallEventInfo> lstCallEventInfo = new List<CallEventInfo>();
         public static string Teams;
-
+        public static string PhonebookTeamId;
         public static int totalNumberOfTeams;
         public static bool isSupervisor;
         public static string TeamAgentLoginID;
