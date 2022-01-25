@@ -63,6 +63,34 @@
         </DataTemplate>
 
 
+
+        <Style TargetType="{x:Type ToolTip}">
+            <Setter Property="OverridesDefaultStyle" Value="true"/>
+            <Setter Property="HasDropShadow" Value="True"/>
+            <Setter Property="Placement" Value="Center" />
+            <!--Offset to the arrow path-->
+            <Setter Property="HorizontalOffset" Value="15"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ToolTip}">
+                        <StackPanel>
+                            <Border x:Name="border" CornerRadius="3" HorizontalAlignment="Center" VerticalAlignment="Top" Padding="10,7" BorderThickness="0" Background="#e5323232">
+                                <StackPanel>
+                                    <TextBlock FontFamily="Arial" FontSize="12" Text="{TemplateBinding Content}" Foreground="#f0f0f0" />
+                                </StackPanel>
+                            </Border>
+                            <!--<Path Margin="10,0,0,0" Fill="#e5323232" Data="M 0 0 L 6 6 L 12 0 Z"/>-->
+
+                            <!--Dummy rectangle same height as tool tip, so it centers on the control-->
+                            <Rectangle Height="{Binding ActualHeight, ElementName=border}" />
+                        </StackPanel>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+
+
         <!--start expender-->
         <ControlTemplate x:Key="ExpanderToggleButton"
                  TargetType="{x:Type ToggleButton}">

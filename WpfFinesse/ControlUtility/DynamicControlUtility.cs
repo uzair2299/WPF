@@ -19,7 +19,7 @@ namespace WpfFinesse.ControlUtility
             Expander Exp = new Expander();
             Grid grid = new Grid();
             grid.ColumnDefinitions.Clear();
-            grid.Height =28.5;
+            grid.Height = 28.5;
 
             ColumnDefinition c1 = new ColumnDefinition();
             c1.Width = new GridLength(65, GridUnitType.Star);
@@ -36,6 +36,7 @@ namespace WpfFinesse.ControlUtility
             if (Header.Length > 30)
             {
                 ToolTip tooltip = new ToolTip();
+
                 tooltip.Placement = PlacementMode.Bottom;
                 //tooltip.PlacementRectangle = new Rect(20, 0, 0, 0);
                 tooltip.HorizontalOffset = 0;
@@ -172,7 +173,7 @@ namespace WpfFinesse.ControlUtility
                         if (item is Button)
                         {
                             Button btn = (Button)item;
-                            switch(btn.Name)
+                            switch (btn.Name)
                             {
                                 case "MakeCall":
                                     btn.Visibility = Visibility.Visible;
@@ -182,7 +183,7 @@ namespace WpfFinesse.ControlUtility
                     }
                 }
 
-                
+
 
 
             }
