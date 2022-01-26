@@ -451,9 +451,9 @@
                             <Trigger Property="IsKeyboardFocused" Value="true">
                                 <Setter Property="BorderBrush" Value="Transparent" TargetName="Border"/>
                             </Trigger>
-                            <Trigger Property="IsMouseOver" Value="true">
+                            <!--<Trigger Property="IsMouseOver" Value="true">
                                 <Setter Property="Background" Value="#bfbfbf" TargetName="Border"/>
-                            </Trigger>
+                            </Trigger>-->
                             <Trigger Property="IsPressed" Value="true">
                                 <Setter Property="Background" Value="#bfbfbf" TargetName="Border"/>
                             </Trigger>
@@ -1700,8 +1700,80 @@
 
                                         </StackPanel>
                                         <StackPanel Grid.Column="1" Grid.Row="0"  Margin="10 0 0 0">
-                                            <ComboBox ItemTemplate = "{StaticResource myTaskTemplate}" SelectionChanged="cbPhonebookTeam_SelectionChanged"  Height="28"  x:Name="cbPhonebookTeam"  IsEditable="True" IsReadOnly="True" Text="Phone Book"  HorizontalAlignment="Stretch" VerticalAlignment="Center">
-                                                 <!--<ComboBoxItem Content="Item 1"/>
+                                            <ComboBox  ItemTemplate = "{StaticResource myTaskTemplate}" SelectionChanged="cbPhonebookTeam_SelectionChanged"  Height="28"  x:Name="cbPhonebookTeam"  IsEditable="True" IsReadOnly="True" Text="Phone Book"  HorizontalAlignment="Stretch" VerticalAlignment="Center">
+                                                <ComboBox.Resources>
+
+                                                    <Style  TargetType="{x:Type ScrollBar}">
+                                                        <Setter Property="Background" Value="{StaticResource ScrollBarTrackColorBrush}" />
+                                                        <Setter Property="Width" Value="10" />
+                                                        <Setter Property="Template">
+                                                            <Setter.Value>
+                                                                <ControlTemplate TargetType="{x:Type ScrollBar}">
+                                                                    <Grid x:Name="GridRoot" Width="{DynamicResource {x:Static SystemParameters.VerticalScrollBarWidth}}" Background="{TemplateBinding Background}">
+                                                                        <Grid.RowDefinitions>
+                                                                            <RowDefinition MaxHeight="18" />
+                                                                            <RowDefinition Height="0.00001*" />
+                                                                            <RowDefinition MaxHeight="18" />
+                                                                        </Grid.RowDefinitions>
+                                                                        <RepeatButton x:Name="DecreaseRepeat" Command="ScrollBar.LineUpCommand" Foreground="{StaticResource StandardBrush}" Style="{DynamicResource ScrollButtons}">
+                                                                            <Path x:Name="DecreaseArrow" HorizontalAlignment="Center" VerticalAlignment="Center" Data="F1 M 3.5,0L 0,7L 7,7L 3.5,0 Z " Fill="{StaticResource StandardBrush}" />
+                                                                        </RepeatButton>
+                                                                        <Track x:Name="PART_Track" Grid.Row="1"  IsEnabled="{TemplateBinding IsMouseOver}" IsDirectionReversed="true">
+                                                                            <Track.DecreaseRepeatButton>
+                                                                                <RepeatButton Command="{x:Static ScrollBar.PageUpCommand}" Style="{StaticResource ScrollButtons}" HorizontalAlignment="Left" Width="17"/>
+                                                                            </Track.DecreaseRepeatButton>
+                                                                            <Track.IncreaseRepeatButton>
+                                                                                <RepeatButton Command="{x:Static ScrollBar.PageDownCommand}" Style="{StaticResource ScrollButtons}"/>
+                                                                            </Track.IncreaseRepeatButton>
+                                                                            <Track.Thumb>
+                                                                                <Thumb x:Name="Thumb" Background="{DynamicResource ButtonDefaultBrush}" Style="{DynamicResource ScrollThumbs}" />
+                                                                            </Track.Thumb>
+                                                                        </Track>
+                                                                        <RepeatButton x:Name="IncreaseRepeat" Grid.Row="2" Command="ScrollBar.LineDownCommand" Foreground="{DynamicResource StandardBrush}" Style="{DynamicResource ScrollButtons}">
+                                                                            <Path x:Name="IncreaseArrow" HorizontalAlignment="Center" VerticalAlignment="Center" Data="F1 M 3.5,7L 7,0L 0,0L 3.5,7 Z" Fill="{StaticResource StandardBrush}" />
+                                                                        </RepeatButton>
+                                                                    </Grid>
+                                                                </ControlTemplate>
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </Style>
+
+
+
+                                                    <!--<Style TargetType="{x:Type ScrollBar}">
+                                                        <Setter Property="Background" Value="LightGray"/>
+                                                        <Setter Property="BorderBrush" Value="LightGray"/>
+                                                        <Setter Property="Template">
+                                                            <Setter.Value>
+                                                                <ControlTemplate TargetType="{x:Type ScrollBar}">
+                                                                    <Grid x:Name="Bg" SnapsToDevicePixels="true">
+                                                                        <Grid.RowDefinitions>
+                                                                            <RowDefinition MaxHeight="{DynamicResource {x:Static SystemParameters.VerticalScrollBarButtonHeightKey}}"/>
+                                                                            <RowDefinition Height="0.00001*"/>
+                                                                            <RowDefinition MaxHeight="{DynamicResource {x:Static SystemParameters.VerticalScrollBarButtonHeightKey}}"/>
+                                                                        </Grid.RowDefinitions>
+                                                                        <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" Grid.Row="1" CornerRadius="10"/>
+                                                                        <Track x:Name="PART_Track" IsDirectionReversed="true" IsEnabled="{TemplateBinding IsMouseOver}" Grid.Row="1">
+                                                                            <Track.DecreaseRepeatButton>
+                                                                                <RepeatButton Command="{x:Static ScrollBar.PageUpCommand}" Style="{StaticResource ScrollButtons}" HorizontalAlignment="Left" Width="17"/>
+                                                                            </Track.DecreaseRepeatButton>
+                                                                            <Track.IncreaseRepeatButton>
+                                                                                <RepeatButton Command="{x:Static ScrollBar.PageDownCommand}" Style="{StaticResource ScrollButtons}"/>
+                                                                            </Track.IncreaseRepeatButton>
+                                                                            <Track.Thumb>
+                                                                                <Thumb Style="{StaticResource ScrollThumbs}" Margin="3"/>
+                                                                            </Track.Thumb>
+                                                                        </Track>
+                                                                    </Grid>
+
+                                                                </ControlTemplate>
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </Style>-->
+                                                </ComboBox.Resources>
+
+
+                                                <!--<ComboBoxItem Content="Item 1"/>
                                                 <ComboBoxItem Content="Item 2"/>
                                                 <ComboBoxItem Content="Item 3"/>
                                                 <ComboBoxItem Content="Item 4"/>
