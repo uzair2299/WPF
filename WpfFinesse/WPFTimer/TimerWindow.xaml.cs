@@ -74,6 +74,7 @@ namespace WpfFinesse.WPFTimer
                 aMQManager.SendMessageToQueue(GCMessages("getteamusers"), _key + ",true");
                 aMQManager.SendMessageToQueue(GCMessages("GetPhonebooks"), "");
                 aMQManager.SendMessageToQueue(GCMessages("GetTeamPhonebooks"), CallEventInfoListing.PhonebookTeamId);
+                aMQManager.SendMessageToQueue(GCMessages("getqueuelist"), "");
                 //aMQManager.SendMessageToQueue(GCMessages("GetPhonebookContacts"), "7");
 
             }
@@ -239,6 +240,46 @@ namespace WpfFinesse.WPFTimer
 
                         switch (eventName)
                         {
+
+                            case EventType.QueueList:
+                                if (events.Length > 2)
+                                {
+                                    qs.Clear();
+                                    for (int i = 2; i < events.Length; i++)
+                                    {
+                                        string[] queueStr = events[i].Split(',');
+
+
+                                        QueueStat queueStat = new QueueStat();
+
+                                        queueStat.QueueName = queueStr[0].Split(':')[1];
+                                        queueStat.NotReady = Convert.ToInt16(queueStr[1].Split(':')[1]);
+                                        queueStat.Ready = Convert.ToInt16(queueStr[2].Split(':')[1]);
+                                        queueStat.TalkingIN = Convert.ToInt16(queueStr[3].Split(':')[1]);
+                                        queueStat.TalkingINT = Convert.ToInt16(queueStr[4].Split(':')[1]);
+                                        queueStat.TalkingOUT = Convert.ToInt16(queueStr[5].Split(':')[1]);
+
+                                        queueStat.QueuedCalls = 0;
+                                        queueStat.MaxTime = "00:00:00";
+                                        qs.Add(queueStat);
+                                    }
+                                    if (qs.Count > 10)
+                                    {
+                                        dgSimple1.Height = 400;
+                                    }
+                                    else
+                                    {
+                                        dgSimple1.Height = double.NaN;
+
+                                    }
+                                    dgSimple1.ItemsSource = qs;
+                                    dgSimple1.Items.Refresh();
+                                }
+
+
+
+
+                                break;
                             case EventType.Phonebooks:
                                 if (events.Length > 2)
                                 {
@@ -310,7 +351,7 @@ namespace WpfFinesse.WPFTimer
 
                                     throw ex;
                                 }
-                                
+
                                 break;
                             case EventType.PhonebookContacts:
                                 try
@@ -627,7 +668,9 @@ namespace WpfFinesse.WPFTimer
                                     case AgentState.LOGOUT:
                                         if (CallEventInfoListing.agentID == events[8])
                                         {
-                                            //DeactivateConnection();
+                                            this.Close();
+                                            LoginWindow loginwindow = new LoginWindow();
+                                            loginwindow.Show();
                                         }
                                         else
                                         {
@@ -2698,7 +2741,8 @@ namespace WpfFinesse.WPFTimer
         TeamUsersList,
         Phonebooks,
         TeamPhoneBooks,
-        PhonebookContacts
+        PhonebookContacts,
+        QueueList
     }
 
     public enum AgentState
