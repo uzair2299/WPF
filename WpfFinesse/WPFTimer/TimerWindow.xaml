@@ -62,8 +62,6 @@
             </StackPanel>
         </DataTemplate>
 
-
-
         <Style TargetType="{x:Type ToolTip}">
             <Setter Property="OverridesDefaultStyle" Value="true"/>
             <Setter Property="HasDropShadow" Value="True"/>
@@ -76,7 +74,7 @@
                         <StackPanel>
                             <Border x:Name="border" CornerRadius="3" HorizontalAlignment="Center" VerticalAlignment="Top" Padding="10,7" BorderThickness="0" Background="#e5323232">
                                 <StackPanel>
-                                    <TextBlock FontFamily="Arial" FontSize="12" Text="{TemplateBinding Content}" Foreground="#f0f0f0" />
+                                    <TextBlock TextAlignment="Center" FontFamily="Arial" FontSize="12" Text="{TemplateBinding Content}" Foreground="#f0f0f0"  MaxWidth="200" TextWrapping="Wrap"/>
                                 </StackPanel>
                             </Border>
                             <!--<Path Margin="10,0,0,0" Fill="#e5323232" Data="M 0 0 L 6 6 L 12 0 Z"/>-->
@@ -89,7 +87,10 @@
             </Setter>
         </Style>
 
-
+        
+        
+        
+        
 
         <!--start expender-->
         <ControlTemplate x:Key="ExpanderToggleButton"
@@ -1151,7 +1152,7 @@
                                 <Path  Data="M 0,100  Q 35,140  54,190 Q 100,45  168,0 S 90,40  50,150 Q 40,136 0,100 Z "
                                Fill="{StaticResource GridSortingArrowActiveColorBrush}" 
                                Stretch="Fill"
-                               VerticalAlignment="Bottom"
+                               VerticalAlignment="Center"
                                HorizontalAlignment="Right"
                                Height="15"
                                Width="15"
@@ -1258,45 +1259,6 @@
             </Setter>
         </Style>
 
-        <!--<Style x:Key="uzairTemp" TargetType="{x:Type Button}">
-            -->
-        <!---->
-        <!--
-            <Setter Property="FocusVisualStyle" Value="{x:Null}" />
-
-            <Setter Property="Height" Value="200"/>
-            <Setter Property="Width" Value="200"/>
-            <Setter Property="Foreground" Value="Silver"/>
-            <Setter Property="FontSize" Value="25"/>
-            <Setter Property="BorderBrush" Value="Silver"/>
-            <Setter Property="BorderThickness" Value="55"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type Button}">
-                        <Border BorderBrush="Aqua" BorderThickness="2">
-                            <Grid>
-                                <Ellipse Fill="{TemplateBinding Background}"/>
-                                <ContentPresenter Content="{TemplateBinding Content}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                
-                            </Grid>
-                        </Border>
-
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>-->
-
-
-        <!--visual focus rectangle-->
-        <!--<Style x:Key="FocusVisual">
-            <Setter Property="Control.Template">
-                <Setter.Value>
-                    <ControlTemplate>
-                        <Rectangle StrokeDashArray="1 2" StrokeThickness="0" Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" SnapsToDevicePixels="true" Margin="2"/>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>-->
 
 
         <LinearGradientBrush x:Key="ComboBox.Static.Background" EndPoint="0,1" StartPoint="0,0">
@@ -1785,14 +1747,24 @@
                                 </StackPanel>
                                 <StackPanel>
                                     <ScrollViewer Name="PhoneBookScrollViewer" Height="400" Margin="0 10 0 0" VerticalScrollBarVisibility="Auto" Template="{DynamicResource ScrollViewerControlTemplate1}">
-                                        <StackPanel Name="PhoneBookStackPanel">
-                                            <!--<Expander Header="Glenn Helgass">
+                                        <Grid>
+                                            <StackPanel Name="PhoneBookStackPanel">
+                                                <!--<Expander Header="Glenn Helgass">
 
                                             <TextBlock Text="Under development" FontWeight="ExtraBold" Foreground="Yellow" FontSize="20"></TextBlock>
                                         </Expander>-->
 
-                                        </StackPanel>
+                                            </StackPanel>
+                                        </Grid>
+
                                     </ScrollViewer>
+                                    <!--<StackPanel>
+                                        <TextBlock Name="PhoneBookLoader" TextAlignment="Center" Text="Loading..." Visibility="Collapsed"></TextBlock>
+                                    </StackPanel>-->
+                                    <StackPanel Visibility="Collapsed"  Name="PhoneBookLoaderStack" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0 3 5 0">
+                                        <TextBlock Name="PhoneBookLoader" TextAlignment="Center" Text="Loading..."  FontSize="15" FontWeight="DemiBold" Foreground="{StaticResource BackgroundBrush}"></TextBlock>
+                                    </StackPanel>
+
                                     <StackPanel Visibility="Collapsed"  Name="PhoneBookNoDataStack" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0 3 5 0">
                                         <TextBlock Text="No Contact Found" FontSize="15" FontWeight="DemiBold" Foreground="{StaticResource BackgroundBrush}" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
                                     </StackPanel>
@@ -1925,6 +1897,7 @@
                             <TabItem Header="Queue Stats" Width="{Binding ElementName=c11, Path=ActualWidth}" Height="50">
                                 <Border BorderBrush="#C8C6C6" BorderThickness="1">
                                     <StackPanel HorizontalAlignment="Stretch">
+                                        <TextBlock Name="questStatic"></TextBlock>
                                         <DataGrid  Name="dgSimple1" VerticalAlignment="Center" VerticalContentAlignment="Center" CellStyle="{StaticResource Body_Content_DataGrid_Centering}" Height="350" EnableRowVirtualization="False">
                                             <DataGrid.Columns>
                                                 <DataGridTextColumn Header="Queue Name" Binding="{Binding QueueName}" IsReadOnly="True">
@@ -2204,7 +2177,7 @@
                                         <StackPanel Grid.Row="3" HorizontalAlignment="Stretch" Orientation="Vertical"  Width="306">
                                             <!--<TextBox BorderThickness="0" Style="{StaticResource WaterMarkTeamPerformanceSearch}" x:Name="SearchTermTextBox"></TextBox>-->
 
-                                            <Grid>
+                                            <Grid Visibility="Collapsed">
                                                 <TextBox   VerticalAlignment="Center" HorizontalAlignment="Stretch" x:Name="SearchTermTextBox"  Padding="4 0 0 0" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" KeyUp="SearchTermTextBox_KeyDown">
                                                     <TextBox.Resources>
                                                         <Style TargetType="{x:Type Border}">
@@ -2215,7 +2188,32 @@
                                                     </TextBox.Resources>
                                                 </TextBox>
                                             </Grid>
+
+
+
+                                            <Grid>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition />
+                                                </Grid.RowDefinitions>
+                                                <Grid Grid.Row="1" Background="White" Style="{StaticResource EntryFieldStyle}" >
+                                                    <Label Height="27" Content="Search" Foreground="{StaticResource ForegroundPhonebookColorBrush}" VerticalContentAlignment="Center">
+                                                        <Label.Visibility>
+                                                            <MultiBinding Converter="{StaticResource TextInputToVisibilityConverter}">
+                                                                <Binding ElementName="txtTeamPerformanceSearch" Path="Text.IsEmpty" />
+                                                                <Binding ElementName="txtTeamPerformanceSearch" Path="IsFocused" />
+                                                            </MultiBinding>
+                                                        </Label.Visibility>
+                                                    </Label>
+                                                    <Border CornerRadius="2" BorderBrush="{StaticResource  BorderColorBrush}" BorderThickness="1">
+                                                        <TextBox Padding="3 0 0 0" BorderBrush="Transparent" BorderThickness="0" Height="27" Name="txtTeamPerformanceSearch" Background="Transparent"  KeyUp="TeamPerformanceSearch_KeyUp" VerticalContentAlignment="Center" Foreground="{StaticResource ForegroundPhonebookColorBrush}"/>
+                                                    </Border>
+                                                </Grid>
+                                            </Grid>
+
+
                                         </StackPanel>
+                                        
+                                        
                                         <StackPanel  Visibility="Collapsed" Grid.Row="4" HorizontalAlignment="Stretch" Orientation="Vertical"  Width="306">
                                             <Grid>
                                                 <TextBox   VerticalAlignment="Center" HorizontalAlignment="Stretch" x:Name="TxtUserInput" Margin="0 5 0 5" Padding="4 0 0 0" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" KeyUp="SearchTermTextBox_KeyDown">
@@ -2325,15 +2323,3 @@
         </TabControl>
     </Grid>
 </Window>
-
-
-<!--
-    Queue Name
-    Queue Call
-    Max Time
-    Ready
-    Not Ready
-    Talking-IN
-    Talking-OUT
-    Talking INT
-    -->
