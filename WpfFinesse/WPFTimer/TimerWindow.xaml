@@ -62,7 +62,7 @@
             </StackPanel>
         </DataTemplate>
 
-        <Style TargetType="{x:Type ToolTip}">
+        <Style x:Key="PhoneBookToolTip" TargetType="{x:Type ToolTip}">
             <Setter Property="OverridesDefaultStyle" Value="true"/>
             <Setter Property="HasDropShadow" Value="True"/>
             <Setter Property="Placement" Value="Center" />
@@ -360,10 +360,10 @@
                     <TextBlock Text="{Binding CallStatus}" Width="100" TextTrimming="CharacterEllipsis"  VerticalAlignment="Center">
                         <TextBlock.ToolTip>
                             <ToolTip  ToolTipService.ShowDuration="12000" Placement="Bottom"  HorizontalOffset="0" VerticalOffset="0" BorderBrush="Transparent" Margin="0 10 0 0" Background="Transparent"  Panel.ZIndex="1000" Visibility="{Binding Path =CallStatus, Converter={StaticResource ToolTipCon}}">
-                                <Grid Width="110" Background="{StaticResource BackgroundBrush}">
+                                <Grid Width="120" Background="{StaticResource BackgroundBrush}">
                                     <Polygon Points="5,0 10,10, 0,10" Stroke="{StaticResource BackgroundBrush}" Fill="{StaticResource BackgroundBrush}" Grid.Row="0" HorizontalAlignment="Center" Margin="0,-8,0,8" Panel.ZIndex="1000" StrokeThickness="2" StrokeDashArray="1 0"   />
                                     <Border x:Name="border" HorizontalAlignment="Center" VerticalAlignment="Top">
-                                        <TextBlock Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" Text="{Binding CallStatus}" Padding="10"></TextBlock>
+                                        <TextBlock TextWrapping="Wrap" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" Text="{Binding CallStatus}" Padding="5"></TextBlock>
                                     </Border>
                                 </Grid>
                             </ToolTip>
@@ -374,6 +374,27 @@
         </DataTemplate>
         <!--End Data Grid StatusTemplate-->
 
+        <!--Queue Name Cell With Tool tip-->
+        <DataTemplate x:Key="QueueNameTemplate" >
+            <Border VerticalAlignment="Center" HorizontalAlignment="Center" Width="120">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Height="40" VerticalAlignment="Center" Width="auto">
+                    <TextBlock Text="{Binding QueueName}" Width="100" TextTrimming="CharacterEllipsis"  VerticalAlignment="Center">
+                        <TextBlock.ToolTip>
+                            <ToolTip  ToolTipService.ShowDuration="12000" Placement="Bottom"  HorizontalOffset="0" VerticalOffset="0" BorderBrush="Transparent" Margin="0 10 0 0" Background="Transparent"  Panel.ZIndex="1000" Visibility="{Binding Path =QueueName, Converter={StaticResource ToolTipCon}}">
+                                <Grid Width="110" Background="{StaticResource BackgroundBrush}">
+                                    <Polygon Points="5,0 10,10, 0,10" Stroke="{StaticResource BackgroundBrush}" Fill="{StaticResource BackgroundBrush}" Grid.Row="0" HorizontalAlignment="Center" Margin="0,-8,0,8" Panel.ZIndex="1000" StrokeThickness="2" StrokeDashArray="1 0"   />
+                                    <Border x:Name="border" HorizontalAlignment="Center" VerticalAlignment="Top">
+                                        <TextBlock TextWrapping="Wrap" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" Text="{Binding QueueName}" Padding="10"></TextBlock>
+                                    </Border>
+                                </Grid>
+                            </ToolTip>
+                        </TextBlock.ToolTip>
+                </TextBlock>
+                </StackPanel>
+            </Border>
+        </DataTemplate>
+        <!--Queue Name cell End -->
+        
         <!--Start Data Grid Cell Template-->
         <Style x:Key="Body_Content_DataGrid_Centering" TargetType="{x:Type DataGridCell}">
             <Setter Property="VerticalAlignment" Value="Center" />
@@ -1900,8 +1921,11 @@
                                         <TextBlock Name="questStatic"></TextBlock>
                                         <DataGrid  Name="dgSimple1" VerticalAlignment="Center" VerticalContentAlignment="Center" CellStyle="{StaticResource Body_Content_DataGrid_Centering}" Height="350" EnableRowVirtualization="False">
                                             <DataGrid.Columns>
-                                                <DataGridTextColumn Header="Queue Name" Binding="{Binding QueueName}" IsReadOnly="True">
-                                                </DataGridTextColumn>
+                                                <DataGridTemplateColumn  SortMemberPath="QueueName" CanUserSort="True" Header="Queue Name" CellTemplate="{StaticResource QueueNameTemplate}"></DataGridTemplateColumn>
+
+
+                                                <!--<DataGridTextColumn Header="Queue Name" Binding="{Binding QueueName}" IsReadOnly="True">
+                                                </DataGridTextColumn>-->
                                                 <DataGridTextColumn Header="Queued Calls" Binding="{Binding QueuedCalls}" IsReadOnly="True" HeaderStyle="{StaticResource DataGridColumnHeader1}">
                                                     <DataGridTextColumn.ElementStyle>
                                                         <Style TargetType="TextBlock">
@@ -2205,7 +2229,7 @@
                                                         </Label.Visibility>
                                                     </Label>
                                                     <Border CornerRadius="2" BorderBrush="{StaticResource  BorderColorBrush}" BorderThickness="1">
-                                                        <TextBox Padding="3 0 0 0" BorderBrush="Transparent" BorderThickness="0" Height="27" Name="txtTeamPerformanceSearch" Background="Transparent"  KeyUp="TeamPerformanceSearch_KeyUp" VerticalContentAlignment="Center" Foreground="{StaticResource ForegroundPhonebookColorBrush}"/>
+                                                        <TextBox KeyUp="SearchTermTextBox_KeyDown" Padding="3 0 0 0" BorderBrush="Transparent" BorderThickness="0" Height="27" Name="txtTeamPerformanceSearch" Background="Transparent"   VerticalContentAlignment="Center" Foreground="{StaticResource ForegroundPhonebookColorBrush}"/>
                                                     </Border>
                                                 </Grid>
                                             </Grid>

@@ -36,7 +36,7 @@ namespace WpfFinesse.ControlUtility
             if (Header.Length > 30)
             {
                 ToolTip tooltip = new ToolTip();
-
+                tooltip.Style = (Style)Application.Current.FindResource("PhoneBookToolTip");
                 tooltip.Placement = PlacementMode.Bottom;
                 //tooltip.PlacementRectangle = new Rect(20, 0, 0, 0);
                 tooltip.HorizontalOffset = 0;

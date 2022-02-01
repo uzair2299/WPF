@@ -15,6 +15,10 @@ using WpfFinesse.ControlUtility;
 using WpfFinesse.CustomTab;
 using WpfFinesse.Models;
 using System.Timers;
+using System.Windows;
+using System.Windows.Media;
+using System.Windows.Controls.Primitives;
+using System.Windows.Media.Imaging;
 
 namespace WpfFinesse.WPFTimer
 {
@@ -261,8 +265,8 @@ namespace WpfFinesse.WPFTimer
                         {
 
                             case EventType.QueueList:
-                                queueInt++;
-                                questStatic.Text = queueInt.ToString();
+                                //queueInt++;
+                                //questStatic.Text = queueInt.ToString();
                                 if (events.Length > 2)
                                 {
                                     qs.Clear();
@@ -281,7 +285,7 @@ namespace WpfFinesse.WPFTimer
                                         queueStat.TalkingOUT = Convert.ToInt16(queueStr[5].Split(':')[1]);
 
                                         queueStat.QueuedCalls = 0;
-                                        queueStat.MaxTime = "00:00:00";
+                                        queueStat.MaxTime = queueStr[9];
                                         qs.Add(queueStat);
                                     }
                                     if (qs.Count > 10)
@@ -398,9 +402,79 @@ namespace WpfFinesse.WPFTimer
                                             };
                                             pb.Add(_phoneNumber);
                                         }
+                                        List<PhoneBook> phonebookList = new List<PhoneBook>();
+                                        phonebookList = pb;
+                                        int totalitems = phonebookList.Count();
+                                        int _page = 1;
+                                        Pager pg = new Pager(totalitems, _page);
+                                        phonebookList = phonebookList.Skip((pg.CurrentPage - 1) * pg.PageSize).Take(pg.PageSize).ToList();
+                                        SetPhoneBookSource(phonebookList);
+                                        PhoneBookPagination.Children.Clear();
+                                        if (pg.EndPage > 1)
+                                        {
 
-                                        SetPhoneBookSource(pb);
 
+                                            PhoneBookLoaderStack.Visibility = Visibility.Collapsed;
+                                            PhoneBookNoDataStack.Visibility = Visibility.Collapsed;
+                                            PhoneBookScrollViewer.Height = 400;
+                                            PhoneBookStackPanel.Visibility = Visibility.Visible;
+                                            PhoneBookPagination.Visibility = Visibility.Visible;
+
+
+                                            if (pg.CurrentPage > 1)
+                                            {
+                                                Button First = new Button();
+                                                First.Name = "FirstPage";
+                                                First.Click -= Btn_ClickPhoneBook;
+                                                First.Click += Btn_ClickPhoneBook;
+                                                First.Content = "<<";
+                                                First.Tag = 1;
+                                                First.Style = (Style)FindResource("btnPagination");
+                                                PhoneBookPagination.Children.Add(First);
+
+                                                Button Previous = new Button();
+                                                First.Click -= Btn_ClickPhoneBook;
+                                                Previous.Click += Btn_ClickPhoneBook;
+                                                Previous.Content = "<;";
+                                                Previous.Tag = pg.CurrentPage - 1;
+                                                Previous.Style = (Style)FindResource("btnPagination");
+                                                PhoneBookPagination.Children.Add(Previous);
+                                            }
+                                            for (var page = pg.StartPage; page <= pg.EndPage; page++)
+                                            {
+                                                Button btn = new Button();
+                                                btn.Click -= Btn_ClickPhoneBook;
+                                                btn.Click += Btn_ClickPhoneBook;
+                                                btn.Content = page;
+                                                btn.Tag = page;
+                                                btn.Style = (Style)FindResource("btnPagination");
+                                                if (page == 1)
+                                                {
+
+                                                    btn.FontWeight = FontWeights.UltraBold;
+                                                }
+                                                PhoneBookPagination.Children.Add(btn);
+
+                                            }
+                                            if (pg.CurrentPage < pg.TotalPages)
+                                            {
+                                                Button Next = new Button();
+                                                Next.Click -= Btn_ClickPhoneBook;
+                                                Next.Click += Btn_ClickPhoneBook;
+                                                Next.Content = ">";
+                                                Next.Tag = pg.CurrentPage + 1;
+                                                Next.Style = (Style)FindResource("btnPagination");
+                                                PhoneBookPagination.Children.Add(Next);
+
+                                                Button Last = new Button();
+                                                Last.Click -= Btn_ClickPhoneBook;
+                                                Last.Click += Btn_ClickPhoneBook;
+                                                Last.Content = ">>";
+                                                Last.Tag = pg.TotalPages;
+                                                Last.Style = (Style)FindResource("btnPagination");
+                                                PhoneBookPagination.Children.Add(Last);
+                                            }
+                                        }
 
                                     }
                                     else
@@ -410,6 +484,7 @@ namespace WpfFinesse.WPFTimer
                                         PhoneBookNoDataStack.Visibility = Visibility.Visible;
                                         PhoneBookScrollViewer.Height = double.NaN;
                                         PhoneBookStackPanel.Visibility = Visibility.Collapsed;
+                                        PhoneBookPagination.Visibility = Visibility.Collapsed;
                                     }
                                 }
                                 catch (Exception ex)
@@ -742,6 +817,7 @@ namespace WpfFinesse.WPFTimer
                                 }
                                 String[] teams = list.ToArray();
                                 teamUserList.Clear();
+                                List<UserTab> userList = new List<UserTab>();
 
                                 foreach (var item in teams)
                                 {
@@ -783,11 +859,80 @@ namespace WpfFinesse.WPFTimer
                                     teamUserList.Add(agent);
                                 }
                                 teamUserList = teamUserList.Where(x => x.CallStatus != "LOGOUT").ToList();
+                                userList = teamUserList;
+                                int totalItem = userList.Count;
+                                int page_ = 1;
                                 if (teamUserList.Count > 0)
                                 {
+                                    Pager pg = new Pager(totalItem, page_);
+
                                     TeamPerformanceStackPanel.Visibility = Visibility.Collapsed;
                                     StackNoData.Visibility = Visibility.Collapsed;
-                                    dgSimple.ItemsSource = teamUserList;
+                                    userList = teamUserList.Skip((pg.CurrentPage - 1) * pg.PageSize).Take(pg.PageSize).ToList();
+                                    dgSimple.ItemsSource = userList;
+                                    StackPagination.Children.Clear();
+                                    if (pg.EndPage > 1)
+                                    {
+                                        if (userList.Count >= 10)
+                                        {
+                                            dgSimple.Height = 350;
+                                        }
+                                        else
+                                        {
+                                            dgSimple.Height = double.NaN;
+                                        }
+                                        if (pg.CurrentPage > 1)
+                                        {
+                                            Button First = new Button();
+                                            First.Name = "FirstPage";
+                                            First.Click += Btn_Click;
+                                            First.Content = "<<";
+                                            First.Tag = 1;
+                                            First.Style = (Style)FindResource("btnPagination");
+                                            StackPagination.Children.Add(First);
+
+                                            Button Previous = new Button();
+                                            Previous.Click += Btn_Click;
+                                            Previous.Content = "<;";
+                                            Previous.Tag = pg.CurrentPage - 1;
+                                            Previous.Style = (Style)FindResource("btnPagination");
+                                            StackPagination.Children.Add(Previous);
+                                        }
+                                        for (var page = pg.StartPage; page <= pg.EndPage; page++)
+                                        {
+                                            Button btn = new Button();
+                                            btn.Click += Btn_Click;
+                                            btn.Content = page;
+                                            btn.Tag = page;
+                                            btn.Style = (Style)FindResource("btnPagination");
+                                            if (page == 1)
+                                            {
+
+                                                btn.FontWeight = FontWeights.UltraBold;
+                                            }
+                                            StackPagination.Children.Add(btn);
+
+                                        }
+                                        if (pg.CurrentPage < pg.TotalPages)
+                                        {
+                                            Button Next = new Button();
+                                            Next.Click += Btn_Click;
+                                            Next.Content = ">";
+                                            Next.Tag = pg.CurrentPage + 1;
+                                            Next.Style = (Style)FindResource("btnPagination");
+                                            StackPagination.Children.Add(Next);
+
+                                            Button Last = new Button();
+                                            Last.Click += Btn_Click;
+                                            Last.Content = ">>";
+                                            Last.Tag = pg.TotalPages;
+                                            Last.Style = (Style)FindResource("btnPagination");
+                                            StackPagination.Children.Add(Last);
+                                        }
+                                    }
+
+
+
                                     dgSimple.Items.Refresh();
                                     if (teamUserList.Count >= 10)
                                     {
@@ -804,6 +949,7 @@ namespace WpfFinesse.WPFTimer
                                     dgSimple.Items.Refresh();
                                     StackNoData.Visibility = Visibility.Visible;
                                     dgSimple.Height = Double.NaN;
+                                    StackPagination.Visibility = Visibility.Collapsed;
                                     Dispatcher.Invoke(() => TeamPerformanceStackPanel.Visibility = Visibility.Collapsed);
 
                                 }
@@ -1293,32 +1439,32 @@ namespace WpfFinesse.WPFTimer
         private void SetPhoneBookSource(List<PhoneBook> phoneBookSource)
         {
 
-            
+
             PhoneBookStackPanel.Children.Clear();
 
-            
+
             foreach (var item in phoneBookSource)
             {
                 StackPanel mainPhoneBookStackPanel = new StackPanel();
-                Expander expender = DynamicControlUtility.GetExpenderPhoneBook(item.fullName, item.phoneNubmer);
-                Border b = DynamicControlUtility.GetBorderPhoneBook("#C8C6C6", 5, 5, 5, 1);
+                Expander expender = GetExpenderPhoneBook(item.fullName, item.phoneNubmer);
+                Border b = GetBorderPhoneBook("#C8C6C6", 5, 5, 5, 1);
 
                 StackPanel phoneNoStackPanel = new StackPanel();
-                TextBlock tb = DynamicControlUtility.GetTextBlockPhoneBook("Phone No");
+                TextBlock tb = GetTextBlockPhoneBook("Phone No");
 
-                TextBlock txt = DynamicControlUtility.GetTextBoxPhoneBook(item.phoneNubmer);
+                TextBlock txt = GetTextBoxPhoneBook(item.phoneNubmer);
                 phoneNoStackPanel.Children.Add(tb);
                 phoneNoStackPanel.Children.Add(txt);
                 b.Child = phoneNoStackPanel;
 
 
                 //notes penal
-                Border b1 = DynamicControlUtility.GetBorderPhoneBook("#C8C6C6", 5, 5, 5, 1);
+                Border b1 = GetBorderPhoneBook("#C8C6C6", 5, 5, 5, 1);
 
                 StackPanel notesStackPanel = new StackPanel();
-                TextBlock tb1 = DynamicControlUtility.GetTextBlockPhoneBook("Notes");
+                TextBlock tb1 = GetTextBlockPhoneBook("Notes");
 
-                TextBlock txt1 = DynamicControlUtility.GetTextBoxPhoneBook(item.description);
+                TextBlock txt1 = GetTextBoxPhoneBook(item.description);
                 notesStackPanel.Children.Add(tb1);
                 notesStackPanel.Children.Add(txt1);
                 b1.Child = notesStackPanel;
@@ -1403,23 +1549,25 @@ namespace WpfFinesse.WPFTimer
         {
             Button bt = (Button)sender;
 
-            if (!string.IsNullOrEmpty(SearchTermTextBox.Text.ToLower()))
+            List<UserTab> usersList = new List<UserTab>();
+            if (!string.IsNullOrEmpty(txtTeamPerformanceSearch.Text.ToLower()))
             {
                 StackPagination.Children.Clear();
                 int totalItem = 0;
 
-                us = user.GetUsers();
-                string searchtext = SearchTermTextBox.Text.ToLower();
+                //us = user.GetUsers();
+                string searchtext = txtTeamPerformanceSearch.Text.ToLower();
                 if (string.IsNullOrEmpty(searchtext))
                 {
                     //dgSimple.ItemsSource = u;
-                    totalItem = us.Count();
+                    usersList = teamUserList;
+                    totalItem = teamUserList.Count();
 
                 }
                 else
                 {
-                    us = us.Where(x => x.AgentName.ToLower().Contains(searchtext) || x.CallStatus.ToLower().Contains(searchtext) || x.Time.ToString().ToLower().Contains(searchtext) || x.Extension.ToLower().Contains(searchtext)).ToList();
-                    totalItem = us.Count();
+                    usersList = teamUserList.Where(x => x.AgentName.ToLower().Contains(searchtext) || x.CallStatus.ToLower().Contains(searchtext) || x.Time.ToString().ToLower().Contains(searchtext) || x.Extension.ToLower().Contains(searchtext)).ToList();
+                    totalItem = usersList.Count();
                     // dgSimple.ItemsSource = u.Where(x => x.AgentName.ToLower().Contains(searchtext));
                 }
 
@@ -1427,7 +1575,7 @@ namespace WpfFinesse.WPFTimer
 
                 int page_ = Convert.ToInt32(bt.Tag);
                 Pager pg = new Pager(totalItem, page_);
-                dgSimple.ItemsSource = us.Skip((pg.CurrentPage - 1) * pg.PageSize).Take(pg.PageSize);
+                dgSimple.ItemsSource = usersList.Skip((pg.CurrentPage - 1) * pg.PageSize).Take(pg.PageSize);
                 if (pg.EndPage > 1)
                 {
                     if (pg.CurrentPage > 1)
@@ -1486,14 +1634,24 @@ namespace WpfFinesse.WPFTimer
                 StackPagination.Children.Clear();
 
 
-                us = user.GetUsers();
+                //us = user.GetUsers();
 
-                int totalItem = us.Count();
+                int totalItem = teamUserList.Count();
+                usersList = teamUserList;
                 int page_ = Convert.ToInt32(bt.Tag);
-                Pager pg = new Pager(totalItem, page_);
-                dgSimple.ItemsSource = us.Skip((pg.CurrentPage - 1) * pg.PageSize).Take(pg.PageSize);
+                Pager pg = new Pager(usersList.Count, page_);
+                usersList = usersList.Skip((pg.CurrentPage - 1) * pg.PageSize).Take(pg.PageSize).ToList();
+                dgSimple.ItemsSource = usersList;
                 if (pg.EndPage > 1)
                 {
+                    if (usersList.Count >= 10)
+                    {
+                        dgSimple.Height = 350;
+                    }
+                    else
+                    {
+                        dgSimple.Height = double.NaN;
+                    }
                     if (pg.CurrentPage > 1)
                     {
                         Button First = new Button();
@@ -1551,24 +1709,26 @@ namespace WpfFinesse.WPFTimer
         private void Btn_ClickPhoneBook(object sender, RoutedEventArgs e)
         {
             Button bt = (Button)sender;
-
+            List<PhoneBook> phonebookList = new List<PhoneBook>();
+            PhoneBookLoaderStack.Visibility = Visibility.Visible;
+            phonebookList = pb;
             if (!string.IsNullOrEmpty(txtPhoneBookSearch.Text.ToLower()))
             {
                 PhoneBookPagination.Children.Clear();
                 int totalItem = 0;
 
-                us = user.GetUsers();
+                phonebookList = pb;
                 string searchtext = txtPhoneBookSearch.Text.ToLower();
                 if (string.IsNullOrEmpty(searchtext))
                 {
                     //dgSimple.ItemsSource = u;
-                    totalItem = us.Count();
+                    totalItem = phonebookList.Count();
 
                 }
                 else
                 {
-                    us = us.Where(x => x.AgentName.ToLower().Contains(searchtext) || x.Extension.ToLower().Contains(searchtext)).ToList();
-                    totalItem = us.Count();
+                    phonebookList = pb.Where(x => x.fullName.ToLower().Contains(searchtext) || x.phoneNubmer.ToLower().Contains(searchtext)).ToList();
+                    totalItem = phonebookList.Count();
                     // dgSimple.ItemsSource = u.Where(x => x.AgentName.ToLower().Contains(searchtext));
                 }
 
@@ -1576,17 +1736,32 @@ namespace WpfFinesse.WPFTimer
 
                 int page_ = Convert.ToInt32(bt.Tag);
                 Pager pg = new Pager(totalItem, page_);
-                int setHeight = totalItem % pg.PageSize;
+                //int setHeight = totalItem % pg.PageSize;
 
-                PhoneBookScrollViewerSetHeight(setHeight, page_, pg.EndPage);
-                List<UserTab> phoneBookSource = us.Skip((pg.CurrentPage - 1) * pg.PageSize).Take(pg.PageSize).ToList();
-                //SetPhoneBookSource(phoneBookSource);
+                //PhoneBookScrollViewerSetHeight(setHeight, page_, pg.EndPage);
+                phonebookList = phonebookList.Skip((pg.CurrentPage - 1) * pg.PageSize).Take(pg.PageSize).ToList();
+                SetPhoneBookSource(phonebookList);
                 if (pg.EndPage > 1)
                 {
+
+                    PhoneBookNoDataStack.Visibility = Visibility.Collapsed;
+                    if (phonebookList.Count >= 10)
+                    {
+                        PhoneBookScrollViewer.Height = 400;
+                    }
+                    else
+                    {
+                        PhoneBookScrollViewer.Height = double.NaN;
+
+                    }
+
+                    PhoneBookStackPanel.Visibility = Visibility.Visible;
+                    PhoneBookPagination.Visibility = Visibility.Visible;
                     if (pg.CurrentPage > 1)
                     {
                         Button First = new Button();
                         First.Name = "FirstPage";
+                        First.Click -= Btn_ClickPhoneBook;
                         First.Click += Btn_ClickPhoneBook;
                         First.Content = "<<";
                         First.Tag = 1;
@@ -1594,6 +1769,7 @@ namespace WpfFinesse.WPFTimer
                         PhoneBookPagination.Children.Add(First);
 
                         Button Previous = new Button();
+                        Previous.Click -= Btn_ClickPhoneBook;
                         Previous.Click += Btn_ClickPhoneBook;
                         Previous.Content = "<";
                         Previous.Tag = pg.CurrentPage - 1;
@@ -1603,6 +1779,7 @@ namespace WpfFinesse.WPFTimer
                     for (var page = pg.StartPage; page <= pg.EndPage; page++)
                     {
                         Button btn = new Button();
+                        btn.Click -= Btn_ClickPhoneBook;
                         btn.Click += Btn_ClickPhoneBook;
                         btn.Content = page;
                         btn.Tag = page;
@@ -1618,6 +1795,7 @@ namespace WpfFinesse.WPFTimer
                     if (pg.CurrentPage < pg.TotalPages)
                     {
                         Button Next = new Button();
+                        Next.Click -= Btn_ClickPhoneBook;
                         Next.Click += Btn_ClickPhoneBook;
                         Next.Content = ">";
                         Next.Tag = pg.CurrentPage + 1;
@@ -1625,6 +1803,7 @@ namespace WpfFinesse.WPFTimer
                         PhoneBookPagination.Children.Add(Next);
 
                         Button Last = new Button();
+                        Last.Click -= Btn_ClickPhoneBook;
                         Last.Click += Btn_ClickPhoneBook;
                         Last.Content = ">>";
                         Last.Tag = pg.TotalPages;
@@ -1635,71 +1814,109 @@ namespace WpfFinesse.WPFTimer
             }
             else
             {
-                //MessageBox.Show(bt.Tag.ToString());
-                PhoneBookPagination.Children.Clear();
 
-
-                us = user.GetUsers();
-
-                int totalItem = us.Count();
-                int page_ = Convert.ToInt32(bt.Tag);
-                Pager pg = new Pager(totalItem, page_);
-                int setHeight = totalItem % pg.PageSize;
-
-                PhoneBookScrollViewerSetHeight(setHeight, page_, pg.EndPage);
-                List<UserTab> phoneBookSource = us.Skip((pg.CurrentPage - 1) * pg.PageSize).Take(pg.PageSize).ToList();
-                //SetPhoneBookSource(phoneBookSource);
-                if (pg.EndPage > 1)
+                try
                 {
-                    if (pg.CurrentPage > 1)
-                    {
-                        Button First = new Button();
-                        First.Name = "FirstPage";
-                        First.Click += Btn_ClickPhoneBook;
-                        First.Content = "<<";
-                        First.Tag = 1;
-                        First.Style = (Style)FindResource("btnPagination");
-                        PhoneBookPagination.Children.Add(First);
 
-                        Button Previous = new Button();
-                        Previous.Click += Btn_ClickPhoneBook;
-                        Previous.Content = "<";
-                        Previous.Tag = pg.CurrentPage - 1;
-                        Previous.Style = (Style)FindResource("btnPagination");
-                        PhoneBookPagination.Children.Add(Previous);
-                    }
-                    for (var page = pg.StartPage; page <= pg.EndPage; page++)
+
+
+                    phonebookList = pb;
+
+                    int totalItem = phonebookList.Count();
+                    int page_ = Convert.ToInt32(bt.Tag);
+                    Pager pg = new Pager(totalItem, page_);
+                    //if (totalItem > 10)
+                    //{
+                    //    PhoneBookScrollViewer.Height = 200;
+                    //}
+                    //else
+                    //{
+                    //    PhoneBookScrollViewer.Height = double.NaN;
+                    //}
+
+                    //int setHeight = totalItem % pg.PageSize;
+
+                    //PhoneBookScrollViewerSetHeight(setHeight, page_, pg.EndPage);
+                    phonebookList = phonebookList.Skip((pg.CurrentPage - 1) * pg.PageSize).Take(pg.PageSize).ToList();
+                    SetPhoneBookSource(phonebookList);
+                    PhoneBookPagination.Children.Clear();
+                    if (pg.EndPage > 1)
                     {
-                        Button btn = new Button();
-                        btn.Click += Btn_ClickPhoneBook;
-                        btn.Content = page;
-                        btn.Tag = page;
-                        btn.Style = (Style)FindResource("btnPagination");
-                        if (page == page_)
+
+                        PhoneBookNoDataStack.Visibility = Visibility.Collapsed;
+                        if (phonebookList.Count >= 10)
                         {
-
-                            btn.FontWeight = FontWeights.UltraBold;
+                            PhoneBookScrollViewer.Height = 400;
                         }
-                        PhoneBookPagination.Children.Add(btn);
+                        else
+                        {
+                            PhoneBookScrollViewer.Height = double.NaN;
 
-                    }
-                    if (pg.CurrentPage < pg.TotalPages)
-                    {
-                        Button Next = new Button();
-                        Next.Click += Btn_ClickPhoneBook;
-                        Next.Content = ">";
-                        Next.Tag = pg.CurrentPage + 1;
-                        Next.Style = (Style)FindResource("btnPagination");
-                        PhoneBookPagination.Children.Add(Next);
+                        }
 
-                        Button Last = new Button();
-                        Last.Click += Btn_ClickPhoneBook;
-                        Last.Content = ">>";
-                        Last.Tag = pg.TotalPages;
-                        Last.Style = (Style)FindResource("btnPagination");
-                        PhoneBookPagination.Children.Add(Last);
+                        PhoneBookStackPanel.Visibility = Visibility.Visible;
+                        PhoneBookPagination.Visibility = Visibility.Visible;
+
+                        if (pg.CurrentPage > 1)
+                        {
+                            Button First = new Button();
+                            First.Name = "FirstPage";
+                            First.Click += Btn_ClickPhoneBook;
+                            First.Content = "<<";
+                            First.Tag = 1;
+                            First.Style = (Style)FindResource("btnPagination");
+                            PhoneBookPagination.Children.Add(First);
+
+                            Button Previous = new Button();
+                            Previous.Click += Btn_ClickPhoneBook;
+                            Previous.Content = "<";
+                            Previous.Tag = pg.CurrentPage - 1;
+                            Previous.Style = (Style)FindResource("btnPagination");
+                            PhoneBookPagination.Children.Add(Previous);
+                        }
+                        for (var page = pg.StartPage; page <= pg.EndPage; page++)
+                        {
+                            Button btn = new Button();
+                            btn.Click += Btn_ClickPhoneBook;
+                            btn.Content = page;
+                            btn.Tag = page;
+                            btn.Style = (Style)FindResource("btnPagination");
+                            if (page == page_)
+                            {
+
+                                btn.FontWeight = FontWeights.UltraBold;
+                            }
+                            PhoneBookPagination.Children.Add(btn);
+
+                        }
+                        if (pg.CurrentPage < pg.TotalPages)
+                        {
+                            Button Next = new Button();
+                            Next.Click += Btn_ClickPhoneBook;
+                            Next.Content = ">";
+                            Next.Tag = pg.CurrentPage + 1;
+                            Next.Style = (Style)FindResource("btnPagination");
+                            PhoneBookPagination.Children.Add(Next);
+
+                            Button Last = new Button();
+                            Last.Click += Btn_ClickPhoneBook;
+                            Last.Content = ">>";
+                            Last.Tag = pg.TotalPages;
+                            Last.Style = (Style)FindResource("btnPagination");
+                            PhoneBookPagination.Children.Add(Last);
+                        }
                     }
+                    PhoneBookLoaderStack.Visibility = Visibility.Collapsed;
                 }
+                catch (Exception ex)
+                {
+
+                    throw ex;
+                }
+
+                //MessageBox.Show(bt.Tag.ToString());
+                //PhoneBookPagination.Children.Clear();
+
 
             }
         }
@@ -1713,7 +1930,8 @@ namespace WpfFinesse.WPFTimer
             }
             else
             {
-                PhoneBookScrollViewer.Height = 400;
+                PhoneBookScrollViewer.Dispatcher.Invoke(new Action(() => PhoneBookScrollViewer.Height = 400));
+                //PhoneBookScrollViewer.Height = 400;
             }
         }
 
@@ -1750,52 +1968,61 @@ namespace WpfFinesse.WPFTimer
         private void PhoneBookSearch_KeyDown(object sender, KeyEventArgs e)
         {
 
-            string searchtext = txtPhoneBookSearch.Text.ToLower();
-            PhoneBookStackPanel.Children.Clear();
-            PhoneBookScrollViewer.Height = double.NaN;
-            PhoneBookLoaderStack.Visibility = Visibility.Visible;
-            
-            if (!string.IsNullOrEmpty(searchtext))
-            {
-
-                var phonebook = pb.Where(x => x.fullName.ToLower().Contains(searchtext)).ToList();
-                SetPhoneBookSource(phonebook);
-            }
-            else
-            {
-                SetPhoneBookSource(pb);
-            }
 
 
 
-            //PhoneBookPagination.Children.Clear();
-            //var tct = (TextBox)sender;
-            //int totalItem = 0;
-            //us = user.GetUsers();
+
+
+
+            //------------------------------------------------------
             //string searchtext = txtPhoneBookSearch.Text.ToLower();
-            //string searchtext1 = txtPhoneBookSearch1.Text.ToLower();
+            //PhoneBookStackPanel.Children.Clear();
+            //PhoneBookScrollViewer.Height = double.NaN;
+            //PhoneBookLoaderStack.Visibility = Visibility.Visible;
 
-            //if (string.IsNullOrEmpty(searchtext))
+            //if (!string.IsNullOrEmpty(searchtext))
             //{
-            //    //dgSimple.ItemsSource = u;
-            //    totalItem = us.Count();
-            //    PhoneBookNoDataStack.Visibility = Visibility.Collapsed;
+
+            //    var phonebook = pb.Where(x => x.fullName.ToLower().Contains(searchtext)).ToList();
+            //    SetPhoneBookSource(phonebook);
             //}
             //else
             //{
-            //    us = us.Where(x => x.AgentName.ToLower().Contains(searchtext) || x.Extension.ToLower().Contains(searchtext)).ToList();
-            //    totalItem = us.Count();
-            //    if (totalItem == 0)
-            //    {
-            //        PhoneBookNoDataStack.Visibility = Visibility.Visible;
-            //    }
-            //    else
-            //    {
-            //        PhoneBookNoDataStack.Visibility = Visibility.Collapsed;
-            //        //dgSimple.Visibility = Visibility.Visible;
-            //    }
-            //    // dgSimple.ItemsSource = u.Where(x => x.AgentName.ToLower().Contains(searchtext));
+            //    SetPhoneBookSource(pb);
             //}
+            //------------------------------------------------------------------------------------------------------
+
+
+
+            PhoneBookPagination.Children.Clear();
+            List<PhoneBook> phonebooklist = new List<PhoneBook>();
+            var tct = (TextBox)sender;
+            int totalItem = 0;
+            phonebooklist = pb;
+            string searchtext = txtPhoneBookSearch.Text.ToLower();
+            //string searchtext1 = txtPhoneBookSearch1.Text.ToLower();
+
+            if (string.IsNullOrEmpty(searchtext))
+            {
+                //dgSimple.ItemsSource = u;
+                totalItem = phonebooklist.Count;
+                PhoneBookNoDataStack.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                phonebooklist = phonebooklist.Where(x => x.fullName.ToLower().Contains(searchtext) || x.phoneNubmer.ToLower().Contains(searchtext)).ToList();
+                totalItem = phonebooklist.Count();
+                if (totalItem == 0)
+                {
+                    PhoneBookNoDataStack.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    PhoneBookNoDataStack.Visibility = Visibility.Collapsed;
+                    //dgSimple.Visibility = Visibility.Visible;
+                }
+                // dgSimple.ItemsSource = u.Where(x => x.AgentName.ToLower().Contains(searchtext));
+            }
 
 
             //if (totalItem <= 10)
@@ -1807,61 +2034,80 @@ namespace WpfFinesse.WPFTimer
             //    PhoneBookScrollViewer.Height = 400;
             //}
 
-            //Pager pg = new Pager(totalItem, 1);
-            //List<UserTab> phoneBookSource = us.Skip((pg.CurrentPage - 1) * pg.PageSize).Take(pg.PageSize).ToList();
-            ////SetPhoneBookSource(phoneBookSource);
+            Pager pg = new Pager(totalItem, 1);
+            phonebooklist = phonebooklist.Skip((pg.CurrentPage - 1) * pg.PageSize).Take(pg.PageSize).ToList();
+            SetPhoneBookSource(phonebooklist);
 
-            //if (pg.EndPage > 1)
-            //{
-            //    if (pg.CurrentPage > 1)
-            //    {
-            //        Button First = new Button();
-            //        First.Name = "FirstPage";
-            //        First.Click += Btn_ClickPhoneBook;
-            //        First.Content = "<<";
-            //        First.Tag = 1;
-            //        First.Style = (Style)FindResource("btnPagination");
-            //        PhoneBookPagination.Children.Add(First);
+            if (pg.EndPage > 1)
+            {
 
-            //        Button Previous = new Button();
-            //        Previous.Click += Btn_ClickPhoneBook;
-            //        Previous.Content = "<";
-            //        Previous.Tag = pg.CurrentPage - 1;
-            //        Previous.Style = (Style)FindResource("btnPagination");
-            //        PhoneBookPagination.Children.Add(Previous);
-            //    }
-            //    for (var page = pg.StartPage; page <= pg.EndPage; page++)
-            //    {
-            //        Button btn = new Button();
-            //        btn.Click += Btn_ClickPhoneBook;
-            //        btn.Content = page;
-            //        btn.Tag = page;
-            //        btn.Style = (Style)FindResource("btnPagination");
-            //        if (page == 1)
-            //        {
+                PhoneBookNoDataStack.Visibility = Visibility.Collapsed;
+                if (phonebooklist.Count >= 10)
+                {
+                    PhoneBookScrollViewer.Height = 400;
+                }
+                else
+                {
+                    PhoneBookScrollViewer.Height = double.NaN;
 
-            //            btn.FontWeight = FontWeights.UltraBold;
-            //        }
-            //        PhoneBookPagination.Children.Add(btn);
+                }
 
-            //    }
-            //    if (pg.CurrentPage < pg.TotalPages)
-            //    {
-            //        Button Next = new Button();
-            //        Next.Click += Btn_ClickPhoneBook;
-            //        Next.Content = ">";
-            //        Next.Tag = pg.CurrentPage + 1;
-            //        Next.Style = (Style)FindResource("btnPagination");
-            //        PhoneBookPagination.Children.Add(Next);
+                PhoneBookStackPanel.Visibility = Visibility.Visible;
+                PhoneBookPagination.Visibility = Visibility.Visible;
+                if (pg.CurrentPage > 1)
+                {
+                    Button First = new Button();
+                    First.Name = "FirstPage";
+                    First.Click -= Btn_ClickPhoneBook;
+                    First.Click += Btn_ClickPhoneBook;
+                    First.Content = "<<";
+                    First.Tag = 1;
+                    First.Style = (Style)FindResource("btnPagination");
+                    PhoneBookPagination.Children.Add(First);
 
-            //        Button Last = new Button();
-            //        Last.Click += Btn_ClickPhoneBook;
-            //        Last.Content = ">>";
-            //        Last.Tag = pg.TotalPages;
-            //        Last.Style = (Style)FindResource("btnPagination");
-            //        PhoneBookPagination.Children.Add(Last);
-            //    }
-            //}
+                    Button Previous = new Button();
+                    Previous.Click -= Btn_ClickPhoneBook;
+                    Previous.Click += Btn_ClickPhoneBook;
+                    Previous.Content = "<";
+                    Previous.Tag = pg.CurrentPage - 1;
+                    Previous.Style = (Style)FindResource("btnPagination");
+                    PhoneBookPagination.Children.Add(Previous);
+                }
+                for (var page = pg.StartPage; page <= pg.EndPage; page++)
+                {
+                    Button btn = new Button();
+                    btn.Click -= Btn_ClickPhoneBook;
+                    btn.Click += Btn_ClickPhoneBook;
+                    btn.Content = page;
+                    btn.Tag = page;
+                    btn.Style = (Style)FindResource("btnPagination");
+                    if (page == 1)
+                    {
+
+                        btn.FontWeight = FontWeights.UltraBold;
+                    }
+                    PhoneBookPagination.Children.Add(btn);
+
+                }
+                if (pg.CurrentPage < pg.TotalPages)
+                {
+                    Button Next = new Button();
+                    Next.Click -= Btn_ClickPhoneBook;
+                    Next.Click += Btn_ClickPhoneBook;
+                    Next.Content = ">";
+                    Next.Tag = pg.CurrentPage + 1;
+                    Next.Style = (Style)FindResource("btnPagination");
+                    PhoneBookPagination.Children.Add(Next);
+
+                    Button Last = new Button();
+                    Last.Click -= Btn_ClickPhoneBook;
+                    Last.Click += Btn_ClickPhoneBook;
+                    Last.Content = ">>";
+                    Last.Tag = pg.TotalPages;
+                    Last.Style = (Style)FindResource("btnPagination");
+                    PhoneBookPagination.Children.Add(Last);
+                }
+            }
         }
 
 
@@ -1871,24 +2117,27 @@ namespace WpfFinesse.WPFTimer
         {
             StackPagination.Children.Clear();
             int totalItem = 0;
-            us = user.GetUsers();
-            string searchtext = SearchTermTextBox.Text.ToLower();
+            List<UserTab> userList = new List<UserTab>();
+            userList = teamUserList;
+            string searchtext = txtTeamPerformanceSearch.Text.ToLower();
             if (string.IsNullOrEmpty(searchtext))
             {
                 //dgSimple.ItemsSource = u;
-                totalItem = us.Count();
+                totalItem = userList.Count();
                 StackNoData.Visibility = Visibility.Collapsed;
                 dgSimple.Visibility = Visibility.Visible;
 
             }
             else
             {
-                us = us.Where(x => x.AgentName.ToLower().Contains(searchtext) || x.CallStatus.ToLower().Contains(searchtext) || x.Time.ToString().ToLower().Contains(searchtext) || x.Extension.ToLower().Contains(searchtext)).ToList();
-                totalItem = us.Count();
+                userList = userList.Where(x => x.AgentName.ToLower().Contains(searchtext) || x.CallStatus.ToLower().Contains(searchtext) || x.Time.ToString().ToLower().Contains(searchtext) || x.Extension.ToLower().Contains(searchtext)).ToList();
+                totalItem = userList.Count();
                 if (totalItem == 0)
                 {
+                    Dispatcher.Invoke(() => StackNoData.Visibility = Visibility.Visible);
+
                     StackNoData.Visibility = Visibility.Visible;
-                    dgSimple.Visibility = Visibility.Collapsed;
+                    //dgSimple.Visibility = Visibility.Collapsed;
                 }
                 else
                 {
@@ -1902,9 +2151,32 @@ namespace WpfFinesse.WPFTimer
 
 
             Pager pg = new Pager(totalItem, 1);
-            dgSimple.ItemsSource = us.Skip((pg.CurrentPage - 1) * pg.PageSize).Take(pg.PageSize);
+            userList = userList.Skip((pg.CurrentPage - 1) * pg.PageSize).Take(pg.PageSize).ToList();
+            dgSimple.ItemsSource = userList;
+            if (userList.Count == 0)
+            {
+                dgSimple.Height = double.NaN;
+                // Dispatcher.Invoke(() => StackNoData.Visibility = Visibility.Visible);
+
+                //StackNoData.Visibility = Visibility.Visible;
+                TeamPerformanceStackPanel.Visibility = Visibility.Collapsed;
+
+            }
+            else if (userList.Count >= 10)
+            {
+                dgSimple.Height = 400;
+                StackNoData.Visibility = Visibility.Collapsed;
+                TeamPerformanceStackPanel.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                dgSimple.Height = double.NaN;
+                StackNoData.Visibility = Visibility.Collapsed;
+                TeamPerformanceStackPanel.Visibility = Visibility.Collapsed;
+            }
             if (pg.EndPage > 1)
             {
+
                 if (pg.CurrentPage > 1)
                 {
                     Button First = new Button();
@@ -1954,10 +2226,6 @@ namespace WpfFinesse.WPFTimer
                     StackPagination.Children.Add(Last);
                 }
             }
-
-
-
-
         }
 
         private void btnChangeTimer_Click(object sender, RoutedEventArgs e)
@@ -2331,6 +2599,7 @@ namespace WpfFinesse.WPFTimer
                 var comboBox = (ComboBox)sender;
                 if (comboBox.IsLoaded)
                 {
+                    txtPhoneBookSearch.Text = "";
                     PhoneBookStackPanel.Children.Clear();
                     PhoneBookScrollViewer.Height = double.NaN;
                     PhoneBookLoaderStack.Visibility = Visibility.Visible;
@@ -2358,6 +2627,230 @@ namespace WpfFinesse.WPFTimer
         private void TeamPerformanceSearch_KeyUp(object sender, KeyEventArgs e)
         {
 
+        }
+
+
+        //phonebook dynamic controls
+        private Expander GetExpenderPhoneBook(string Header, string phoneNumber = null)
+        {
+            Expander Exp = new Expander();
+            Grid grid = new Grid();
+            grid.ColumnDefinitions.Clear();
+            grid.Height = 28.5;
+
+            ColumnDefinition c1 = new ColumnDefinition();
+            c1.Width = new GridLength(65, GridUnitType.Star);
+            ColumnDefinition c2 = new ColumnDefinition();
+            c2.Width = new GridLength(35, GridUnitType.Star);
+            grid.ColumnDefinitions.Add(c1);
+            grid.ColumnDefinitions.Add(c2);
+
+            TextBlock tb = new TextBlock();
+            tb.FontWeight = FontWeights.SemiBold;
+            tb.FontSize = 14;
+            tb.VerticalAlignment = VerticalAlignment.Center;
+            tb.Text = Header;
+            if (Header.Length > 30)
+            {
+                ToolTip tooltip = new ToolTip();
+                tooltip.Style = (Style)FindResource("PhoneBookToolTip");
+                tooltip.Placement = PlacementMode.Bottom;
+                //tooltip.PlacementRectangle = new Rect(20, 0, 0, 0);
+                tooltip.HorizontalOffset = 0;
+                tooltip.VerticalOffset = 0;
+                tooltip.Content = Header;
+                tb.ToolTip = tooltip;
+                //tb.TextWrapping = TextWrapping.Wrap;
+                tb.TextTrimming = TextTrimming.CharacterEllipsis;
+            }
+            StackPanel callControlsStackPanel = new StackPanel();
+            callControlsStackPanel.Orientation = Orientation.Horizontal;
+            callControlsStackPanel.HorizontalAlignment = HorizontalAlignment.Right;
+            //Button bn = new Button();
+            //bn.Cursor = Cursors.Hand;
+            //bn.BorderBrush = Brushes.Transparent;
+            //bn.Width = 28;
+            //bn.Height = 28;
+            //bn.Click += Bn_Click;
+            //bn.Margin = new Thickness(1);
+            //bn.BorderThickness = new Thickness(0);
+            //bn.Content = new Image
+            //{
+            //    Source = new BitmapImage(new Uri("/Resources/call-end.png", UriKind.RelativeOrAbsolute)),
+            //    VerticalAlignment = VerticalAlignment.Center,
+            //    Width=25,
+            //    Height=25
+            //};
+
+
+            Button bn1 = new Button();
+            bn1.BorderBrush = Brushes.Transparent;
+            bn1.Cursor = Cursors.Hand;
+            bn1.Name = "MakeCall";
+            bn1.Visibility = Visibility.Collapsed;
+            bn1.Width = 28;
+            bn1.Height = 28;
+            bn1.Tag = phoneNumber;
+            bn1.Click += Bn_Click;
+            bn1.BorderThickness = new Thickness(0);
+            bn1.Content = new Image
+            {
+                Source = new BitmapImage(new Uri("/Resources/call-answer.png", UriKind.RelativeOrAbsolute)),
+                VerticalAlignment = VerticalAlignment.Center,
+                Width = 25,
+                Height = 25
+            };
+
+
+            //Button bn3 = new Button();
+            //bn3.BorderBrush = Brushes.Transparent;
+            //bn3.Cursor = Cursors.Hand;
+            //bn3.Width = 28;
+            //bn3.Height = 28;
+            //bn3.Click += Bn_Click;
+            //bn3.BorderThickness = new Thickness(0);
+            //bn3.Content = new Image
+            //{
+            //    Source = new BitmapImage(new Uri("/Resources/call-transfer.png", UriKind.RelativeOrAbsolute)),
+            //    VerticalAlignment = VerticalAlignment.Center,
+            //    Width = 25,
+            //    Height = 25
+            //};
+
+
+
+            //callControlsStackPanel.Children.Add(bn);
+            callControlsStackPanel.Children.Add(bn1);
+            //callControlsStackPanel.Children.Add(bn3);
+
+
+            grid.Children.Add(tb);
+            grid.Children.Add(callControlsStackPanel);
+
+            Grid.SetColumn(callControlsStackPanel, 1);
+            Grid.SetColumn(tb, 0);
+
+
+            Exp.Header = grid;
+            Exp.MouseEnter += Exp_MouseEnter;
+            Exp.MouseLeave += Exp_MouseLeave;
+            return Exp;
+        }
+
+        private void Exp_MouseLeave(object sender, MouseEventArgs e)
+        {
+            try
+            {
+                Expander ex = (Expander)sender;
+                Grid gd = (Grid)ex.Header;
+                var i = Grid.GetColumn(gd);
+                var ii = gd.Children.Cast<UIElement>().Where(x => Grid.GetColumn(x) == 1).FirstOrDefault();
+                if (ii != null)
+                {
+                    StackPanel st = (StackPanel)ii;
+                    foreach (var item in st.Children)
+                    {
+                        if (item is Button)
+                        {
+                            Button btn = (Button)item;
+                            switch (btn.Name)
+                            {
+                                case "MakeCall":
+                                    btn.Visibility = Visibility.Collapsed;
+                                    break;
+                            }
+                        }
+                    }
+                }
+
+
+
+
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        private void Exp_MouseEnter(object sender, MouseEventArgs e)
+        {
+            try
+            {
+                Expander ex = (Expander)sender;
+                Grid gd = (Grid)ex.Header;
+                var i = Grid.GetColumn(gd);
+                var ii = gd.Children.Cast<UIElement>().Where(x => Grid.GetColumn(x) == 1).FirstOrDefault();
+                if (ii != null)
+                {
+                    StackPanel st = (StackPanel)ii;
+                    foreach (var item in st.Children)
+                    {
+                        if (item is Button)
+                        {
+                            Button btn = (Button)item;
+                            switch (btn.Name)
+                            {
+                                case "MakeCall":
+                                    btn.Visibility = Visibility.Visible;
+                                    break;
+                            }
+                        }
+                    }
+                }
+
+
+
+
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
+            //gd.Children.Cast<UIElement>().First(x => Grid.GetRow(x) == row && Grid.GetColumn(x) == Button);
+        }
+
+        private void Bn_Click(object sender, RoutedEventArgs e)
+        {
+            Button btn = (Button)sender;
+
+            MessageBox.Show("Call - " + btn.Tag.ToString());
+        }
+
+        private Border GetBorderPhoneBook(string BorderColorBrush, int CornerRadius, int Margin, int Padding, int BorderThickness)
+        {
+            Border b = new Border();
+            b.BorderBrush = (SolidColorBrush)new BrushConverter().ConvertFrom(BorderColorBrush);
+            b.CornerRadius = new CornerRadius(CornerRadius);
+            b.Margin = new Thickness(Margin);
+            b.Padding = new Thickness(Padding);
+            b.BorderThickness = new Thickness(BorderThickness);
+            return b;
+        }
+
+        private TextBlock GetTextBlockPhoneBook(string Text)
+        {
+            TextBlock tb = new TextBlock();
+            tb.FontWeight = FontWeights.Light;
+            tb.FontSize = 12;
+            tb.Text = Text;
+            return tb;
+        }
+
+        private TextBlock GetTextBoxPhoneBook(string Text)
+        {
+            TextBlock txt = new TextBlock();
+            //txt.BorderBrush = Brushes.Transparent;
+            //txt.BorderThickness = new Thickness(0);
+            txt.FontWeight = FontWeights.SemiBold;
+            //txt.IsReadOnly = true;
+            txt.TextWrapping = TextWrapping.Wrap;
+            txt.Foreground = (SolidColorBrush)new BrushConverter().ConvertFrom("#938c8c");
+            txt.Text = Text;
+            return txt;
         }
     }
 
@@ -2752,7 +3245,7 @@ namespace WpfFinesse.WPFTimer
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value.ToString().Length > 15)
+            if (value.ToString().Length > 10)
             {
                 return Visibility.Visible;
             }
@@ -2861,10 +3354,6 @@ namespace WpfFinesse.WPFTimer
 }
 
 
-//1st command GetPhonebooks > Phonebooks > this will contain phonebook name,type (global, nd user defines all) we will get only global phone id will be used only and name.
-
-
-//2nd GetTeamPhonebooks
 
 
 
