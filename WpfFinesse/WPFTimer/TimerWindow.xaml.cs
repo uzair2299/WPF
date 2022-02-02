@@ -11,11 +11,9 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using WpfFinesse.AMQ;
-using WpfFinesse.ControlUtility;
 using WpfFinesse.CustomTab;
 using WpfFinesse.Models;
 using System.Timers;
-using System.Windows;
 using System.Windows.Media;
 using System.Windows.Controls.Primitives;
 using System.Windows.Media.Imaging;
@@ -30,6 +28,7 @@ namespace WpfFinesse.WPFTimer
         private bool timerOnce = false;
         private List<UserTab> us;
         List<UserTab> teamUserList = new List<UserTab>();
+
         List<ComboBoxPair> cbPhonebook = new List<ComboBoxPair>();
 
         UserTab user = new UserTab();
@@ -284,7 +283,19 @@ namespace WpfFinesse.WPFTimer
                                         queueStat.TalkingINT = Convert.ToInt16(queueStr[4].Split(':')[1]);
                                         queueStat.TalkingOUT = Convert.ToInt16(queueStr[5].Split(':')[1]);
 
-                                        queueStat.QueuedCalls = 0;
+                                        queueStat.QueuedCalls = Convert.ToInt16(queueStr[8].Split(':')[1]);
+
+                                        
+                                        string[] time = queueStr[9].Split(new[] { ':' }, 2);
+
+                                        //string[] time = t[1].Split();
+                                        //DateTime d = new DateTime((int)time[5], time[1], time[2]);
+                                        //DateTime date = DateTime.Parse(time[1], System.Globalization.CultureInfo.CurrentCulture);
+
+                                        //DateTime now = DateTime.Now;
+                                        //int diffInSeconds = (int)(now - date).TotalSeconds;
+                                        //queueStat.MaxTime = $"{ (diffInSeconds / 60 / 60).ToString().PadLeft(2, '0')}:{(diffInSeconds / 60 % 60).ToString().PadLeft(2, '0')}:{(diffInSeconds % 60).ToString().PadLeft(2, '0')}";
+                                        
                                         queueStat.MaxTime = queueStr[9];
                                         qs.Add(queueStat);
                                     }
