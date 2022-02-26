@@ -15,13 +15,13 @@
             <Label Content="Login" Foreground="Gray" FontSize="25" HorizontalAlignment="Center"></Label>
             <Separator></Separator>
             <Label MouseLeftButtonDown="Label_MouseLeftButtonDown" Content="Agent ID" Foreground="Gray" Margin="0 0 0 2"></Label>
-            <TextBox Name="txtAgentID" Foreground="Gray" FontSize="15" Padding="2" Text=""></TextBox>
+            <TextBox Name="txtAgentID" Foreground="Gray" FontSize="15" Padding="2" Text="565656"></TextBox>
             
             <Label Content="Agent Password" Foreground="Gray" Margin="0 0 0 2"></Label>
-            <PasswordBox Name="txtAgentPassword" Foreground="Gray" FontSize="15" Padding="2" Password=""></PasswordBox>
+            <PasswordBox Name="txtAgentPassword" Foreground="Gray" FontSize="15" Padding="2" Password="Expertflow464"></PasswordBox>
             
             <Label Content="Agent Extension" Foreground="Gray" Margin="0 0 0 2"></Label>
-            <TextBox Name="txtAgentExtension" Foreground="Gray" FontSize="15" Padding="2" Text=""></TextBox>
+            <TextBox Name="txtAgentExtension" Foreground="Gray" FontSize="15" Padding="2" Text="42053"></TextBox>
 
             <Button Name="btnLogin" Click="btnLogin_Click" Content="Login" Background="#6c757d" Margin="0 20 0 0" Padding="3" FontSize="20" FontWeight="Bold"></Button>
         </StackPanel>

@@ -38,6 +38,8 @@ namespace WpfFinesse.WPFTimer
         private List<PhoneBook> pb = new List<PhoneBook>();
         private static int queueInt = 0;
         QueueStat Que = new QueueStat();
+        Stopwatch stopwatch = new Stopwatch();
+
         public TimerWindow()
         {
             aMQManager = AMQManager.GetInstance();
@@ -72,6 +74,7 @@ namespace WpfFinesse.WPFTimer
                     CTITeams.SelectedValuePath = "_Key";
                     CTITeams.ItemsSource = cb;
                     CTITeams.SelectedIndex = 0;
+                    CTITeams.Items.Refresh();
                 }
 
                 ComboBoxPair cbp = (ComboBoxPair)CTITeams.SelectedItem;
@@ -84,11 +87,11 @@ namespace WpfFinesse.WPFTimer
                 aMQManager.SendMessageToQueue(GCMessages("GetTeamPhonebooks"), CallEventInfoListing.PhonebookTeamId);
                 //aMQManager.SendMessageToQueue(GCMessages("getqueuelist"), "");
 
-                System.Timers.Timer time = new System.Timers.Timer();
-                time.Interval = 15000;
-                time.Elapsed += QuesStates;
-                time.Start();
-                QuesStates(time, null);
+                //System.Timers.Timer time = new System.Timers.Timer();
+                //time.Interval = 15000;
+                //time.Elapsed += QuesStates;
+                //time.Start();
+                //QuesStates(time, null);
 
                 //aMQManager.SendMessageToQueue(GCMessages("GetPhonebookContacts"), "7");
 
@@ -101,7 +104,7 @@ namespace WpfFinesse.WPFTimer
 
             qs = new List<QueueStat>();
             qs = Que.getQueueStat();
-            dgSimple1.ItemsSource = qs;
+            //dgSimple1.ItemsSource = qs;
 
 
             us = user.GetUsers();
@@ -229,10 +232,10 @@ namespace WpfFinesse.WPFTimer
 
         }
 
-        private void QuesStates(object sender, ElapsedEventArgs e)
-        {
-            aMQManager.SendMessageToQueue(GCMessages("getqueuelist"), "");
-        }
+        //private void QuesStates(object sender, ElapsedEventArgs e)
+        //{
+        //    aMQManager.SendMessageToQueue(GCMessages("getqueuelist"), "");
+        //}
 
 
 
@@ -264,8 +267,15 @@ namespace WpfFinesse.WPFTimer
                         {
 
                             case EventType.QueueList:
-                                //queueInt++;
-                                //questStatic.Text = queueInt.ToString();
+
+
+                                stopwatch.Start();
+                                long sec = stopwatch.ElapsedMilliseconds/1000;
+                                questStatic.Text = sec.ToString();
+                                
+
+
+                                queueInt = 0;
                                 if (events.Length > 2)
                                 {
                                     qs.Clear();
@@ -285,18 +295,23 @@ namespace WpfFinesse.WPFTimer
 
                                         queueStat.QueuedCalls = Convert.ToInt16(queueStr[8].Split(':')[1]);
 
-                                        
+
                                         string[] time = queueStr[9].Split(new[] { ':' }, 2);
+                                        if (time[1] != "")
+                                        {
+                                            //DateTime d = new DateTime((int)time[5], time[1], time[2]);
+                                            DateTime date = DateTime.Parse(time[1], System.Globalization.CultureInfo.CurrentCulture);
 
+                                            DateTime now = DateTime.Now;
+                                            int diffInSeconds = (int)(now - date).TotalSeconds;
+                                            queueStat.MaxTime = $"{ (diffInSeconds / 60 / 60).ToString().PadLeft(2, '0')}:{(diffInSeconds / 60 % 60).ToString().PadLeft(2, '0')}:{(diffInSeconds % 60).ToString().PadLeft(2, '0')}";
+                                        }
+                                        else
+                                        {
+                                            queueStat.MaxTime = "00:00:00";
+                                        }
                                         //string[] time = t[1].Split();
-                                        //DateTime d = new DateTime((int)time[5], time[1], time[2]);
-                                        //DateTime date = DateTime.Parse(time[1], System.Globalization.CultureInfo.CurrentCulture);
 
-                                        //DateTime now = DateTime.Now;
-                                        //int diffInSeconds = (int)(now - date).TotalSeconds;
-                                        //queueStat.MaxTime = $"{ (diffInSeconds / 60 / 60).ToString().PadLeft(2, '0')}:{(diffInSeconds / 60 % 60).ToString().PadLeft(2, '0')}:{(diffInSeconds % 60).ToString().PadLeft(2, '0')}";
-                                        
-                                        queueStat.MaxTime = queueStr[9];
                                         qs.Add(queueStat);
                                     }
                                     if (qs.Count > 10)
@@ -308,7 +323,8 @@ namespace WpfFinesse.WPFTimer
                                         dgSimple1.Height = double.NaN;
 
                                     }
-                                    dgSimple1.ItemsSource = qs;
+
+                                   dgSimple1.ItemsSource = qs;
                                     dgSimple1.Items.Refresh();
                                 }
 
@@ -1105,7 +1121,6 @@ namespace WpfFinesse.WPFTimer
                                                             }
                                                             catch (Exception ex)
                                                             {
-
                                                                 throw ex;
                                                             }
 
@@ -1367,7 +1382,7 @@ namespace WpfFinesse.WPFTimer
                 throw e;
             }
         }
-
+        
 
         private void DropParticipants(object sender, RoutedEventArgs e)
         {
@@ -2259,6 +2274,7 @@ namespace WpfFinesse.WPFTimer
             if (comboBox.IsLoaded)
             {
                 var cb = (ComboBoxPair)comboBox.SelectedItem;
+                int index = comboBox.SelectedIndex;
                 string _key = cb._Key;
                 string _value = cb._Value;
                 aMQManager.SendMessageToQueue(GCMessages("getteamusers"), _key + ",true");
@@ -3360,8 +3376,6 @@ namespace WpfFinesse.WPFTimer
         NotFound,
         DROPPED
     }
-
-
 }
 
 

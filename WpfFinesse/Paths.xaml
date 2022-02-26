@@ -6,6 +6,26 @@
         xmlns:local="clr-namespace:WpfFinesse"
         mc:Ignorable="d"
         Title="Paths" Height="300" Width="300">
+    <Window.Resources>
+        <Style x:Key="PhoneToogleButton" TargetType="Button">
+            <Setter Property="OverridesDefaultStyle" Value="True" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Name="border" BorderThickness="0" BorderBrush="Black" Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Opacity" Value="0.8" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
     <StackPanel Orientation="Vertical" Margin="0 20 0 0">
         <Path 
                 Width="10" Height="10" 
@@ -47,5 +67,51 @@
                   Data="M0,0 L0,2 L4,6 L8,2 L8,0 L4,4 z"
                 />
 
+
+        <Button FontFamily="Marlett" FontSize="20" Content="5"/>
+        <Button FontFamily="Marlett" FontSize="20" Content="6"/>
+
+        <Border CornerRadius="50" Height="20" Width="20" Cursor="Hand">
+            <Border.Background>
+                <ImageBrush Stretch="Fill" ImageSource="/Resources/call-answer-3.png"/>
+            </Border.Background>
+            <Button Click="Button_Click" Background="Transparent" Foreground="Transparent"></Button>
+        </Border>
+
+
+
+
+        <Button Width="20" Height="20" Click="Button_Click">
+            <Button.Template>
+                <ControlTemplate TargetType="Button">
+                    <Border CornerRadius="50" Height="20" Width="20" Cursor="Hand">
+                        <Border.Background>
+                            <ImageBrush Stretch="Fill" ImageSource="/Resources/call-answer-3.png"/>
+                        </Border.Background>
+                        <Button Click="Button_Click" Background="Transparent" Foreground="Transparent"></Button>
+                    </Border>
+                </ControlTemplate>
+            </Button.Template>
+        </Button>
+
+
+        <Ellipse Height="100" Width="100">
+            <Ellipse.Fill>
+                <ImageBrush Stretch="Fill" ImageSource="/Resources/call-answer-3.png"/>
+            </Ellipse.Fill>
+        </Ellipse>
+
+        <Button Style="{StaticResource MyButton}" Click="Button_Click">
+            <Button.Resources>
+                <Style TargetType="Border">
+                    <Setter Property="Width" Value="20"></Setter>
+                    <Setter Property="Height" Value="20"></Setter>
+                    <Setter Property="CornerRadius" Value="50"/>
+                </Style>
+            </Button.Resources>
+            <Button.Background>
+                <ImageBrush Stretch="Fill" ImageSource="/Resources/call-answer-3.png"/>
+            </Button.Background>
+        </Button>
     </StackPanel>
 </Window>

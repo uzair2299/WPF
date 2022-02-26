@@ -109,7 +109,6 @@ namespace WpfFinesse
                                         isopen = true;
                                         timerWinder.Show();
                                     }
-
                                 }
                                 break;
 

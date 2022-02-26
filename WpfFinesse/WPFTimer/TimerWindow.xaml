@@ -1569,7 +1569,7 @@
         </Style>
     </Window.Resources>
     <Grid Margin="0">
-        <UniformGrid Rows="1" Columns="2" Margin="5,0">
+        <UniformGrid Name="UniformGridMain" Rows="1" Columns="2" Margin="1,0,1,0">
             <FrameworkElement x:Name="c1"/>
         </UniformGrid>
         <TabControl BorderThickness="0">
@@ -1624,7 +1624,7 @@
                 </Style>
             </TabControl.Resources>
 
-            <TabItem Header="Cisco CTI By Expertflow" Width="{Binding ElementName=c1, Path=ActualWidth}" Height="50" VerticalAlignment="Top">
+            <TabItem Name="CiscoCTIByExpertflowTab" Header="Cisco CTI By Expertflow" Width="{Binding ElementName=c1, Path=ActualWidth}" Height="50" VerticalAlignment="Top">
                 <Border BorderBrush="#C8C6C6" BorderThickness="1">
                     <StackPanel>
                         <Border BorderBrush="#C8C6C6" BorderThickness="0 0 0 1" Margin="0 0 0 8" Height="50">
@@ -1876,10 +1876,10 @@
 
 
             </TabItem>
-            <TabItem Header="Supervisor Dashboard" Width="{Binding ElementName=c1, Path=ActualWidth}">
+            <TabItem Name="SupervisorDashboardTab"  Header="Supervisor Dashboard" Width="{Binding ElementName=c1, Path=ActualWidth}">
                 <Border BorderBrush="{StaticResource TransparentColorBrush}" BorderThickness="0">
                     <StackPanel>
-                        <UniformGrid Rows="1" Columns="2" Margin="5 0,5,0">
+                        <UniformGrid Rows="1" Columns="2" Margin="1 0,1,0">
                             <FrameworkElement x:Name="c11"/>
                         </UniformGrid>
                         <TabControl  BorderThickness="0" Margin="1 0">
@@ -1918,8 +1918,8 @@
                             <TabItem Header="Queue Stats" Width="{Binding ElementName=c11, Path=ActualWidth}" Height="50">
                                 <Border BorderBrush="#C8C6C6" BorderThickness="1">
                                     <StackPanel HorizontalAlignment="Stretch">
-                                        <TextBlock Name="questStatic"></TextBlock>
-                                        <DataGrid  Name="dgSimple1" VerticalAlignment="Center" VerticalContentAlignment="Center" CellStyle="{StaticResource Body_Content_DataGrid_Centering}" Height="350" EnableRowVirtualization="False">
+                                        <TextBlock Name="questStatic" Text=""></TextBlock>
+                                        <DataGrid  Visibility="Visible" Name="dgSimple1" VerticalAlignment="Center" VerticalContentAlignment="Center" CellStyle="{StaticResource Body_Content_DataGrid_Centering}" Height="350" EnableRowVirtualization="False">
                                             <DataGrid.Columns>
                                                 <DataGridTemplateColumn  SortMemberPath="QueueName" CanUserSort="True" Header="Queue Name" CellTemplate="{StaticResource QueueNameTemplate}"></DataGridTemplateColumn>
 
